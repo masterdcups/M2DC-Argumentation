@@ -19,3 +19,7 @@ U.E. Chef-d'Œuvre (Université Toulouse III - Master 2 D.C. - 2019/2020)
  - [Project management:](management/README.md)
      - Progress sheet
      - Meeting reports
+
+## Resources
+
+ - [Trello](https://trello.com/b/07XV119w/argumentation)
