@@ -36,12 +36,13 @@
       <premise-content><xsl:value-of select="./div[3]" /></premise-content>
       <premise-author><xsl:value-of select=".//div[@class='premise-user']/*/a/@href" /></premise-author>
       <premise-date><xsl:value-of select=".//time/@datetime" /></premise-date>
-
+      <premise-sources>
+	<xsl:apply-templates select=".//p[@class='links']/a" />
+      </premise-sources>
       <premise-support><xsl:value-of select=".//div[@class='supporters']" /></premise-support>
       <premise-fallacies>
 	<xsl:apply-templates select=".//div[@class='fallacy']" />
       </premise-fallacies>
-	
     </premise>
     <xsl:apply-templates select="..//li/div[2]" />
   </xsl:template>
@@ -53,5 +54,13 @@
       <fallacy-reason><xsl:value-of select=".//div[@class='fallacy-reasons']" /></fallacy-reason>
     </fallacy>
   </xsl:template>
+
+  <!-- Match a premise source links block -->
+  <xsl:template match="p[@class='links']/a">
+    <source><xsl:value-of select="@href" /></source>
+  </xsl:template>
+  
 </xsl:stylesheet>
+
+
 
