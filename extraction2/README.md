@@ -20,8 +20,8 @@ Les pages de Wikidébats forment le graphe, les liens html représentent les arc
 On a trois cas :
 
 1. Les débats sont les puits du graphe, ils ont une page dédiée, accessible depuis la *sitemap*.
-2. Les arguments et sous-arguments étayés sont les sommets intermédiaires, ils ont une page dédiée accessible depuis l'argument enfant.
-3. Les arguments non-étayés sont les sources du graphe, ils n'ont pas de page dédiée et sont représentés uniquement dans la page de l'argument enfant.
+2. Les arguments et sous-arguments étayés sont les sommets intermédiaires, ils ont une page dédiée accessible depuis la page de l'argument soutenu/attaqué.
+3. Les arguments terminaux (feuilles) sont les sources du graphe, ils n'ont pas de page dédiée et sont représentés uniquement dans la page de l'argument soutenu/attaqué.
 
 On va transformer chaque page en un fichier *xxx.csv* contenant les lignes *a1;b1;c1*, *a2;b2;c2*, etc. Cela signifie que l'argument d'identifiant *xxx* à pour parents les arguments d'identifiant *ai*, de label *bi* avec un poids *ci*.
 
@@ -31,7 +31,7 @@ On parse le html de la *sitemap* facilement avec XSLT.
 
 	wget "https://wikidebats.org/wiki/Cat%C3%A9gorie:D%C3%A9bats" -O - | xsltproc xslt/sitemap.xsl - | sed 's/.wiki.//' > out/sitemap.csv
 
-On parse ensuite le html des pages de débat avec une seconde feuille de style XSLT. Leurs urls forment la première colonne du CSV.
+On parse ensuite le html des pages de débat avec une seconde feuille de style XSLT. Leurs urls sont dans la première colonne du CSV créé juste avant.
 
 	urls=`cat out/sitemap.csv | cut -d ';' -f 1`
 	for url in $urls; 
