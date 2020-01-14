@@ -1,21 +1,39 @@
-# Extraction des arguments
+# Extraction
 
-*Note :* Il s'agit d'une version *brouillon* incomplète. Particulièrement, on ne récupère pas le texte et autres données attachés à l'argument.
+## Usage
 
-## Modèle
+Le contenu de ce dossier permet d'extraire le graphe d'argumentation de :
 
-On cherche à reproduire le graph *(V,E)* des arguments de Wikidébats, où *V* est l'ensemble des arguments (représentés par leurs identifiants+labels), et *E* l'ensemble des liens *(u,v,w)* reliant les arguments *u* et *v* avec un poids *w* (égal à 1 ou -1).
+ - Wikidebats
+
+Pour cela, ouvrez un terminal unix dans ce dossier et tapez :
+
+	# Wikidebats
+	./wd_extract.sh
+	
+Cela produit deux fichiers *wd_nodes.csv* et *wd_edges.csv* représentant le graphe. Ils peuvent être importés avec *Neo4j* ou *Gephi* par exemple (*cf.* bas de page).
+
+## Description
+
+### Modèle(s)
 
 On considère que les débats, arguments, sous-arguments, objections, etc. sont tous des arguments au sens large.
 
-Les pages de Wikidébats forment le graphe, les liens html représentent les arcs entrants de chaque argument.
+Le graphe d'argumentation est un graphe étiqueté :
 
-## Procédure (Wikidebats)
+ - Les sommets ont un *label* (le texte de l'argument) et une *url* (pour les besoins de l'extraction : celle de la page sur WikiDebats)
+ - Les arcs représentent les relations de soutien (*resp.* d'attaque) ont un poids égal à 1 (*resp. -1).
 
- 1. On télécharge et simplifie les pages de façon à ne garder que la structure du graphe
- 2. On parse cette structure pour reconstruire les ensembles *V* et *E*, avec la représentation voulue
+### Procédure
 
-### Simplification des pages
+Sur WikiDebats, les arguments ont une page dédiée (sauf les arguments terminaux). Ainsi les liens HTML de WikiDebats couvrent les arcs du graphe.
+
+ 1. On télécharge et simplifie les pages du site, de façon à ne garder que la structure du graphe.
+ 2. On parse cette collection de fichiers pour reconstruire le graphe
+ 
+ Le script *wd_extract.sh* effectue ce travail
+
+#### Données brutes (WikiDebats)
 
 On a trois cas :
 
@@ -23,88 +41,46 @@ On a trois cas :
 2. Les arguments et sous-arguments étayés sont les sommets intermédiaires, ils ont une page dédiée accessible depuis la page de l'argument soutenu/attaqué.
 3. Les arguments terminaux (feuilles) sont les sources du graphe, ils n'ont pas de page dédiée et sont représentés uniquement dans la page de l'argument soutenu/attaqué.
 
-On va transformer chaque page en un fichier *xxx.csv* contenant les lignes *a1;b1;c1*, *a2;b2;c2*, etc. Cela signifie que l'argument d'identifiant *xxx* à pour parents les arguments d'identifiant *ai*, de label *bi* avec un poids *ci*.
+Avec XSLT, on transforme chaque page en un fichier *xxx.csv* contenant les lignes *a1;b1;c1*, *a2;b2;c2*, etc. Cela signifie que l'argument d'url *xxx* à pour parents les arguments d'identifiant *ai*, de label *bi* avec un poids *ci*.
 
-On parse le html de la *sitemap* facilement avec XSLT.
+Le traitement est effectué en boucle jusqu'à ce qu'il ne produise plus de nouveaux fichiers : toutes les pages sont alors téléchargées et converties.
 
-	mkdir out
 
-	wget "https://wikidebats.org/wiki/Cat%C3%A9gorie:D%C3%A9bats" -O - | xsltproc xslt/sitemap.xsl - | sed 's/.wiki.//' > out/sitemap.csv
+## Interrogation et visualisation
 
-On parse ensuite le html des pages de débat avec une seconde feuille de style XSLT. Leurs urls sont dans la première colonne du CSV créé juste avant.
+### Neo4j
 
-	urls=`cat out/sitemap.csv | cut -d ';' -f 1`
-	for url in $urls; 
-	do 
-		echo $url; 
-		wget -q "https://wikidebats.org/wiki/$url" -O - | xsltproc xslt/page.xsl - | sed 's/.wiki.//' > "out/$url.csv"; 
-	done
-
-On a ainsi parsé les arguments de niveau 1. Les pages des arguments intermédiaires ont la même structure que les pages de débats, on peut donc appliquer récursivement cette feuille de style (exactement: tant qu'on extrait de nouveaux arguments).
-
-*Note :* L'étape précédente est facultative, car elle constitue la première itération cette boucle.
-
-	n_files1=0
-	n_files2=`ls out/ | wc -w`
-
-	while test $n_files1 -ne $n_files2
-	do 
-		urls=`cat out/*.csv | cut -d ';' -f 1`
-		for url in $urls
-			do 
-			if test ! -f out/$url.csv
-			then
-				echo "$url"
-				wget -q "https://wikidebats.org/wiki/$url" -O - | xsltproc xslt/page.xsl - | sed 's/.wiki.//' | tr '/' '~' > "out/`echo "$url" | tr '/' '~'`.csv"
-			fi
-		done
-		n_files1=$n_files2
-		n_files2=`ls out/ | wc -w`
-	done
-	
-*Note :* On convertit les */* en *~* pour les noms de fichiers.
-
-*Note :* le script génère quelques erreurs dues aux pages invalides, mais n'impacte pas le parsing.
-
-Nous avons maintenant une collection de fichiers CSV représentant le graphe, chaque fichier *xxx.csv* contenant les liens entrants du sommet *xxx*.
-
-### Reconstruction du graphe
-
-On utilise ensuite un script *python* pour reconstruire le graphe. On peut générer des csvs pour *neo4j* ou pour *gephi*.
-
-	python3 mk_graph.py
-
-Cela génère les deux fichiers *n4j_nodes.csv* et *n4j_edges.csv* qu'on peut importer directement avec neo4j, après les avoir copié dans le dossier *import/* de la base.
+Après avoir copié les fichiers *wd_nodes.csv* et *wd_edges.csv* dans le dossier *import* de la base, il faut exécuter les ordres d'insertion suivants :
 
 	// Create nodes
-	LOAD CSV WITH HEADERS FROM "file:///n4j_nodes.csv" AS row
-	  CREATE (:Argument {url: row.url, label: row.label, n: toInteger(row.n)})
+	LOAD CSV WITH HEADERS FROM "file:///wd_nodes.csv" AS row
+	  CREATE (:Argument {url: row.url, label: row.label, n: toInteger(row.n), origin: "wd"})
 	  
-	// Create index on 'n' attribute
+	// Create indexes
 	CREATE INDEX ON :Argument(n)
+	CREATE INDEX ON :Argument(origin)
 	
 	// Create 'Support' edges
-	LOAD CSV WITH HEADERS FROM "file:///n4j_edges.csv" AS row
+	LOAD CSV WITH HEADERS FROM "file:///wd_edges.csv" AS row
 	  WITH row WHERE toInteger(row.weight) > 0
-	  MATCH (n1:Argument {n: toInteger(row.n1)}),
-	    (n2:Argument {n: toInteger(row.n2)})
+	  MATCH (n1:Argument {n: toInteger(row.n1), origin:"wd"}),
+	    (n2:Argument {n: toInteger(row.n2), origin: "wd"})
 	  WITH row, n1, n2
 	  CREATE (n1)-[:Support {w: toInteger(row.weight)}]->(n2)
 
 	// Create 'Attack' edges
-	LOAD CSV WITH HEADERS FROM "file:///n4j_edges.csv" AS row
+	LOAD CSV WITH HEADERS FROM "file:///wd_edges.csv" AS row
 	  WITH row WHERE toInteger(row.weight) < 0
-	  MATCH (n1:Argument {n: toInteger(row.n1)}),
-	    (n2:Argument {n: toInteger(row.n2)})
+	  MATCH (n1:Argument {n: toInteger(row.n1), origin:"wd"}),
+	    (n2:Argument {n: toInteger(row.n2), origin:"wd"})
 	  WITH row, n1, n2
 	  CREATE (n1)-[:Attack {w: toInteger(row.weight)}]->(n2)
 
-## Résultats
+Une fois cela fait, nous pouvons interroger la base et visualiser le résultat des requêtes dans le navigateur :
 
-Querying (neo4j) :
 
 	// Get debate list (nodes without outgoing edges)
-	MATCH (a:Argument) WHERE NOT (a)-[]->(:Argument) 
+	MATCH (a:Argument {origin:"wd"}) WHERE NOT (a)-[]->(:Argument) 
 		  RETURN a.n, a.label
 
 	//a.n	a.label
@@ -117,20 +93,16 @@ Querying (neo4j) :
 	//163	"Faut-il instaurer un salaire à vie ?"
 	//[...]
 
-Visualisation (neo4j) :
-
 	// Get the #192 debate
-	MATCH (a:Argument)-[*]->(b:Argument {n: 192})
+	MATCH (a:Argument)-[*]->(b:Argument {n: 192, origin: "wd"})
 	  RETURN a, b
-
+	  
 ![Neo4j viz](images/n4j_example.svg  "Neo4j visualization")
 
-Visualisation (Gephi) :
+### Gephi
 
-	# Gephi want 'source' and 'target' columns, and doesn't like negative or null weight values
-	cat n4j_edges.csv | sed 's/n1/source/' | sed 's/n2/target/' | sed 's/-1/1/' > edges2.csv
-	
-Ouverture avec Gephi, puis spatialisation (OpenOrd + Yifan Hu proportionnel) :
+Gephi est un outil de visualisation uniquement. Il permet la visualisation de la totalité du graphe.
 
 ![Gephi viz](images/gephi_example.png  "Gephi visualization")
+Spatialisation (OpenOrd + Yifan Hu proportionnel) du graphe non pondéré (tous les arcs sont de poids égal à 1)
 
