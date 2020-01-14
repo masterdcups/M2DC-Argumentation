@@ -12,15 +12,7 @@ U.E. Chef-d'Œuvre (Université Toulouse III - Master 2 D.C. - 2019/2020)
 
 ## Description
 
-	-- NOT NULL constraint failed: PROJECT.DESCRIPTION
+Sujet : "Empowering Online Debating Platforms" 
 
-## Contents
-
- - [Project management:](management/README.md)
-     - [Progress sheet](https://docs.google.com/spreadsheets/d/1i4Xq7jg7BHAXHvnBNg2ha24sje23rU1fjPL0VtJB6kY/edit#gid=0)
-     - Meeting reports
-
-## Resources
-
- - [Slack](https://projetdc-2020.slack.com/)
- - [Trello](https://trello.com/b/07XV119w/argumentation)
+Objectif : développement d'outils d'extraction, de visualisation et d'évaluation de graphes d'arguments extraits de plateformes de débats numériques.  
+Il est également envisagé la création d'un outil d'extraction d'arguments à partir de texte non structurées.
