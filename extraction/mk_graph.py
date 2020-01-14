@@ -50,8 +50,7 @@ def main(csvdir):
                 e = (get_num(parent_id), get_num(child_id), float(weight))
 
                 # Append only non-existing edges (there is one...)
-                if not e in edges:
-                    edges.append(e)
+                edges.append(e)
 
     # Neo4j csvs
     with open('%s_nodes.csv'%csvdir, 'w') as f:
