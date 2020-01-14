@@ -48,8 +48,6 @@ def main(csvdir):
 
                 # Build the edge with the numerical ids
                 e = (get_num(parent_id), get_num(child_id), float(weight))
-
-                # Append only non-existing edges (there is one...)
                 edges.append(e)
 
     # Neo4j csvs
