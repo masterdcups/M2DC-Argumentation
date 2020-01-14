@@ -99,9 +99,16 @@ Une fois cela fait, nous pouvons interroger la base et visualiser le résultat d
 	  
 ![Neo4j viz](images/n4j_example.svg  "Neo4j visualization")
 
+Le système de requêtage permet aussi de détecter des problèmes dans le graphe d'argumentation.
+
+	// Cycles
+	MATCH (n)-[*]->(m) WHERE n = m RETURN n, m
+
+![Cycles](images/n4j_cycles.svg  "Cycles in the argumentation graph")
+
 ### Gephi
 
-Gephi est un outil de visualisation uniquement. Il permet la visualisation de la totalité du graphe.
+Gephi permet la visualisation de la totalité du graphe.
 
 ![Gephi viz](images/gephi_example.png  "Gephi visualization")
 Spatialisation (OpenOrd + Yifan Hu proportionnel) du graphe non pondéré (tous les arcs sont de poids égal à 1)
