@@ -6,14 +6,25 @@
 
   <!-- Root -->
   <xsl:template match="/">
-    <xsl:apply-templates mode="pro" select="//div[count(preceding-sibling::h2)=3]">
-      <xsl:with-param name="procon" select="1"/>
-    </xsl:apply-templates>
-    <xsl:apply-templates mode="con" select="//div[count(preceding-sibling::h2)=4]">
-      <xsl:with-param name="procon" select="-1"/>
-    </xsl:apply-templates>
+    <xsl:apply-templates select="//h1" />
+    <xsl:apply-templates mode="descr" select="//div[@id='content']//div[count(preceding-sibling::h2)=1]" />
+    <xsl:apply-templates mode="pro" select="//div[count(preceding-sibling::h2)=3]" />
+    <xsl:apply-templates mode="con" select="//div[count(preceding-sibling::h2)=4]" />
   </xsl:template>
 
+  <!-- Name -->
+  <xsl:template match="h1">
+    <xsl:text>#name: </xsl:text>
+    <xsl:value-of select="." />
+    <xsl:text>&#xa;</xsl:text> <!-- newline -->
+  </xsl:template>
+
+  <!-- Description -->
+  <xsl:template mode="descr" match="div">
+    <xsl:text>#description: </xsl:text>
+    <xsl:value-of select="." />
+    <xsl:text>&#xa;</xsl:text> <!-- newline -->
+  </xsl:template>
 
   <!-- Arguments (pros) -->
   <xsl:template mode="pro" match="div">

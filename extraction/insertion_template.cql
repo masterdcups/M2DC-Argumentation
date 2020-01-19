@@ -17,7 +17,7 @@ CREATE INDEX ON
 LOAD CSV WITH HEADERS FROM 
     "file:///xxx_nodes.csv" AS row 
 CREATE 
-    (:Argument {url: row.url, label: row.label, n: toInteger(row.n), origin: "xxx"});
+    (:Argument {url: row.url, label: row.label, description: row.description, n: toInteger(row.n), origin: "xxx"});
 
 
 
