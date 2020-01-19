@@ -21,11 +21,6 @@ def main(csvdir):
 
     # Init
     edges = []
-    arg_labels = {}
-    arg_nums = {}
-    leaf_num = 0
-
-
     nums = DefaultDict(-1, show_warning=True)
     urls = {}
     labels = DefaultDict("", show_warning=True)
@@ -41,27 +36,10 @@ def main(csvdir):
             urls[num] = url
 
 
-            
-#    def get_num(arg_id):
-#        """Numerical id (auto-increment)"""
-#        if not arg_id in arg_nums.keys():
-#            arg_nums[arg_id] = len(arg_nums)
-#        return arg_nums[arg_id]
-#
-#    
-#    def get_label(arg_id):
-#        """Label of argument (defaults to an empty string)"""
-#        if not arg_id in arg_labels.keys():
-#            arg_labels[arg_id] = ''
-#        return arg_labels[arg_id]
-
 
     # Read each csv file
     filenames = [f for f in os.listdir(csvdir) if f.endswith('.csv')]
     for filename in filenames:
-
-        # arg_id of the page (slashes was changed into tildes)
-        child_id = filename.replace('.csv', '').replace('~','/')
 
         url = None
         label = None
