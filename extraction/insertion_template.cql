@@ -10,6 +10,9 @@ CREATE INDEX ON
 CREATE INDEX ON 
     :Argument(origin);
 
+CREATE INDEX ON 
+    :Argument(n,origin);
+
 
 
 // Create nodes
