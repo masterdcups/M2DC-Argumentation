@@ -70,38 +70,47 @@ Il ne reste plus qu'à exécuter le script *all_insertion.csv*
 
 ## Interrogation et visualisation
 
+On peut utiliser le navigateur neo4j pour interroger et visualiser les données. On fait rapidement ces constats :
 
-	// Get debate list (nodes without outgoing edges)
-	MATCH (a:Argument {origin:"wd"}) WHERE NOT (a)-[]->(:Argument) 
-		  RETURN a.n, a.label
+ - **WikiDebats**
+     - Deux cycles (arguments qui s'attaquent mutuellement)
+     - Arguments qui appartiennent à plusieurs débats
+ - **Argüman**
+     - Peu de données (principalement en chinois)
+     - Uniquement de arbres (chaque argument à 0 ou 1 successeur)
+  - **Kialo**
+     - Beaucoup de données (grands graphes: le plus grands possède 16644 sommets)
+     - Uniquement des DAGs
 
-	//a.n	a.label
-	//17	"Faut-il supprimer les notes à l'école ?"
-	//158	"Faut-il préserver les Murs à pêches de Montreuil ?"
-	//159	""
-	//160	"Le réchauffement climatique est-il dû à l'activité humaine ?"
-	//161	"Faut-il arrêter de manger des animaux ?"
-	//162	"Faut-il instaurer un revenu de base ?"
-	//163	"Faut-il instaurer un salaire à vie ?"
-	//[...]
+#### Galerie
 
-	// Get the #192 debate
-	MATCH (a:Argument)-[*]->(b:Argument {n: 192, origin: "wd"})
-	  RETURN a, b
+	// WikiDebats (debat 44)
+	MATCH
+		(x)-[*0..]->(y) 
+	WHERE
+		y.origin="wd" and y.n=44
+	RETURN
+		x
 	  
-![Neo4j viz](images/n4j_example.svg  "Neo4j visualization")
+![Neo4j viz](images/wd_example.svg  "Neo4j: exemple WikiDebats")
 
-Le système de requêtage permet aussi de détecter des problèmes dans le graphe d'argumentation.
+	// Argüman: le plus grand graphe (argüman fr)
+	MATCH
+		(x)-[*0..]->(y) 
+	WHERE
+		y.origin="am-fr" and y.n=3 
+	RETURN
+		x
 
-	// Cycles
-	MATCH (n)-[*]->(m) WHERE n = m RETURN n, m
+![Cycles](images/am-fr_example.svg  "Neo4j: exemple Argüman")
 
-![Cycles](images/n4j_cycles.svg  "Cycles in the argumentation graph")
+	// Kialo: un "petit" graphe
+	MATCH
+		(x)-[*0..]->(y) 
+	WHERE
+		y.origin="kl" and y.n=19 
+	RETURN
+		x
 
-### Gephi
-
-Gephi permet la visualisation de la totalité du graphe.
-
-![Gephi viz](images/gephi_example.png  "Gephi visualization")
-Spatialisation (OpenOrd + Yifan Hu proportionnel) du graphe non pondéré (tous les arcs sont de poids égal à 1)
+![Cycles](images/kl_example.svg  "Neo4j: exemple Kialo")
 
