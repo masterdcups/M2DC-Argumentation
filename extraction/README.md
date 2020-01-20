@@ -4,14 +4,23 @@
 
 Le contenu de ce dossier permet d'extraire le graphe d'argumentation de :
 
- - Wikidebats
+ - Wikidebats (fr)
+ - Argüman (fr|en|es|pl|tr|ch)
+ - Kialo (en)
 
-Pour cela, ouvrez un terminal unix dans ce dossier et tapez :
+Pour cela, on utilise le script *extract.sh*
 
-	# Wikidebats
-	./wd_extract.sh
-	
-Cela produit deux fichiers *wd_nodes.csv* et *wd_edges.csv* représentant le graphe. Ils peuvent être importés avec *Neo4j* ou *Gephi* par exemple (*cf.* bas de page).
+	extract.sh site [language] [--n_threads n] [--clean]
+
+	# site: in { wikidebats | wd | kialo | kl | arguman | am }
+	# language: in { fr | en | es | pl | tr | ch } (arguman only)
+	# --n_threads n: download and convert n files in parallel
+	# --clean: check and remove incomplete files
+
+Cela produit deux fichiers *xxx_nodes.csv* et *xxx_edges.csv* représentant le graphe, et les instructions d'insertion cypher *xxx_insertion.cql*.
+
+Ces fichiers csv doivent être copiés dans le dossier *import* de la base de données Neo4j avant d'exécuter les instructions d'insetion.
+
 
 ## Description
 
@@ -21,95 +30,87 @@ On considère que les débats, arguments, sous-arguments, objections, etc. sont 
 
 Le graphe d'argumentation est un graphe étiqueté :
 
- - Les sommets ont un *label* (le texte de l'argument) et une *url* (pour les besoins de l'extraction : celle de la page sur WikiDebats)
+ - Les sommets ont un *label* (le titre de l'argument), une description éventuelle (le texte de l'argument) et une *url* (pour les besoins de l'extraction)
  - Les arcs représentent les relations de soutien (*resp.* d'attaque) ont un poids égal à 1 (*resp. -1).
 
-### Procédure
+### Procedure
 
-Sur WikiDebats, les arguments ont une page dédiée (sauf les arguments terminaux). Ainsi les liens HTML de WikiDebats couvrent les arcs du graphe.
+1. On parse les pages du site de façon à construire des fichiers *xxx.csv* contenant les lignes *a1;b1;c1*, *a2;b2;c2*, etc. Cela signifie que l'argument *xxx* à pour parents les arguments d'url *ai*, de label *bi* avec un poids *ci*.  
+Ces fichiers ont en en-tête des lignes de commentaire *#url, #domain, #name* et *#description*.
+2. On regroupe les fichiers produits en deux csv *nodes.csv* et *edges.csv* contenant tout le graphe.
+3. On génère les instructions neo4j.
 
- 1. On télécharge et simplifie les pages du site, de façon à ne garder que la structure du graphe.
- 2. On parse cette collection de fichiers pour reconstruire le graphe
- 
- Le script *wd_extract.sh* effectue ce travail
+C'est ce que fait *extract.sh*. Ainsi, pour tout télécharger :
 
-#### Données brutes (WikiDebats)
+	# Neo4j database directory
+	db_dir=path/to/neo4j/database/directory
 
-On a trois cas :
+	# WikiDebats
+	./extract.sh wd --n_threads 8
+	
+	# Kialo
+	./extract.sh kl --n_threads 8
+	
+	# Argüman (foreach language)
+	for lg in fr en es pl tr ch
+	do
+		./extract am $lg --n_threads 8
+	done
+	
+	# Copy data to neo4j DB directory
+	cp *_nodes.csv *_edges.csv $db_dir/import
+	
+	# Concatenate all insertion instructions
+	cat *_insertion.cql > all_insertion.cql
 
-1. Les débats sont les puits du graphe, ils ont une page dédiée, accessible depuis la *sitemap*.
-2. Les arguments et sous-arguments étayés sont les sommets intermédiaires, ils ont une page dédiée accessible depuis la page de l'argument soutenu/attaqué.
-3. Les arguments terminaux (feuilles) sont les sources du graphe, ils n'ont pas de page dédiée et sont représentés uniquement dans la page de l'argument soutenu/attaqué.
+Il ne reste plus qu'à exécuter le script *all_insertion.csv*
 
-Avec XSLT, on transforme chaque page en un fichier *xxx.csv* contenant les lignes *a1;b1;c1*, *a2;b2;c2*, etc. Cela signifie que l'argument d'url *xxx* à pour parents les arguments d'identifiant *ai*, de label *bi* avec un poids *ci*.
 
-Le traitement est effectué en boucle jusqu'à ce qu'il ne produise plus de nouveaux fichiers : toutes les pages sont alors téléchargées et converties.
 
 
 ## Interrogation et visualisation
 
-### Neo4j
+On peut utiliser le navigateur neo4j pour interroger et visualiser les données. On fait rapidement ces constats :
 
-Après avoir copié les fichiers *wd_nodes.csv* et *wd_edges.csv* dans le dossier *import* de la base, il faut exécuter les ordres d'insertion suivants :
+ - **WikiDebats**
+     - Deux cycles (arguments qui s'attaquent mutuellement)
+     - Arguments qui appartiennent à plusieurs débats
+ - **Argüman**
+     - Peu de données (principalement en chinois)
+     - Uniquement de arbres (chaque argument à 0 ou 1 successeur)
+  - **Kialo**
+     - Beaucoup de données (grands graphes: le plus grands possède 16644 sommets)
+     - Uniquement des DAGs
 
-	// Create nodes
-	LOAD CSV WITH HEADERS FROM "file:///wd_nodes.csv" AS row
-	  CREATE (:Argument {url: row.url, label: row.label, n: toInteger(row.n), origin: "wd"})
+#### Galerie
+
+	// WikiDebats (debat 44)
+	MATCH
+		(x)-[*0..]->(y) 
+	WHERE
+		y.origin="wd" and y.n=44
+	RETURN
+		x
 	  
-	// Create indexes
-	CREATE INDEX ON :Argument(n)
-	CREATE INDEX ON :Argument(origin)
-	
-	// Create 'Support' edges
-	LOAD CSV WITH HEADERS FROM "file:///wd_edges.csv" AS row
-	  WITH row WHERE toInteger(row.weight) > 0
-	  MATCH (n1:Argument {n: toInteger(row.n1), origin:"wd"}),
-	    (n2:Argument {n: toInteger(row.n2), origin: "wd"})
-	  WITH row, n1, n2
-	  CREATE (n1)-[:Support {w: toInteger(row.weight)}]->(n2)
+![Neo4j viz](images/wd_example.svg  "Neo4j: exemple WikiDebats")
 
-	// Create 'Attack' edges
-	LOAD CSV WITH HEADERS FROM "file:///wd_edges.csv" AS row
-	  WITH row WHERE toInteger(row.weight) < 0
-	  MATCH (n1:Argument {n: toInteger(row.n1), origin:"wd"}),
-	    (n2:Argument {n: toInteger(row.n2), origin:"wd"})
-	  WITH row, n1, n2
-	  CREATE (n1)-[:Attack {w: toInteger(row.weight)}]->(n2)
+	// Argüman: le plus grand graphe (argüman fr)
+	MATCH
+		(x)-[*0..]->(y) 
+	WHERE
+		y.origin="am-fr" and y.n=3 
+	RETURN
+		x
 
-Une fois cela fait, nous pouvons interroger la base et visualiser le résultat des requêtes dans le navigateur :
+![Cycles](images/am-fr_example.svg  "Neo4j: exemple Argüman")
 
+	// Kialo: un "petit" graphe
+	MATCH
+		(x)-[*0..]->(y) 
+	WHERE
+		y.origin="kl" and y.n=19 
+	RETURN
+		x
 
-	// Get debate list (nodes without outgoing edges)
-	MATCH (a:Argument {origin:"wd"}) WHERE NOT (a)-[]->(:Argument) 
-		  RETURN a.n, a.label
-
-	//a.n	a.label
-	//17	"Faut-il supprimer les notes à l'école ?"
-	//158	"Faut-il préserver les Murs à pêches de Montreuil ?"
-	//159	""
-	//160	"Le réchauffement climatique est-il dû à l'activité humaine ?"
-	//161	"Faut-il arrêter de manger des animaux ?"
-	//162	"Faut-il instaurer un revenu de base ?"
-	//163	"Faut-il instaurer un salaire à vie ?"
-	//[...]
-
-	// Get the #192 debate
-	MATCH (a:Argument)-[*]->(b:Argument {n: 192, origin: "wd"})
-	  RETURN a, b
-	  
-![Neo4j viz](images/n4j_example.svg  "Neo4j visualization")
-
-Le système de requêtage permet aussi de détecter des problèmes dans le graphe d'argumentation.
-
-	// Cycles
-	MATCH (n)-[*]->(m) WHERE n = m RETURN n, m
-
-![Cycles](images/n4j_cycles.svg  "Cycles in the argumentation graph")
-
-### Gephi
-
-Gephi permet la visualisation de la totalité du graphe.
-
-![Gephi viz](images/gephi_example.png  "Gephi visualization")
-Spatialisation (OpenOrd + Yifan Hu proportionnel) du graphe non pondéré (tous les arcs sont de poids égal à 1)
+![Cycles](images/kl_example.svg  "Neo4j: exemple Kialo")
 

@@ -6,6 +6,7 @@
 
   <!-- Root -->
   <xsl:template match="/">
+    <xsl:text>#name: sitemap&#xa;#description: wikidebats&#xa;</xsl:text>
     <xsl:apply-templates select="//div[@id='mw-content-text']//li/a" />
   </xsl:template>
 
