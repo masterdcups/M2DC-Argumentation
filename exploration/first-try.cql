@@ -104,15 +104,40 @@ ORDER BY
   origin, debate_id
 ;
 
-// Cycles
+// Cycles of size < 15
 MATCH
-  (x)-[*..5]->(x)
+  path=(x)-[*..15]->(x)
 RETURN
-  x
+  id(x) as node_id,
+  x.debates as debate_ids,
+  x.origin as website,
+  count(path) as n_cycles,
+  min(length(path)) as min_cycle_len,
+  max(length(path)) as max_cycle_len
+ORDER BY
+  website, 
+  node_id
 ;
 
 // Arguments that are in multiple debates
 MATCH
   (x)
 WHERE
-  size(x.debates) > 
+  size(x.debates) > 1
+WITH
+  x.debates as debate_ids,
+  count(x) as n_common_nodes
+UNWIND
+  debate_ids as idd
+MATCH
+  (d)
+WHERE
+  id(d) = idd
+RETURN 
+  debate_ids,
+  collect(d.origin) as debate_origins,
+  collect(d.label) as debate_labels,
+  n_common_nodes
+ORDER BY
+  debate_ids
+;

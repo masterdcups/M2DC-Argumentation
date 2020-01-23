@@ -1,0 +1,8 @@
+debate_ids,debate_origins,debate_labels,n_common_nodes
+[1214, 1224, 1225],["kl", "kl", "kl"],[" There is no free will.", " Fundamental rights should be extended to General AI.", "If Scientifically Possible, Should Humans Become Immortal?"],1163
+[1216, 1224],["kl", "kl"],[" All humans should be vegan.", " Fundamental rights should be extended to General AI."],2312
+[1224, 1225],["kl", "kl"],[" Fundamental rights should be extended to General AI.", "If Scientifically Possible, Should Humans Become Immortal?"],1
+[38732, 38739],["wd", "wd"],[" Faut-il instaurer un revenu de base ?", "Lénine est-il le précurseur de Staline ?"],2
+[38740, 38768],["wd", "wd"],[" La liberté d'expression doit-elle être limitée ?", " La liberté d'expression doit-elle être totale ?"],188
+[38744, 38767],["wd", "wd"],[" L'extrême-gauche doit-elle lutter contre l'islamophobie ?", " La gauche doit-elle défendre le port du voile islamique ?"],1
+[38761, 38766],["wd", "wd"],["Faut-il incinérer les déchets ménagers à La Réunion ?", " La classe ouvrière est-elle la seule classe révolutionnaire ?"],2
