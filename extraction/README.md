@@ -80,7 +80,8 @@ On peut utiliser le navigateur neo4j pour interroger et visualiser les données.
      - Uniquement de arbres (chaque argument à 0 ou 1 successeur)
   - **Kialo**
      - Beaucoup de données (grands graphes: le plus grands possède 16644 sommets)
-     - Uniquement des DAGs
+     - ~~Uniquement des DAGs~~  
+       Quelques grands cycles (plus de 10 arcs).
 
 #### Galerie
 
