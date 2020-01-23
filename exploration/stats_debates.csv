@@ -1,155 +1,155 @@
-origin	debate_id	debate_label	n_nodes	n_edges	max(outdeg)	max(indeg)	avg(x.depth)	max(x.depth)	n_descriptions	avg(size(x.description))	avg(size(x.label))	max(size(x.label))	stdev(size(x.label))
-"am-ch"	0	" 東南亞星期天向移工收費"	11	10	1	5	1.4545454545454546	3	0	0.0	38.90909090909091	80	20.46682459715989
-"am-ch"	1	" ＩＡＭＦＲＥＥ"	2	1	1	1	0.5	1	0	0.0	7.0	8	1.4142135623730951
-"am-ch"	2	" 加強英文 師資最重要"	6	5	1	3	1.3333333333333333	3	0	0.0	14.666666666666668	27	6.713171133426189
-"am-ch"	3	" 可開放原住民狩獵"	7	6	1	3	1.2857142857142858	2	0	0.0	23.714285714285715	44	14.138768047632789
-"am-ch"	4	" 兩韓會談將為東亞情勢帶來和平"	156	155	1	38	2.2115384615384603	5	0	0.0	150.80128205128204	300	61.11305439675372
-"am-ch"	5	" 美國應出兵攻打伊拉克。"	21	20	1	15	1.238095238095238	3	0	0.0	40.61904761904762	213	48.39367333699333
-"am-ch"	6	" 女性比男性優越"	53	52	1	20	1.9245283018867925	4	0	0.0	33.45283018867926	203	38.345878345224584
-"am-ch"	7	"全球暖化是個騙局(教學用)"	8	7	1	2	2.75	5	0	0.0	27.249999999999996	42	11.37352816223457
-"am-ch"	8	" 日本福島與周邊核災地區的食品是有疑慮的"	119	118	1	43	2.1932773109243695	6	0	0.0	153.99159663865547	300	53.65418078049232
-"am-ch"	9	" 日本由於安全原因禁用華為設備是合理的"	110	109	1	55	1.7909090909090912	5	0	0.0	144.20909090909095	294	45.407046992698874
-"am-ch"	10	"使對智障者的尊重從理想成為現實"	23	22	1	3	5.0	10	0	0.0	20.130434782608692	49	9.33860193851349
-"am-ch"	11	" 臺灣應使用核能發電"	15	14	1	5	1.7333333333333334	3	0	0.0	32.333333333333336	115	28.634810649843327
-"am-ch"	12	" 未來應全面使用電動車輛"	8	7	1	2	2.75	6	0	0.0	55.0	139	47.25009448214287
-"am-ch"	13	"我覺得伊朗女子完成鐵人三項是一件令人佩服的事"	10	9	1	7	1.1	2	0	0.0	24.300000000000004	83	21.42195135836136
-"am-ch"	14	" 香港應禁止食用魚翅。"	31	30	1	18	1.3870967741935485	3	0	0.0	44.74193548387097	205	46.87072131009968
-"am-ch"	15	" 先工作再留學比畢業後直接留學好"	16	15	1	6	1.625	3	0	0.0	23.750000000000004	42	10.08959860450355
-"am-ch"	16	" 限制使用一次性塑膠用具"	16	15	1	7	1.5625	3	0	0.0	25.187500000000004	57	13.799607482340456
-"am-ch"	17	" 以核養綠的公投應該同意嗎？"	12	11	1	5	1.4166666666666667	2	0	0.0	69.50000000000001	240	64.35766536248103
-"am-ch"	18	" 中興大學百年校慶的天鵝意象是最佳選擇"	90	89	1	53	1.4777777777777774	3	0	0.0	144.94444444444446	279	40.940175897239115
-"am-ch"	19	" 中油應興建第三天然氣接收站於觀塘地區"	3	2	1	2	0.6666666666666666	1	0	0.0	86.33333333333334	227	121.85784067237256
-"am-en"	729	" Until Peace can be achieved with the Middle East, The United States should support the Middle East."	19	18	1	4	2.3684210526315788	5	0	0.0	57.00000000000001	111	26.909312720898523
-"am-en"	730	" Congress has the implied power to establish a bank and federal laws are supreme over state laws"	11	10	1	5	1.4545454545454546	3	0	0.0	84.36363636363637	107	25.04505031846703
-"am-en"	731	" Congress has the power to regulate employment conditions"	9	8	1	2	2.0	4	0	0.0	179.55555555555554	290	68.33577231419704
-"am-en"	732	" Congress passing the Gun-Free School Zones Act of 1990 did not count as a legislative activity that falls under the Commerce Clause"	10	9	1	2	2.0	4	0	0.0	136.2	227	54.75561868683229
-"am-en"	733	" Consideration of race violated the Equal Protection Clause of the 14th Amendment. "	7	6	1	2	1.7142857142857142	3	0	0.0	125.0	181	32.78210894171799
-"am-en"	734	" Denial of Unemployment Benefits violates the First Amendment "	10	9	1	3	1.7	3	0	0.0	93.2	167	38.68332974292673
-"am-en"	735	" Schenck's conviction under the Espionage Act did not violate his First Amendment right of freedom of speech"	10	9	1	2	2.1	4	0	0.0	128.0	205	41.97353663652585
-"am-en"	736	"Donald Trump would make a great president"	12	11	1	4	1.8333333333333333	4	0	0.0	199.25	289	79.13638974465655
-"am-en"	737	" Louisiana law does not infringe upon the 14th Amendment"	12	11	1	3	3.9166666666666665	7	0	0.0	91.75	137	26.938060266268074
-"am-en"	738	" Madisons refusal to deliver is illegal and Marbury's jump straight to the Supreme Court is unconstitutional"	11	10	1	3	2.090909090909091	4	0	0.0	91.81818181818183	143	28.241169174870162
-"am-en"	739	"New Jersey was not in violation of the Establishment Clause"	9	8	1	2	2.4444444444444446	4	0	0.0	86.33333333333333	162	31.29696470905765
-"am-en"	740	" Protest and hate speech is shielded by The First Amendment (Snyder v. Phelps)"	8	7	1	3	1.75	4	0	0.0	122.24999999999999	261	66.38147331899165
-"am-en"	741	" The U.S Southern will be build"	2	1	1	1	0.5	1	0	0.0	129.0	227	138.59292911256333
-"am-en"	742	"Separate educational facilities for different races are inherently unequal."	12	11	1	2	2.9166666666666665	6	0	0.0	87.75	120	21.955015993451866
-"am-en"	743	" Sherbert’s Ability to Freely Practice Her Faith Was Hindered by the State’s Restrictions For Unemployment Compensation."	9	8	1	5	1.3333333333333333	3	0	0.0	122.88888888888889	191	30.600018155404925
-"am-en"	744	" Slaves should be freed"	4	3	1	2	1.0	2	0	0.0	53.0	78	25.179356624028344
-"am-en"	745	" The President of the United States has no immunity for civil law litigation for actions done before taking office or unrelated to taking office. Vote (9-0)"	5	4	1	2	1.4	3	0	0.0	187.0	223	27.52271788904577
-"am-en"	746	" The denial of unemployment compensation infringed upon the Sherbert's First Amendment right to freely exercise her religion. "	9	8	1	5	1.3333333333333333	3	0	0.0	139.66666666666666	209	34.05143168796284
-"am-en"	747	" There are ghosts in this world."	5	4	1	4	0.8	1	0	0.0	65.6	124	38.429155598321444
-"am-en"	748	" The War in Iraq can become a Catalyst for Progress in America"	10	9	1	4	1.4	2	0	0.0	58.99999999999999	114	28.998084227908727
-"am-es"	913	" El objetivo de nuestra especie podría ser la investigación"	4	3	1	1	1.5	3	0	0.0	214.75	293	109.1860033765012
-"am-es"	914	" El sentido de la vida es 42"	5	4	1	3	1.0	2	0	0.0	40.2	71	20.801442257689732
-"am-es"	915	" El sistema democrático representativo es capaz de proveer solución a todos los desafíos existenciales sociales"	31	30	1	4	2.903225806451612	6	0	0.0	147.93548387096777	285	71.10458751438895
-"am-es"	916	" Hay vida después de la muerte"	5	4	1	2	1.2	2	0	0.0	115.0	296	105.60776486603625
-"am-es"	917	" La acción colectiva esta orientada por relaciones sociales"	4	3	1	2	1.25	2	0	0.0	95.0	244	99.84321041846894
-"am-es"	918	" La lectura es una actividad que requiere esfuerzo y concentración"	2	1	1	1	0.5	1	0	0.0	77.0	88	15.556349186104045
-"am-es"	919	" La Renta Básica Universal Incondicional es aplicable en España"	9	8	1	6	1.1111111111111112	2	0	0.0	64.55555555555556	109	33.166666666666664
-"am-es"	920	"La tierra es plana"	3	2	1	2	0.6666666666666666	1	0	0.0	76.33333333333334	145	64.12747721011121
-"am-es"	921	" Vivir es ir perdiendo terreno."	4	3	1	2	1.25	2	0	0.0	59.5	78	21.79449471770337
-"am-fr"	980	" Arguman devrait créer un espace privé"	4	3	1	2	1.0	2	0	0.0	132.0	219	74.03152481657168
-"am-fr"	981	" Créer une liste de diffusion en plus de la liste de discussion pour l'organisation du processus constituant inter-ville"	11	10	1	4	1.909090909090909	4	0	0.0	189.36363636363637	293	71.48044869371307
-"am-fr"	982	" En grammaire, le «masculin» doit être renommé «neutre»."	4	3	1	2	1.0	2	0	0.0	107.0	152	39.5558676641869
-"am-fr"	983	" Il faudrait supprimer les cotisations retraites pour les jeunes de moins de 30 ans."	18	17	1	4	2.5555555555555554	5	0	0.0	133.38888888888889	244	56.80424475531932
-"am-fr"	984	" Il faut interdire la pratique du « lancer de nain »"	4	3	1	2	1.0	2	0	0.0	79.5	106	22.18858565419016
-"am-fr"	985	" Il n'existe pas d'outils numérique permettant de créer un thème / problématique / question, de permettre à tous de particper et de mettre en avant les interventions les plus pertinentes puis de prendre des décisions à partir de toute la participation"	5	4	1	4	0.8	1	0	0.0	168.4	287	94.58752560459544
-"am-fr"	986	" La liste de discussion pour l'organisation du processus constituant inter-ville doit être publique"	9	8	1	4	1.4444444444444444	3	0	0.0	144.22222222222223	277	89.73262753560961
-"am-fr"	987	"l&#39;apéro de rentrée existe"	7	6	1	4	1.1428571428571428	2	0	0.0	46.85714285714286	85	22.79202032458269
-"am-fr"	988	" Le café est bon pour la santé"	4	3	1	2	1.0	2	0	0.0	81.25	198	79.92235815673442
-"am-fr"	989	" L'enfer est pavé de bonnes intentions"	8	7	1	3	1.625	3	0	0.0	145.875	289	79.85064182584884
-"am-fr"	990	"Les relations entre les hommes sont conflictuelles"	1	0	0	0	0.0	0	0	0.0	50.0	50	0.0
-"am-pl"	1055	" Należy zalegalizować eutanazję."	19	18	1	4	2.3684210526315788	6	0	0.0	101.52631578947368	258	64.69275111466219
-"am-tr"	1074	" Allah'ın, insanı ilk yarattığı andan itibaren, o kişinin ahiret gününde cennet/cehenneme gideceğini bilir olması mantıksızdır."	13	12	1	5	1.6153846153846154	3	0	0.0	225.07692307692307	298	62.574570898064685
-"am-tr"	1075	" Araç kullanırken sigara içmek cezalandırılmalıdır."	4	3	1	2	1.0	2	0	0.0	86.75	135	37.54441813816447
-"am-tr"	1076	" Argüman'da, safsata tipleri ve açıklamaları çeşitlendirilmelidir"	2	1	1	1	0.5	1	0	0.0	163.5	262	139.30003589374985
-"am-tr"	1077	" Bilinç, zeka için gereksiz bir yetidir"	2	1	1	1	0.5	1	0	0.0	122.5	206	118.08683245815344
-"am-tr"	1078	" Bir fikir işçisinin gerçek düşmanı hemfikirleridir"	6	5	1	4	1.0	2	0	0.0	155.5	294	97.8830935350942
-"am-tr"	1079	" Depresyon içedönük safsataların sonucudur."	3	2	1	1	1.0	2	0	0.0	73.33333333333333	126	45.78573285788198
-"am-tr"	1080	" Devlet, sisteme giren paranın kaynağını sorgulamamalıdır."	2	1	1	1	0.5	1	0	0.0	170.5	283	159.0990257669732
-"am-tr"	1081	"Fotoğraf makinelerinin kaydedebildiği gerçeklikte, realist çizimler yapmak korkunç bir emek israfıdır."	8	7	1	6	1.0	2	0	0.0	127.62499999999999	247	66.99240362053852
-"am-tr"	1082	" Geleceğin yeni dini Dataizm olacaktır"	2	1	1	1	0.5	1	0	0.0	159.5	281	171.82694782833104
-"am-tr"	1083	" Havyanların hayatı da insanlarınki kadar değerlidir"	10	9	1	5	1.5	3	0	0.0	173.79999999999995	294	80.07329975299714
-"am-tr"	1084	"Hiçbir bilgisayar programı kendi başına bir sisteme zihin veremez."	6	5	1	3	1.1666666666666667	2	0	0.0	109.83333333333334	289	90.41994617708345
-"am-tr"	1085	" Hümanizm önümüzdeki 200 yıl içinde yok olacaktır."	3	2	1	1	1.0	2	0	0.0	96.0	201	91.16468614545876
-"am-tr"	1086	" İstanbul suriçi araç trafiğine kapatılmalıdır"	3	2	1	2	0.6666666666666666	1	0	0.0	129.33333333333334	277	128.23546051437307
-"am-tr"	1087	"Kanal İstanbul projesinden vazgeçilmelidir"	8	7	1	5	1.125	2	0	0.0	94.75	191	50.95586325438909
-"am-tr"	1088	" Sanat Eleştirilemez"	8	7	1	6	1.0	2	0	0.0	134.125	296	98.60083671044582
-"am-tr"	1089	" tanrının varlığını kanıtlamak telaşı gereksizdir."	11	10	1	4	1.5454545454545454	3	0	0.0	107.0909090909091	289	90.97851894315993
-"am-tr"	1090	" Tanrı söylediği için kötüdür"	3	2	1	2	0.6666666666666666	1	0	0.0	111.66666666666667	277	143.18286675902718
-"am-tr"	1091	" Vicdan güçlüleri korkutmak için düşünülmüş, korkakların kullandığı bir sözcükten başka bir şey değildir."	8	7	1	3	1.5	3	0	0.0	122.375	289	76.76297005346113
-"am-tr"	1092	" Yalan söyleme olmadan bilim olmaz"	11	10	1	5	1.8181818181818183	4	0	0.0	130.36363636363635	293	73.26018390268035
-"am-tr"	1093	" Yapay zeka insanın varoluş anlamını tehdit etmektedir"	6	5	1	3	1.1666666666666667	2	0	0.0	142.83333333333331	297	104.56847836067361
-"kl"	1212	" Wealthy countries should provide citizens with a universal basic income (UBI)."	3493	3767	8	20	6.12224448897795	17	0	0.0	196.23790438018875	501	103.21114228414473
-"kl"	1213	" The United Kingdom should remain a member of the European Union."	409	419	2	18	3.0171149144254286	7	0	0.0	150.4669926650367	497	81.5801332926198
-"kl"	1214	" There is no free will."	1164	1280	5	26	4.1864261168384855	11	0	0.0	170.54381443298962	498	89.58268955445996
-"kl"	1215	" Donald Trump should be impeached."	906	966	7	15	4.124724061810149	9	0	0.0	169.65231788079478	498	87.03794485998746
-"kl"	1216	" All humans should be vegan."	4611	4898	4	23	10.469312513554542	29	0	0.0	182.38972023422303	501	100.13783415486662
-"kl"	1217	" Governments should not set policies that limit free speech."	651	715	6	22	3.377880184331797	7	0	0.0	159.69278033794166	501	87.60883829726481
-"kl"	1218	" Hate speech should be legally protected."	529	556	3	17	3.4706994328922547	8	0	0.0	177.82986767485835	498	87.52846601996524
-"kl"	1219	"Should Bullfighting be Banned?"	1294	1411	5	23	5.653013910355486	16	0	0.0	165.41499227202488	469	76.21501593278647
-"kl"	1220	" The Bible does not support the conclusion that homosexuality is a sin against God."	175	179	2	11	3.222857142857141	7	0	0.0	263.47428571428566	499	139.98090252104944
-"kl"	1221	" Judges should be appointed rather than elected."	316	353	3	12	3.3481012658227853	8	0	0.0	178.62025316455708	494	94.25279130016366
-"kl"	1222	"NFL Player Protests: Should NFL Players Stand or Kneel for the National Anthem?"	769	838	5	11	5.30819245773732	11	0	0.0	163.4330299089727	497	90.53257356528961
-"kl"	1223	" Voters in the UK should have a final vote on the Brexit deal."	521	596	6	13	3.5777351247600775	9	0	0.0	191.46641074856035	499	91.43822696422832
-"kl"	1224	" Fundamental rights should be extended to General AI."	17915	19450	16	33	14.085738208205454	30	0	0.0	172.5524420876351	501	96.95993766577143
-"kl"	1225	"If Scientifically Possible, Should Humans Become Immortal?"	1537	1661	5	26	3.869876382563435	11	0	0.0	163.7846454131424	498	86.50731437957432
-"kl"	1226	" Marvel Universe is Better than DC Universe."	106	107	2	20	2.3396226415094348	5	0	0.0	99.33962264150945	445	65.59818330708237
-"kl"	1227	" Conscientious objection to abortion should be banned"	836	1027	12	16	3.976076555023921	9	0	0.0	201.03827751196175	497	98.38358739954717
-"kl"	1228	" Fair trade products cause more good than harm."	253	263	2	8	3.9841897233201573	8	0	0.0	157.5691699604743	396	58.53448446115928
-"kl"	1229	" We should have an opt-out system for organ donation."	62	63	2	11	2.14516129032258	4	0	0.0	148.88709677419354	483	91.04261384481114
-"kl"	1230	" Barack Obama was a good President."	628	658	3	9	4.643312101910832	9	0	0.0	153.6878980891719	366	59.266877124778304
-"kl"	1231	" Journalists have a moral obligation to display violent images."	258	289	3	11	3.6899224806201536	8	0	0.0	163.25581395348846	335	59.94534203934679
-"kl"	1232	" Deliberately not preventing someones death is ethically equivalent to killing them."	256	279	4	8	3.64453125	7	0	0.0	170.43359374999997	435	75.53866354764112
-"kl"	1233	" Teachers should not be allowed to wear religious symbols at school"	282	290	4	13	3.170212765957448	9	0	0.0	186.4468085106383	489	94.6888085795
-"kl"	1234	" Hungary should leave the European Union."	715	791	3	13	4.241958041958041	10	0	0.0	158.80000000000007	500	92.65155953676037
-"kl"	1235	" Governments should fund security for places of worship."	291	305	3	8	4.0103092783505145	8	0	0.0	168.00343642611685	410	67.34304860226338
-"kl"	1236	" Fracking should be banned."	866	956	3	12	4.97690531177829	12	0	0.0	148.4191685912239	486	81.38275258473074
-"kl"	1237	""	299	343	3	8	3.6989966555183957	8	0	0.0	137.9966555183947	494	69.04543287471985
-"wd"	38729	" Faut-il préserver les Murs à pêches de Montreuil ?"	44	44	2	12	1.7500000000000002	3	28	275.4090909090909	67.88636363636363	133	29.46437810589287
-"wd"	38730	" Le réchauffement climatique est-il dû à l'activité humaine ?"	47	46	1	8	2.191489361702127	4	33	374.8936170212766	81.14893617021274	147	24.393494075090786
-"wd"	38731	" Faut-il arrêter de manger des animaux ?"	80	80	2	20	1.9124999999999999	4	51	181.3125	63.84999999999998	154	27.758497387560265
-"wd"	38732	" Faut-il instaurer un revenu de base ?"	154	175	7	12	2.707792207792208	5	105	404.0194805194804	57.16233766233765	168	28.064694350899707
-"wd"	38733	" Faut-il instaurer un salaire à vie ?"	9	8	1	6	1.1111111111111112	2	8	540.0	62.111111111111114	132	29.400018896441395
-"wd"	38734	" Le néolibéralisme va-t-il s'effondrer ?"	1	0	0	0	0.0	0	0	46862.0	40.0	40	0.0
-"wd"	38735	" Pour ou contre le capitalisme ?"	104	104	2	16	2.0096153846153846	4	13	58.711538461538446	53.25961538461538	121	16.25524273443769
-"wd"	38736	"Faut-il supprimer les notes à l'école ?"	25	25	2	11	1.4800000000000002	2	6	77.64000000000001	46.92	91	16.474525789836868
-"wd"	38737	" La méthode Céline Alvarez révolutionne-t-elle l'école maternelle ?"	22	21	1	11	1.4545454545454546	3	7	62.63636363636364	58.54545454545454	103	20.950570563266453
-"wd"	38738	" L'Europe occidentale est-elle en déclin ?"	117	119	3	15	2.982905982905981	5	38	516.6068376068375	49.196581196581185	155	26.77339109955337
-"wd"	38739	"Lénine est-il le précurseur de Staline ?"	212	214	2	13	2.768867924528302	6	28	89.78301886792451	67.66981132075472	217	41.45967530916617
-"wd"	38740	" La liberté d'expression doit-elle être limitée ?"	189	210	4	11	2.5502645502645507	4	157	372.13756613756624	56.38095238095237	157	20.312265897645602
-"wd"	38741	" Sommes-nous libres de nos décisions ?"	19	19	2	8	1.473684210526316	2	16	266.63157894736844	61.68421052631578	99	23.238025904822816
-"wd"	38743	" Le Front national est-il un parti fasciste ?"	58	66	6	15	1.7241379310344829	3	10	99.17241379310347	71.05172413793103	140	25.3677668206412
-"wd"	38744	" L'extrême-gauche doit-elle lutter contre l'islamophobie ?"	33	38	2	8	2.0606060606060606	3	1	55.606060606060595	66.4848484848485	115	24.589277658312287
-"wd"	38745	" Faut-il généraliser le vote électronique ?"	92	95	2	11	2.2717391304347823	4	14	134.19565217391295	63.42391304347825	126	19.178876713518846
-"wd"	38746	" Pour ou contre le projet de loi Collomb Asile et immigration ?"	23	23	2	16	1.217391304347826	2	22	668.4782608695651	87.7391304347826	196	39.26855946996082
-"wd"	38747	" Pour ou contre le communisme ?"	49	48	1	10	2.1224489795918364	4	3	2.9387755102040805	44.12244897959184	96	14.436113069113087
-"wd"	38748	" Faut-il accueillir davantage de migrants ?"	188	193	2	12	2.46276595744681	4	50	93.781914893617	63.31914893617023	127	22.71267297590312
-"wd"	38749	" Dieu existe-t-il ?"	133	132	1	132	0.9924812030075187	1	1	0.7142857142857147	0.14285714285714293	19	1.6475089420958267
-"wd"	38750	" La croyance en Dieu est-elle bénéfique ?"	26	25	1	25	0.9615384615384615	1	1	1.192307692307692	57.42307692307691	105	21.637325300365713
-"wd"	38751	" Les religions se rejoignent-elles ?"	68	71	2	12	2.0294117647058822	3	56	326.86764705882354	53.955882352941174	134	19.870050832983683
-"wd"	38752	" Une spiritualité rationnelle est-elle possible ?"	17	16	1	16	0.9411764705882352	1	1	51.41176470588236	51.76470588235294	73	10.946057576615804
-"wd"	38753	" Faut-il se faire vacciner ?"	39	39	2	8	2.128205128205128	4	10	75.10256410256412	56.99999999999999	161	26.5012412817529
-"wd"	38754	"Faut-il dépénaliser le cannabis ?"	3	2	1	2	0.6666666666666666	1	1	10762.333333333332	26.666666666666664	47	24.13158373031769
-"wd"	38755	" Les footballeurs professionnels sont-ils trop payés ?"	37	36	1	13	1.756756756756757	3	7	26.05405405405406	60.162162162162154	116	23.050082566149435
-"wd"	38756	" Faut-il préférer les logiciels libres ?"	3	2	1	2	0.6666666666666666	1	2	316.0	46.333333333333336	52	6.027713773341708
-"wd"	38757	" Le logiciel libre est-il en déclin ?"	18	17	1	7	1.5555555555555554	3	9	91.72222222222223	59.0	85	15.548784707569686
-"wd"	38758	" Faut-il boycotter Facebook ?"	19	19	2	11	1.4210526315789473	3	9	2216.0526315789475	58.73684210526315	106	21.018093013357056
-"wd"	38759	" Dieu existe-t-il ? (nouvelle version)"	148	158	4	19	2.533783783783783	5	33	65.54729729729729	58.520270270270274	140	24.174104769836994
-"wd"	38760	" Espaces ou tabulations ?"	4	3	1	3	0.75	1	1	82.25	58.5	103	32.96968304366907
-"wd"	38761	"Faut-il incinérer les déchets ménagers à La Réunion ?"	52	58	3	8	2.2307692307692313	4	30	202.26923076923072	41.63461538461539	106	18.881497163712634
-"wd"	38762	" Faut-il légaliser le cannabis ?"	81	87	2	11	2.197530864197531	4	4	58.67901234567897	70.28395061728394	188	34.80202385203382
-"wd"	38763	"Faut-il privatiser ADP ?"	38	37	1	7	2.1052631578947367	4	1	65.23684210526315	69.15789473684211	147	26.380302147511987
-"wd"	38764	" Faut-il réguler l'anonymat sur Internet ?"	3	2	1	2	0.6666666666666666	1	2	366.33333333333337	37.666666666666664	44	9.29157324317757
-"wd"	38765	" Faut-il supprimer les frontières ? (nouveau)"	7	6	1	4	1.1428571428571428	2	3	915.5714285714284	44.42857142857143	60	15.262777629002558
-"wd"	38766	" La classe ouvrière est-elle la seule classe révolutionnaire ?"	176	192	3	16	2.7670454545454546	6	1	0.42613636363636415	74.05681818181824	170	30.782131349040966
-"wd"	38767	" La gauche doit-elle défendre le port du voile islamique ?"	63	84	5	14	2.301587301587302	4	1	0.49206349206349176	72.34920634920634	145	23.809159751440966
-"wd"	38768	" La liberté d'expression doit-elle être totale ?"	189	210	4	11	2.5502645502645507	4	157	372.13756613756624	56.37566137566137	157	20.314328875745748
-"wd"	38769	" La religion est-elle compatible avec le marxisme ?"	59	58	1	15	2.0677966101694922	3	5	3.7627118644067785	48.91525423728814	75	12.648140296165693
-"wd"	38770	" Le nationalisme est-il dangeureux ?"	2	1	1	1	0.5	1	1	15.5	42.5	49	9.192388155425117
-"wd"	38771	" Le nucléaire est-il une énergie d'avenir ?"	14	13	1	13	0.9285714285714285	1	4	142.85714285714286	76.28571428571429	120	19.451828355546077
-"wd"	38772	" Les biens communs sont-ils un modèle d'avenir ?"	1	0	0	0	0.0	0	0	31.0	48.0	48	0.0
-"wd"	38773	" Les hommes doivent-ils rejoindre le combat féministe ?"	76	90	4	9	2.4473684210526314	4	15	35.355263157894726	64.86842105263159	107	17.578276066602328
-"wd"	38774	" Peut-on changer le monde sans prendre le pouvoir ?"	5	5	2	4	0.8	1	4	190.4	67.0	80	12.864680330268607
-"wd"	38775	" Qui de jésus et de Mohammed est le sauveur de l'humanité tout entière ?"	1	0	0	0	0.0	0	0	31.0	72.0	72	0.0
-"wd"	38776	" Wikipédia est-elle fiable ?"	3	2	1	2	0.6666666666666666	1	1	88.0	40.333333333333336	48	10.785793124908958
+origin,debate_id,debate_label,n_nodes,n_edges,max(outdeg),max(indeg),avg(x.depth),max(x.depth),n_descriptions,avg(size(x.description)),avg(size(x.label)),max(size(x.label)),stdev(size(x.label))
+"am-ch",0," 東南亞星期天向移工收費",11,10,1,5,1.4545454545454546,3,0,0.0,38.90909090909091,80,20.46682459715989
+"am-ch",1," ＩＡＭＦＲＥＥ",2,1,1,1,0.5,1,0,0.0,7.0,8,1.4142135623730951
+"am-ch",2," 加強英文 師資最重要",6,5,1,3,1.3333333333333333,3,0,0.0,14.666666666666668,27,6.713171133426189
+"am-ch",3," 可開放原住民狩獵",7,6,1,3,1.2857142857142858,2,0,0.0,23.714285714285715,44,14.138768047632789
+"am-ch",4," 兩韓會談將為東亞情勢帶來和平",156,155,1,38,2.2115384615384603,5,0,0.0,150.80128205128204,300,61.11305439675372
+"am-ch",5," 美國應出兵攻打伊拉克。",21,20,1,15,1.238095238095238,3,0,0.0,40.61904761904762,213,48.39367333699333
+"am-ch",6," 女性比男性優越",53,52,1,20,1.9245283018867925,4,0,0.0,33.45283018867926,203,38.345878345224584
+"am-ch",7,"全球暖化是個騙局(教學用)",8,7,1,2,2.75,5,0,0.0,27.249999999999996,42,11.37352816223457
+"am-ch",8," 日本福島與周邊核災地區的食品是有疑慮的",119,118,1,43,2.1932773109243695,6,0,0.0,153.99159663865547,300,53.65418078049232
+"am-ch",9," 日本由於安全原因禁用華為設備是合理的",110,109,1,55,1.7909090909090912,5,0,0.0,144.20909090909095,294,45.407046992698874
+"am-ch",10,"使對智障者的尊重從理想成為現實",23,22,1,3,5.0,10,0,0.0,20.130434782608692,49,9.33860193851349
+"am-ch",11," 臺灣應使用核能發電",15,14,1,5,1.7333333333333334,3,0,0.0,32.333333333333336,115,28.634810649843327
+"am-ch",12," 未來應全面使用電動車輛",8,7,1,2,2.75,6,0,0.0,55.0,139,47.25009448214287
+"am-ch",13,"我覺得伊朗女子完成鐵人三項是一件令人佩服的事",10,9,1,7,1.1,2,0,0.0,24.300000000000004,83,21.42195135836136
+"am-ch",14," 香港應禁止食用魚翅。",31,30,1,18,1.3870967741935485,3,0,0.0,44.74193548387097,205,46.87072131009968
+"am-ch",15," 先工作再留學比畢業後直接留學好",16,15,1,6,1.625,3,0,0.0,23.750000000000004,42,10.08959860450355
+"am-ch",16," 限制使用一次性塑膠用具",16,15,1,7,1.5625,3,0,0.0,25.187500000000004,57,13.799607482340456
+"am-ch",17," 以核養綠的公投應該同意嗎？",12,11,1,5,1.4166666666666667,2,0,0.0,69.50000000000001,240,64.35766536248103
+"am-ch",18," 中興大學百年校慶的天鵝意象是最佳選擇",90,89,1,53,1.4777777777777774,3,0,0.0,144.94444444444446,279,40.940175897239115
+"am-ch",19," 中油應興建第三天然氣接收站於觀塘地區",3,2,1,2,0.6666666666666666,1,0,0.0,86.33333333333334,227,121.85784067237256
+"am-en",729," Until Peace can be achieved with the Middle East, The United States should support the Middle East.",19,18,1,4,2.3684210526315788,5,0,0.0,57.00000000000001,111,26.909312720898523
+"am-en",730," Congress has the implied power to establish a bank and federal laws are supreme over state laws",11,10,1,5,1.4545454545454546,3,0,0.0,84.36363636363637,107,25.04505031846703
+"am-en",731," Congress has the power to regulate employment conditions",9,8,1,2,2.0,4,0,0.0,179.55555555555554,290,68.33577231419704
+"am-en",732," Congress passing the Gun-Free School Zones Act of 1990 did not count as a legislative activity that falls under the Commerce Clause",10,9,1,2,2.0,4,0,0.0,136.2,227,54.75561868683229
+"am-en",733," Consideration of race violated the Equal Protection Clause of the 14th Amendment. ",7,6,1,2,1.7142857142857142,3,0,0.0,125.0,181,32.78210894171799
+"am-en",734," Denial of Unemployment Benefits violates the First Amendment ",10,9,1,3,1.7,3,0,0.0,93.2,167,38.68332974292673
+"am-en",735," Schenck's conviction under the Espionage Act did not violate his First Amendment right of freedom of speech",10,9,1,2,2.1,4,0,0.0,128.0,205,41.97353663652585
+"am-en",736,"Donald Trump would make a great president",12,11,1,4,1.8333333333333333,4,0,0.0,199.25,289,79.13638974465655
+"am-en",737," Louisiana law does not infringe upon the 14th Amendment",12,11,1,3,3.9166666666666665,7,0,0.0,91.75,137,26.938060266268074
+"am-en",738," Madisons refusal to deliver is illegal and Marbury's jump straight to the Supreme Court is unconstitutional",11,10,1,3,2.090909090909091,4,0,0.0,91.81818181818183,143,28.241169174870162
+"am-en",739,"New Jersey was not in violation of the Establishment Clause",9,8,1,2,2.4444444444444446,4,0,0.0,86.33333333333333,162,31.29696470905765
+"am-en",740," Protest and hate speech is shielded by The First Amendment (Snyder v. Phelps)",8,7,1,3,1.75,4,0,0.0,122.24999999999999,261,66.38147331899165
+"am-en",741," The U.S Southern will be build",2,1,1,1,0.5,1,0,0.0,129.0,227,138.59292911256333
+"am-en",742,"Separate educational facilities for different races are inherently unequal.",12,11,1,2,2.9166666666666665,6,0,0.0,87.75,120,21.955015993451866
+"am-en",743," Sherbert’s Ability to Freely Practice Her Faith Was Hindered by the State’s Restrictions For Unemployment Compensation.",9,8,1,5,1.3333333333333333,3,0,0.0,122.88888888888889,191,30.600018155404925
+"am-en",744," Slaves should be freed",4,3,1,2,1.0,2,0,0.0,53.0,78,25.179356624028344
+"am-en",745," The President of the United States has no immunity for civil law litigation for actions done before taking office or unrelated to taking office. Vote (9-0)",5,4,1,2,1.4,3,0,0.0,187.0,223,27.52271788904577
+"am-en",746," The denial of unemployment compensation infringed upon the Sherbert's First Amendment right to freely exercise her religion. ",9,8,1,5,1.3333333333333333,3,0,0.0,139.66666666666666,209,34.05143168796284
+"am-en",747," There are ghosts in this world.",5,4,1,4,0.8,1,0,0.0,65.6,124,38.429155598321444
+"am-en",748," The War in Iraq can become a Catalyst for Progress in America",10,9,1,4,1.4,2,0,0.0,58.99999999999999,114,28.998084227908727
+"am-es",913," El objetivo de nuestra especie podría ser la investigación",4,3,1,1,1.5,3,0,0.0,214.75,293,109.1860033765012
+"am-es",914," El sentido de la vida es 42",5,4,1,3,1.0,2,0,0.0,40.2,71,20.801442257689732
+"am-es",915," El sistema democrático representativo es capaz de proveer solución a todos los desafíos existenciales sociales",31,30,1,4,2.903225806451612,6,0,0.0,147.93548387096777,285,71.10458751438895
+"am-es",916," Hay vida después de la muerte",5,4,1,2,1.2,2,0,0.0,115.0,296,105.60776486603625
+"am-es",917," La acción colectiva esta orientada por relaciones sociales",4,3,1,2,1.25,2,0,0.0,95.0,244,99.84321041846894
+"am-es",918," La lectura es una actividad que requiere esfuerzo y concentración",2,1,1,1,0.5,1,0,0.0,77.0,88,15.556349186104045
+"am-es",919," La Renta Básica Universal Incondicional es aplicable en España",9,8,1,6,1.1111111111111112,2,0,0.0,64.55555555555556,109,33.166666666666664
+"am-es",920,"La tierra es plana",3,2,1,2,0.6666666666666666,1,0,0.0,76.33333333333334,145,64.12747721011121
+"am-es",921," Vivir es ir perdiendo terreno.",4,3,1,2,1.25,2,0,0.0,59.5,78,21.79449471770337
+"am-fr",980," Arguman devrait créer un espace privé",4,3,1,2,1.0,2,0,0.0,132.0,219,74.03152481657168
+"am-fr",981," Créer une liste de diffusion en plus de la liste de discussion pour l'organisation du processus constituant inter-ville",11,10,1,4,1.909090909090909,4,0,0.0,189.36363636363637,293,71.48044869371307
+"am-fr",982," En grammaire, le «masculin» doit être renommé «neutre».",4,3,1,2,1.0,2,0,0.0,107.0,152,39.5558676641869
+"am-fr",983," Il faudrait supprimer les cotisations retraites pour les jeunes de moins de 30 ans.",18,17,1,4,2.5555555555555554,5,0,0.0,133.38888888888889,244,56.80424475531932
+"am-fr",984," Il faut interdire la pratique du « lancer de nain »",4,3,1,2,1.0,2,0,0.0,79.5,106,22.18858565419016
+"am-fr",985," Il n'existe pas d'outils numérique permettant de créer un thème / problématique / question, de permettre à tous de particper et de mettre en avant les interventions les plus pertinentes puis de prendre des décisions à partir de toute la participation",5,4,1,4,0.8,1,0,0.0,168.4,287,94.58752560459544
+"am-fr",986," La liste de discussion pour l'organisation du processus constituant inter-ville doit être publique",9,8,1,4,1.4444444444444444,3,0,0.0,144.22222222222223,277,89.73262753560961
+"am-fr",987,"l&#39;apéro de rentrée existe",7,6,1,4,1.1428571428571428,2,0,0.0,46.85714285714286,85,22.79202032458269
+"am-fr",988," Le café est bon pour la santé",4,3,1,2,1.0,2,0,0.0,81.25,198,79.92235815673442
+"am-fr",989," L'enfer est pavé de bonnes intentions",8,7,1,3,1.625,3,0,0.0,145.875,289,79.85064182584884
+"am-fr",990,"Les relations entre les hommes sont conflictuelles",1,0,0,0,0.0,0,0,0.0,50.0,50,0.0
+"am-pl",1055," Należy zalegalizować eutanazję.",19,18,1,4,2.3684210526315788,6,0,0.0,101.52631578947368,258,64.69275111466219
+"am-tr",1074," Allah'ın, insanı ilk yarattığı andan itibaren, o kişinin ahiret gününde cennet/cehenneme gideceğini bilir olması mantıksızdır.",13,12,1,5,1.6153846153846154,3,0,0.0,225.07692307692307,298,62.574570898064685
+"am-tr",1075," Araç kullanırken sigara içmek cezalandırılmalıdır.",4,3,1,2,1.0,2,0,0.0,86.75,135,37.54441813816447
+"am-tr",1076," Argüman'da, safsata tipleri ve açıklamaları çeşitlendirilmelidir",2,1,1,1,0.5,1,0,0.0,163.5,262,139.30003589374985
+"am-tr",1077," Bilinç, zeka için gereksiz bir yetidir",2,1,1,1,0.5,1,0,0.0,122.5,206,118.08683245815344
+"am-tr",1078," Bir fikir işçisinin gerçek düşmanı hemfikirleridir",6,5,1,4,1.0,2,0,0.0,155.5,294,97.8830935350942
+"am-tr",1079," Depresyon içedönük safsataların sonucudur.",3,2,1,1,1.0,2,0,0.0,73.33333333333333,126,45.78573285788198
+"am-tr",1080," Devlet, sisteme giren paranın kaynağını sorgulamamalıdır.",2,1,1,1,0.5,1,0,0.0,170.5,283,159.0990257669732
+"am-tr",1081,"Fotoğraf makinelerinin kaydedebildiği gerçeklikte, realist çizimler yapmak korkunç bir emek israfıdır.",8,7,1,6,1.0,2,0,0.0,127.62499999999999,247,66.99240362053852
+"am-tr",1082," Geleceğin yeni dini Dataizm olacaktır",2,1,1,1,0.5,1,0,0.0,159.5,281,171.82694782833104
+"am-tr",1083," Havyanların hayatı da insanlarınki kadar değerlidir",10,9,1,5,1.5,3,0,0.0,173.79999999999995,294,80.07329975299714
+"am-tr",1084,"Hiçbir bilgisayar programı kendi başına bir sisteme zihin veremez.",6,5,1,3,1.1666666666666667,2,0,0.0,109.83333333333334,289,90.41994617708345
+"am-tr",1085," Hümanizm önümüzdeki 200 yıl içinde yok olacaktır.",3,2,1,1,1.0,2,0,0.0,96.0,201,91.16468614545876
+"am-tr",1086," İstanbul suriçi araç trafiğine kapatılmalıdır",3,2,1,2,0.6666666666666666,1,0,0.0,129.33333333333334,277,128.23546051437307
+"am-tr",1087,"Kanal İstanbul projesinden vazgeçilmelidir",8,7,1,5,1.125,2,0,0.0,94.75,191,50.95586325438909
+"am-tr",1088," Sanat Eleştirilemez",8,7,1,6,1.0,2,0,0.0,134.125,296,98.60083671044582
+"am-tr",1089," tanrının varlığını kanıtlamak telaşı gereksizdir.",11,10,1,4,1.5454545454545454,3,0,0.0,107.0909090909091,289,90.97851894315993
+"am-tr",1090," Tanrı söylediği için kötüdür",3,2,1,2,0.6666666666666666,1,0,0.0,111.66666666666667,277,143.18286675902718
+"am-tr",1091," Vicdan güçlüleri korkutmak için düşünülmüş, korkakların kullandığı bir sözcükten başka bir şey değildir.",8,7,1,3,1.5,3,0,0.0,122.375,289,76.76297005346113
+"am-tr",1092," Yalan söyleme olmadan bilim olmaz",11,10,1,5,1.8181818181818183,4,0,0.0,130.36363636363635,293,73.26018390268035
+"am-tr",1093," Yapay zeka insanın varoluş anlamını tehdit etmektedir",6,5,1,3,1.1666666666666667,2,0,0.0,142.83333333333331,297,104.56847836067361
+"kl",1212," Wealthy countries should provide citizens with a universal basic income (UBI).",3493,3767,8,20,6.12224448897795,17,0,0.0,196.23790438018875,501,103.21114228414473
+"kl",1213," The United Kingdom should remain a member of the European Union.",409,419,2,18,3.0171149144254286,7,0,0.0,150.4669926650367,497,81.5801332926198
+"kl",1214," There is no free will.",1164,1280,5,26,4.1864261168384855,11,0,0.0,170.54381443298962,498,89.58268955445996
+"kl",1215," Donald Trump should be impeached.",906,966,7,15,4.124724061810149,9,0,0.0,169.65231788079478,498,87.03794485998746
+"kl",1216," All humans should be vegan.",4611,4898,4,23,10.469312513554542,29,0,0.0,182.38972023422303,501,100.13783415486662
+"kl",1217," Governments should not set policies that limit free speech.",651,715,6,22,3.377880184331797,7,0,0.0,159.69278033794166,501,87.60883829726481
+"kl",1218," Hate speech should be legally protected.",529,556,3,17,3.4706994328922547,8,0,0.0,177.82986767485835,498,87.52846601996524
+"kl",1219,"Should Bullfighting be Banned?",1294,1411,5,23,5.653013910355486,16,0,0.0,165.41499227202488,469,76.21501593278647
+"kl",1220," The Bible does not support the conclusion that homosexuality is a sin against God.",175,179,2,11,3.222857142857141,7,0,0.0,263.47428571428566,499,139.98090252104944
+"kl",1221," Judges should be appointed rather than elected.",316,353,3,12,3.3481012658227853,8,0,0.0,178.62025316455708,494,94.25279130016366
+"kl",1222,"NFL Player Protests: Should NFL Players Stand or Kneel for the National Anthem?",769,838,5,11,5.30819245773732,11,0,0.0,163.4330299089727,497,90.53257356528961
+"kl",1223," Voters in the UK should have a final vote on the Brexit deal.",521,596,6,13,3.5777351247600775,9,0,0.0,191.46641074856035,499,91.43822696422832
+"kl",1224," Fundamental rights should be extended to General AI.",17915,19450,16,33,14.085738208205454,30,0,0.0,172.5524420876351,501,96.95993766577143
+"kl",1225,"If Scientifically Possible, Should Humans Become Immortal?",1537,1661,5,26,3.869876382563435,11,0,0.0,163.7846454131424,498,86.50731437957432
+"kl",1226," Marvel Universe is Better than DC Universe.",106,107,2,20,2.3396226415094348,5,0,0.0,99.33962264150945,445,65.59818330708237
+"kl",1227," Conscientious objection to abortion should be banned",836,1027,12,16,3.976076555023921,9,0,0.0,201.03827751196175,497,98.38358739954717
+"kl",1228," Fair trade products cause more good than harm.",253,263,2,8,3.9841897233201573,8,0,0.0,157.5691699604743,396,58.53448446115928
+"kl",1229," We should have an opt-out system for organ donation.",62,63,2,11,2.14516129032258,4,0,0.0,148.88709677419354,483,91.04261384481114
+"kl",1230," Barack Obama was a good President.",628,658,3,9,4.643312101910832,9,0,0.0,153.6878980891719,366,59.266877124778304
+"kl",1231," Journalists have a moral obligation to display violent images.",258,289,3,11,3.6899224806201536,8,0,0.0,163.25581395348846,335,59.94534203934679
+"kl",1232," Deliberately not preventing someones death is ethically equivalent to killing them.",256,279,4,8,3.64453125,7,0,0.0,170.43359374999997,435,75.53866354764112
+"kl",1233," Teachers should not be allowed to wear religious symbols at school",282,290,4,13,3.170212765957448,9,0,0.0,186.4468085106383,489,94.6888085795
+"kl",1234," Hungary should leave the European Union.",715,791,3,13,4.241958041958041,10,0,0.0,158.80000000000007,500,92.65155953676037
+"kl",1235," Governments should fund security for places of worship.",291,305,3,8,4.0103092783505145,8,0,0.0,168.00343642611685,410,67.34304860226338
+"kl",1236," Fracking should be banned.",866,956,3,12,4.97690531177829,12,0,0.0,148.4191685912239,486,81.38275258473074
+"kl",1237,"",299,343,3,8,3.6989966555183957,8,0,0.0,137.9966555183947,494,69.04543287471985
+"wd",38729," Faut-il préserver les Murs à pêches de Montreuil ?",44,44,2,12,1.7500000000000002,3,28,275.4090909090909,67.88636363636363,133,29.46437810589287
+"wd",38730," Le réchauffement climatique est-il dû à l'activité humaine ?",47,46,1,8,2.191489361702127,4,33,374.8936170212766,81.14893617021274,147,24.393494075090786
+"wd",38731," Faut-il arrêter de manger des animaux ?",80,80,2,20,1.9124999999999999,4,51,181.3125,63.84999999999998,154,27.758497387560265
+"wd",38732," Faut-il instaurer un revenu de base ?",154,175,7,12,2.707792207792208,5,105,404.0194805194804,57.16233766233765,168,28.064694350899707
+"wd",38733," Faut-il instaurer un salaire à vie ?",9,8,1,6,1.1111111111111112,2,8,540.0,62.111111111111114,132,29.400018896441395
+"wd",38734," Le néolibéralisme va-t-il s'effondrer ?",1,0,0,0,0.0,0,0,46862.0,40.0,40,0.0
+"wd",38735," Pour ou contre le capitalisme ?",104,104,2,16,2.0096153846153846,4,13,58.711538461538446,53.25961538461538,121,16.25524273443769
+"wd",38736,"Faut-il supprimer les notes à l'école ?",25,25,2,11,1.4800000000000002,2,6,77.64000000000001,46.92,91,16.474525789836868
+"wd",38737," La méthode Céline Alvarez révolutionne-t-elle l'école maternelle ?",22,21,1,11,1.4545454545454546,3,7,62.63636363636364,58.54545454545454,103,20.950570563266453
+"wd",38738," L'Europe occidentale est-elle en déclin ?",117,119,3,15,2.982905982905981,5,38,516.6068376068375,49.196581196581185,155,26.77339109955337
+"wd",38739,"Lénine est-il le précurseur de Staline ?",212,214,2,13,2.768867924528302,6,28,89.78301886792451,67.66981132075472,217,41.45967530916617
+"wd",38740," La liberté d'expression doit-elle être limitée ?",189,210,4,11,2.5502645502645507,4,157,372.13756613756624,56.38095238095237,157,20.312265897645602
+"wd",38741," Sommes-nous libres de nos décisions ?",19,19,2,8,1.473684210526316,2,16,266.63157894736844,61.68421052631578,99,23.238025904822816
+"wd",38743," Le Front national est-il un parti fasciste ?",58,66,6,15,1.7241379310344829,3,10,99.17241379310347,71.05172413793103,140,25.3677668206412
+"wd",38744," L'extrême-gauche doit-elle lutter contre l'islamophobie ?",33,38,2,8,2.0606060606060606,3,1,55.606060606060595,66.4848484848485,115,24.589277658312287
+"wd",38745," Faut-il généraliser le vote électronique ?",92,95,2,11,2.2717391304347823,4,14,134.19565217391295,63.42391304347825,126,19.178876713518846
+"wd",38746," Pour ou contre le projet de loi Collomb Asile et immigration ?",23,23,2,16,1.217391304347826,2,22,668.4782608695651,87.7391304347826,196,39.26855946996082
+"wd",38747," Pour ou contre le communisme ?",49,48,1,10,2.1224489795918364,4,3,2.9387755102040805,44.12244897959184,96,14.436113069113087
+"wd",38748," Faut-il accueillir davantage de migrants ?",188,193,2,12,2.46276595744681,4,50,93.781914893617,63.31914893617023,127,22.71267297590312
+"wd",38749," Dieu existe-t-il ?",133,132,1,132,0.9924812030075187,1,1,0.7142857142857147,0.14285714285714293,19,1.6475089420958267
+"wd",38750," La croyance en Dieu est-elle bénéfique ?",26,25,1,25,0.9615384615384615,1,1,1.192307692307692,57.42307692307691,105,21.637325300365713
+"wd",38751," Les religions se rejoignent-elles ?",68,71,2,12,2.0294117647058822,3,56,326.86764705882354,53.955882352941174,134,19.870050832983683
+"wd",38752," Une spiritualité rationnelle est-elle possible ?",17,16,1,16,0.9411764705882352,1,1,51.41176470588236,51.76470588235294,73,10.946057576615804
+"wd",38753," Faut-il se faire vacciner ?",39,39,2,8,2.128205128205128,4,10,75.10256410256412,56.99999999999999,161,26.5012412817529
+"wd",38754,"Faut-il dépénaliser le cannabis ?",3,2,1,2,0.6666666666666666,1,1,10762.333333333332,26.666666666666664,47,24.13158373031769
+"wd",38755," Les footballeurs professionnels sont-ils trop payés ?",37,36,1,13,1.756756756756757,3,7,26.05405405405406,60.162162162162154,116,23.050082566149435
+"wd",38756," Faut-il préférer les logiciels libres ?",3,2,1,2,0.6666666666666666,1,2,316.0,46.333333333333336,52,6.027713773341708
+"wd",38757," Le logiciel libre est-il en déclin ?",18,17,1,7,1.5555555555555554,3,9,91.72222222222223,59.0,85,15.548784707569686
+"wd",38758," Faut-il boycotter Facebook ?",19,19,2,11,1.4210526315789473,3,9,2216.0526315789475,58.73684210526315,106,21.018093013357056
+"wd",38759," Dieu existe-t-il ? (nouvelle version)",148,158,4,19,2.533783783783783,5,33,65.54729729729729,58.520270270270274,140,24.174104769836994
+"wd",38760," Espaces ou tabulations ?",4,3,1,3,0.75,1,1,82.25,58.5,103,32.96968304366907
+"wd",38761,"Faut-il incinérer les déchets ménagers à La Réunion ?",52,58,3,8,2.2307692307692313,4,30,202.26923076923072,41.63461538461539,106,18.881497163712634
+"wd",38762," Faut-il légaliser le cannabis ?",81,87,2,11,2.197530864197531,4,4,58.67901234567897,70.28395061728394,188,34.80202385203382
+"wd",38763,"Faut-il privatiser ADP ?",38,37,1,7,2.1052631578947367,4,1,65.23684210526315,69.15789473684211,147,26.380302147511987
+"wd",38764," Faut-il réguler l'anonymat sur Internet ?",3,2,1,2,0.6666666666666666,1,2,366.33333333333337,37.666666666666664,44,9.29157324317757
+"wd",38765," Faut-il supprimer les frontières ? (nouveau)",7,6,1,4,1.1428571428571428,2,3,915.5714285714284,44.42857142857143,60,15.262777629002558
+"wd",38766," La classe ouvrière est-elle la seule classe révolutionnaire ?",176,192,3,16,2.7670454545454546,6,1,0.42613636363636415,74.05681818181824,170,30.782131349040966
+"wd",38767," La gauche doit-elle défendre le port du voile islamique ?",63,84,5,14,2.301587301587302,4,1,0.49206349206349176,72.34920634920634,145,23.809159751440966
+"wd",38768," La liberté d'expression doit-elle être totale ?",189,210,4,11,2.5502645502645507,4,157,372.13756613756624,56.37566137566137,157,20.314328875745748
+"wd",38769," La religion est-elle compatible avec le marxisme ?",59,58,1,15,2.0677966101694922,3,5,3.7627118644067785,48.91525423728814,75,12.648140296165693
+"wd",38770," Le nationalisme est-il dangeureux ?",2,1,1,1,0.5,1,1,15.5,42.5,49,9.192388155425117
+"wd",38771," Le nucléaire est-il une énergie d'avenir ?",14,13,1,13,0.9285714285714285,1,4,142.85714285714286,76.28571428571429,120,19.451828355546077
+"wd",38772," Les biens communs sont-ils un modèle d'avenir ?",1,0,0,0,0.0,0,0,31.0,48.0,48,0.0
+"wd",38773," Les hommes doivent-ils rejoindre le combat féministe ?",76,90,4,9,2.4473684210526314,4,15,35.355263157894726,64.86842105263159,107,17.578276066602328
+"wd",38774," Peut-on changer le monde sans prendre le pouvoir ?",5,5,2,4,0.8,1,4,190.4,67.0,80,12.864680330268607
+"wd",38775," Qui de jésus et de Mohammed est le sauveur de l'humanité tout entière ?",1,0,0,0,0.0,0,0,31.0,72.0,72,0.0
+"wd",38776," Wikipédia est-elle fiable ?",3,2,1,2,0.6666666666666666,1,1,88.0,40.333333333333336,48,10.785793124908958
