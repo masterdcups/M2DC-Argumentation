@@ -56,7 +56,7 @@ def main(csvdir):
                         url = line[6:-1]
                         num = nums[url]
                     elif line.startswith('#name: '):
-                        label = line[6:-1].replace('"',"'")
+                        label = line[6:-1].replace('"',"'").replace('\n', '<br />')
                         labels[num] = label
                     elif line.startswith('#description: '):
                         description = line[14:].replace('"',"'").replace('\n', '<br />')
@@ -81,7 +81,7 @@ def main(csvdir):
                         parent_url = "leaf_%d"%parent_num
                         nums[parent_url] = parent_num
                         urls[parent_num] = parent_url
-                        labels[parent_num] = parent_label
+                        labels[parent_num] = parent_label.replace('"',"'").replace('\n', '<br />')
                     else:
                         parent_num = nums[parent_url]
 
