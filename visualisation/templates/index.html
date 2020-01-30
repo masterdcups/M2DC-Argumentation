@@ -1,0 +1,292 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta charset="utf-8">
+  <title>Argument visualization</title>
+
+  <link rel="stylesheet" type="text/css" href="static/local.css">
+
+  <script type="text/javascript" src="static/vis-network.js"></script>
+  <link rel="stylesheet" type="text/css" href="static/local2.css">
+  <link rel="stylesheet" type="text/css" href="static/vis1.css">
+  <link rel="stylesheet" type="text/css" href="static/vis2.css">
+  <link rel="stylesheet" type="text/css" href="static/vis3.css">
+  <script type="text/javascript" src="static/graph.js"></script>
+  <script type="text/javascript">
+
+
+    function getGraph(json_txt){
+        return JSON.parse(json_txt);
+    }
+
+    var nodes = null;
+    var edges = null;
+    var network = null;
+    
+    // Store all the graphs
+    var allData = {};
+    allData[-1] = JSON.parse('{"nodes":[], "edges":[] }');
+    {% for id,graph in list_graph.items() %}
+    allData[{{id}}] = getGraph({{ graph| tojson | safe }});
+    {% endfor %}
+
+    var seed = 2;
+
+    function destroy() {
+      if (network !== null) {
+        network.destroy();
+        network = null;
+      }
+    }
+
+    function draw() {
+      destroy();
+      
+      var select = document.getElementById('topics');
+      var topicID = select.options[select.selectedIndex].value;
+      var topicLabel = select.options[select.selectedIndex].text;
+      /*#select.selectedIndex = 0; // set fallback value
+      for (var i = 0, j = select.options.length; i < j; ++i) {
+        if (select.options[i].getAttribute('value') === defaultLocal) {
+          select.selectedIndex = i;
+          break;
+        }
+      }*/
+   
+      data = allData[topicID]; /*getGraph(topicID);*/
+      nodes = [];
+      edges = [];
+
+      // create a network
+      var container = document.getElementById('mynetwork');
+      var options = {
+
+        physics: {
+            enabled: true,
+            hierarchicalRepulsion: {
+                centralGravity: 0.0,
+                springLength: 200,
+                springConstant: 0.01,
+                nodeDistance: 150,
+                damping: 0.07,
+                avoidOverlap: 1
+            },
+            solver: 'hierarchicalRepulsion'
+        },
+        edges:{
+            arrows: {
+                from: {
+                    scaleFactor:1.5
+                }
+            }
+        },
+        nodes:{
+          color:{
+            'border' : '#6E6EFD',
+            'background': '#FFFFFF'
+          },
+          widthConstraint:{
+            'maximum' : 150  
+            }  
+         },
+        layout: { 
+          hierarchical: {
+            enabled:true,
+            levelSeparation: 500,
+            nodeSpacing: 700,
+            treeSpacing: 250,
+            blockShifting: true,
+            edgeMinimization: true,
+            parentCentralization: true,
+            direction: 'UD',        // UD, DU, LR, RL
+            sortMethod: 'directed',  // hubsize, directed
+           shakeTowards: 'leaves'  // roots, leaves
+             },
+          randomSeed:seed }, // just to make sure the layout is the same when the locale is changed
+        locale: 'en',
+        manipulation: {
+          addNode: function (data, callback) {
+            // filling in the popup DOM elements
+            document.getElementById('node-operation').innerHTML = "Add Node";
+            editNode(data, clearNodePopUp, callback);
+          },
+          editNode: function (data, callback) {
+            // filling in the popup DOM elements
+            document.getElementById('node-operation').innerHTML = "Edit Node";
+            editNode(data, cancelNodeEdit, callback);
+          },
+          addEdge: function (data, callback) {
+            if (data.from == data.to) {
+              var r = confirm("Do you want to connect the node to itself?");
+              if (r != true) {
+                callback(null);
+                return;
+              }
+            }
+            document.getElementById('edge-operation').innerHTML = "Add Edge";
+            editEdgeWithoutDrag(data, callback);
+          },
+          editEdge: {
+            editWithoutDrag: function(data, callback) {
+              document.getElementById('edge-operation').innerHTML = "Edit Edge";
+              editEdgeWithoutDrag(data,callback);
+            }
+          }
+        }
+      };
+      network = new vis.Network(container, data, options);
+    }
+
+    function editNode(data, cancelAction, callback) {
+      document.getElementById('node-id').value = data.id;
+      document.getElementById('node-label').value = data.label;
+      document.getElementById('node-saveButton').onclick = saveNodeData.bind(this, data, callback);
+      document.getElementById('node-cancelButton').onclick = cancelAction.bind(this, callback);
+      document.getElementById('node-popUp').style.display = 'block';
+    }
+
+    // Callback passed as parameter is ignored
+    function clearNodePopUp() {
+      document.getElementById('node-saveButton').onclick = null;
+      document.getElementById('node-cancelButton').onclick = null;
+      document.getElementById('node-popUp').style.display = 'none';
+    }
+
+    function cancelNodeEdit(callback) {
+      clearNodePopUp();
+      callback(null);
+    }
+
+    function saveNodeData(data, callback) {
+      data.label = document.getElementById('node-label').value;
+      data.shape = 'box'; 
+      clearNodePopUp();
+      callback(data);
+    }
+
+    function editEdgeWithoutDrag(data, callback) {
+      // filling in the popup DOM elements
+      document.getElementById('edge-label').value = data.label;
+      document.getElementById('edge-saveButton').onclick = saveEdgeData.bind(this, data, callback);
+      document.getElementById('edge-cancelButton').onclick = cancelEdgeEdit.bind(this,callback);
+      document.getElementById('edge-popUp').style.display = 'block';
+    }
+
+    function clearEdgePopUp() {
+      document.getElementById('edge-saveButton').onclick = null;
+      document.getElementById('edge-cancelButton').onclick = null;
+      document.getElementById('edge-popUp').style.display = 'none';
+    }
+
+    function cancelEdgeEdit(callback) {
+      clearEdgePopUp();
+      callback(null);
+    }
+
+    function saveEdgeData(data, callback) {
+      if (typeof data.to === 'object')
+        data.to = data.to.id
+      if (typeof data.from === 'object')
+        data.from = data.from.id
+
+      data['arrows'] = {'from':{'enabled':true, 'type':'box'}};
+      data['color'] = {'color':'red'};
+
+      var label = parseInt(document.getElementById('edge-label').value);
+      if (label>0){
+        data.arrows.from.type = 'arrow';
+        data.color.color = 'green';
+      }
+
+      //data.label = document.getElementById('edge-label').value;
+      clearEdgePopUp();
+      callback(data);
+    }
+
+    function init() {
+      draw();
+    }
+
+  </script>
+  
+</head>
+
+<body onload="init();">
+<h2>Arguments visualisation</h2>
+
+<form method="post">
+<p style="width: 850px; font-size:14px; text-align: justify;">
+  Choose the file for nodes and edges:
+</p>
+
+
+<label for="source">Source file: </label>
+<select id="source" name="source">
+    <option value="wd" selected>Wikidebats</option>
+    <option value="kl">Kialo</option>
+    <option value="am-fr">Arguman</option>
+</select>
+
+
+<br>
+
+<input type="submit" value="Draw">
+
+</form>
+
+<hr>
+<p>
+  <label for="topics">Select a topic:</label>
+  <select id="topics" onchange="draw();">
+    <option value="-1" selected="selected">-</option>
+    {% if dispo!=0  %}
+    {% for index,row in topics.iterrows() %}
+    <option value="{{row['n']}}">{{row['label']}}</option>
+    {% endfor %}
+    {% endif %}
+  </select>
+</p>
+
+<div id="node-popUp">
+  <span id="node-operation">node</span> <br>
+  <table style="margin:auto;">
+    <tbody><tr>
+      <td>id</td><td><input id="node-id" value="new value"></td>
+    </tr>
+    <tr>
+      <td>label</td><td><input id="node-label" value="new value"></td>
+    </tr>
+  </tbody></table>
+  <input type="button" value="save" id="node-saveButton">
+  <input type="button" value="cancel" id="node-cancelButton">
+</div>
+
+<div id="edge-popUp">
+  <span id="edge-operation">edge</span> <br>
+  <table style="margin:auto;">
+    <tbody><tr>
+      <td>label</td><td><input id="edge-label" value="new value"></td>
+    </tr></tbody></table>
+  <input type="button" value="save" id="edge-saveButton">
+  <input type="button" value="cancel" id="edge-cancelButton">
+</div>
+
+<br>
+<div id="mynetwork">
+  <div class="vis-network" style="position: relative; overflow: hidden; touch-action: pan-y; user-select: none; width: 100%; height: 100%;" tabindex="900">
+    <canvas style="position: relative; touch-action: none; user-select: none; width: 100%; height: 100%;" width="1280" height="1024">
+      
+    </canvas><div class="vis-manipulation" style="display: none;">
+      
+    </div>
+    <div class="vis-edit-mode" style="display: block;">
+      <div class="vis-button vis-edit vis-edit-mode" style="touch-action: pan-y; user-select: none;">
+        <div class="vis-label">Edit</div>
+      </div>
+    </div>
+    <div class="vis-close" style="display: none;"></div>
+  </div>
+</div>
+
+
+
+</body></html>
