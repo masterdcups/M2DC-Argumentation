@@ -5,14 +5,17 @@ Build the graph from the collection of csv files produced by an extraction
 import os
 
 class DefaultDict(dict):
-    def __init__(self, default_value=None, show_warning=False):
+    def __init__(self, default_value=None, show_warning=False, name=None):
         self.default_value = default_value
         self.show_warning = show_warning
+        self.name = name
+        self.count=0
     def __getitem__(self, key):
         if key in self.keys():
             return dict.__getitem__(self, key)
         if self.show_warning:
-            print("Warning: key '%s' not in dict"%key)
+            self.count+=1
+            print("Warning %s#%d: key '%s' not in dict"%(self.name,self.count,key))
         return self.default_value
 
 
@@ -21,9 +24,9 @@ def main(csvdir):
 
     # Init
     edges = []
-    nums = DefaultDict(-1, show_warning=True)
+    nums = DefaultDict(-1, show_warning=True, name='nums')
     urls = {}
-    labels = DefaultDict("", show_warning=True)
+    labels = DefaultDict("", show_warning=True, name='labels')
     descriptions = DefaultDict("")
 
         
@@ -32,6 +35,7 @@ def main(csvdir):
     with open(os.path.join(csvdir, 'index.txt'), 'r') as f:
         for line in f:
             url, num = line[:-1].split(';')
+            num = int(num)
             nums[url] = num
             urls[num] = url
 
@@ -52,10 +56,10 @@ def main(csvdir):
                         url = line[6:-1]
                         num = nums[url]
                     elif line.startswith('#name: '):
-                        label = line[6:-1].replace('"',"'")
+                        label = line[6:-1].replace('"',"'").replace('\n', '<br />')
                         labels[num] = label
                     elif line.startswith('#description: '):
-                        description = line[14:].replace('"',"'")
+                        description = line[14:].replace('"',"'").replace('\n', '<br />')
                         if not num in descriptions.keys():
                             descriptions[num] = ""
                         descriptions[num] += description
@@ -73,18 +77,19 @@ def main(csvdir):
                         print("%s: cannot parse line: %s"%(filename, line[:-1]))
                     weight = float(weight)
                     if parent_url == '':
-                        parent_num = len(nums)
+                        parent_num = max(nums.values())+1
                         parent_url = "leaf_%d"%parent_num
                         nums[parent_url] = parent_num
                         urls[parent_num] = parent_url
-                        labels[parent_num] = parent_label
+                        labels[parent_num] = parent_label.replace('"',"'").replace('\n', '<br />')
                     else:
                         parent_num = nums[parent_url]
 
-                    if not parent_num is labels.keys():
-                        labels[parent_num] = parent_label.replace('"',"'")
-                    e = (parent_num, num, weight)
-                    edges.append(e)
+                    if not num == -1:
+                        if not parent_num in labels.keys():
+                            labels[parent_num] = parent_label.replace('"',"'").replace('\n', '<br />')
+                        e = (parent_num, num, weight)
+                        edges.append(e)
 
     # Neo4j csvs
     with open('%s_nodes.csv'%csvdir, 'w') as f:

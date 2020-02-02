@@ -1,30 +1,29 @@
-
-// Auto-generated instructions
+// Auto-generated insertion instructions.
 
 
 // Create indexes
 
 CREATE INDEX ON 
-    :Argument(n);
+    :Sentence(n);
 
 CREATE INDEX ON 
-    :Argument(origin);
+    :Sentence(origin);
 
 CREATE INDEX ON 
-    :Argument(n,origin);
+    :Sentence(n,origin);
 
 
 
-// Create nodes
+// Create 'Sentence' nodes
 
 LOAD CSV WITH HEADERS FROM 
     "file:///am-ch_nodes.csv" AS row 
 CREATE 
-    (:Argument {url: row.url, label: row.label, description: row.description, n: toInteger(row.n), origin: "am-ch"});
+    (:Sentence {url: row.url, label: row.label, description: row.description, n: toInteger(row.n), origin: "am-ch"});
 
 
 
-// Create 'Support' edges
+// Create 'Pro' edges
 
 LOAD CSV WITH HEADERS FROM 
     "file:///am-ch_edges.csv" AS row
@@ -33,16 +32,16 @@ WITH
 WHERE
     toFloat(row.weight) > 0
 MATCH
-    (n1:Argument {n: toInteger(row.n1), origin:"am-ch"}),
-	(n2:Argument {n: toInteger(row.n2), origin:"am-ch"})
+    (n1:Sentence {n: toInteger(row.n1), origin:"am-ch"}),
+	(n2:Sentence {n: toInteger(row.n2), origin:"am-ch"})
 WITH
     row, n1, n2
 CREATE
-    (n1)-[:Support {w: toFloat(row.weight)}]->(n2);
+    (n1)-[:Pro {w: toFloat(row.weight)}]->(n2);
 
 
 
-// Create 'Attack' edges
+// Create 'Cons' edges
 
 LOAD CSV WITH HEADERS FROM 
     "file:///am-ch_edges.csv" AS row
@@ -51,9 +50,9 @@ WITH
 WHERE
     toFloat(row.weight) < 0
 MATCH
-    (n1:Argument {n: toInteger(row.n1), origin:"am-ch"}),
-    (n2:Argument {n: toInteger(row.n2), origin:"am-ch"})
+    (n1:Sentence {n: toInteger(row.n1), origin:"am-ch"}),
+    (n2:Sentence {n: toInteger(row.n2), origin:"am-ch"})
 WITH
     row, n1, n2
 CREATE
-    (n1)-[:Attack {w: toFloat(row.weight)}]->(n2);
+    (n1)-[:Cons {w: toFloat(row.weight)}]->(n2);

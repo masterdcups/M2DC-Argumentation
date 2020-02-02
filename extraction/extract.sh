@@ -133,7 +133,7 @@ wd_extract_page() {
 }
 wd_extract_subpage() {
     cat \
-	| wd_extract_page
+	| wd_extract_page "$1" "$2"
 }
 
 
@@ -202,7 +202,7 @@ kl_extract_page() {
 }
 kl_extract_subpage() {
     cat \
-	| kl_extract_page
+	| kl_extract_page "$1" "$2"
 }
 
 
@@ -251,7 +251,7 @@ num_of() { # $1=value; 'return'  the number
 if test "$CLEAN"
 then
     echo -n "Check for incomplete files... "
-    fs=`wc -l $OUTPUT_DIR/*.csv | tr -s ' ' | sed 's/^ //' | grep '^1 ' | cut -d ' ' -f 2`
+    fs=`wc -l $OUTPUT_DIR/*.csv | tr -s ' ' | sed 's/^ //' | grep '^[0-2] ' | cut -d ' ' -f 2`
     if test "$fs"
     then
 	rm $fs
@@ -264,7 +264,7 @@ fi
 if test ! -f $OUTPUT_DIR/sitemap.csv
 then
     echo "Extract sitemap: $SITEMAP"
-    wget -q $SITEMAP -O - | ${SITE}_extract_sitemap "$SITEMAP" > $OUTPUT_DIR/sitemap.csv
+    wget -q $SITEMAP -O - | ${SITE}_extract_sitemap "" "$SITEMAP" > $OUTPUT_DIR/sitemap.csv
 fi
 
 
@@ -328,11 +328,18 @@ done
 
 
 # Build the xxx_nodes.csv and xxx_edges.csv graph representation
+echo ""
 echo "Create '${OUTPUT_DIR}_nodes.csv' and '${OUTPUT_DIR}_edges.csv'"
 python3 mk_graph.py $OUTPUT_DIR
 
 
+# Check validity of CSV files
+echo ""
+echo "Check output files"
+./check_validity.sh $OUTPUT_DIR
+
 # Generate the Cypher insertion instructions for Neo4j
+echo ""
 echo "Generate insert instructions (cypher)"
 f=${OUTPUT_DIR}_insertion.cql
 echo "// Auto-generated insertion instructions." > $f

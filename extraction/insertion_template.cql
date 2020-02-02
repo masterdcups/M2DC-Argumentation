@@ -5,26 +5,26 @@
 // Create indexes
 
 CREATE INDEX ON 
-    :Argument(n);
+    :Sentence(n);
 
 CREATE INDEX ON 
-    :Argument(origin);
+    :Sentence(origin);
 
 CREATE INDEX ON 
-    :Argument(n,origin);
+    :Sentence(n,origin);
 
 
 
-// Create nodes
+// Create 'Sentence' nodes
 
 LOAD CSV WITH HEADERS FROM 
     "file:///xxx_nodes.csv" AS row 
 CREATE 
-    (:Argument {url: row.url, label: row.label, description: row.description, n: toInteger(row.n), origin: "xxx"});
+    (:Sentence {url: row.url, label: row.label, description: row.description, n: toInteger(row.n), origin: "xxx"});
 
 
 
-// Create 'Support' edges
+// Create 'Pro' edges
 
 LOAD CSV WITH HEADERS FROM 
     "file:///xxx_edges.csv" AS row
@@ -33,16 +33,16 @@ WITH
 WHERE
     toFloat(row.weight) > 0
 MATCH
-    (n1:Argument {n: toInteger(row.n1), origin:"xxx"}),
-	(n2:Argument {n: toInteger(row.n2), origin:"xxx"})
+    (n1:Sentence {n: toInteger(row.n1), origin:"xxx"}),
+	(n2:Sentence {n: toInteger(row.n2), origin:"xxx"})
 WITH
     row, n1, n2
 CREATE
-    (n1)-[:Support {w: toFloat(row.weight)}]->(n2);
+    (n1)-[:Pro {w: toFloat(row.weight)}]->(n2);
 
 
 
-// Create 'Attack' edges
+// Create 'Cons' edges
 
 LOAD CSV WITH HEADERS FROM 
     "file:///xxx_edges.csv" AS row
@@ -51,9 +51,9 @@ WITH
 WHERE
     toFloat(row.weight) < 0
 MATCH
-    (n1:Argument {n: toInteger(row.n1), origin:"xxx"}),
-    (n2:Argument {n: toInteger(row.n2), origin:"xxx"})
+    (n1:Sentence {n: toInteger(row.n1), origin:"xxx"}),
+    (n2:Sentence {n: toInteger(row.n2), origin:"xxx"})
 WITH
     row, n1, n2
 CREATE
-    (n1)-[:Attack {w: toFloat(row.weight)}]->(n2);
+    (n1)-[:Cons {w: toFloat(row.weight)}]->(n2);
