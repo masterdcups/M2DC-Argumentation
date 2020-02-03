@@ -1,0 +1,7 @@
+N4J_URI = bolt://localhost:7687
+N4J_USER = your-login-here
+N4J_PASS = your-password-here
+
+N4J_DB_PATH = /path/to/the/neo4j/db/directory
+
+N_THREADS = 8

@@ -337,10 +337,3 @@ python3 mk_graph.py $OUTPUT_DIR
 echo ""
 echo "Check output files"
 ./check_validity.sh $OUTPUT_DIR
-
-# Generate the Cypher insertion instructions for Neo4j
-echo ""
-echo "Generate insert instructions (cypher)"
-f=${OUTPUT_DIR}_insertion.cql
-echo "// Auto-generated insertion instructions." > $f
-tail -n +3 insertion_template.cql | sed "s/xxx/$OUTPUT_DIR/g" >> $f
