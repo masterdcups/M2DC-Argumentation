@@ -66,6 +66,7 @@ On peut utiliser le navigateur neo4j pour interroger et visualiser les données.
      - Uniquement de arbres (chaque prémisse à 0 ou 1 conclusion)
   - **Kialo**
      - Beaucoup de données (grands graphes: le plus grands possède 16644 sommets)
+     - Quelques grands cycles (plus de 10 arcs).
 
 #### Galerie
 
