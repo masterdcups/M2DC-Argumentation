@@ -2,57 +2,110 @@ import numpy as np
 import networkx as nx
 
 """
-    Deg_Ebs(a) = 1 - ( (1 - w(a)²) / (1 + w(a)e^E) )
-    E = Sum over x in Supp(a) (Deg_Ebs(x)) - Sum over x in Att(a) (Deg_Ebs(x))
 """
-def evaluate(argument_dag):
+def evaluate(argument_dag, dag=False, max_iterations=100, epsilon=1e-6,
+        verbose=False):
     """
         Evaluates an argument graph according to Euler-based semantic,
         as defined in the paper titled: 
         "Weighted Bipolar Argumentation Graphs: Axioms and Semantics"
         (Amgoud & Ben-Naim)
 
-        Nodes (arguments) should have a "strength" property and edges
-        a "polarity" property (in ["attack", "support"]).
+        Nodes (arguments) should have a "weight" property and edges
+        a "weight" property encoding the polarity in [-1, 1].
+
+        The algorithm can either evaluate the arguments in their topological
+        order (if dag=True), or evaluate until convergence is reached.
 
         Returns a dictionary mapping argument names to their overall strength.
+
+        The formula for computing the Euler-based semantic evaluation is given
+        as:
+            Deg_Ebs(a) = 1 - ( (1 - w(a)²) / (1 + w(a)e^E) )
+            E = Sum over x in Supp(a) (Deg_Ebs(x)) 
+              - Sum over x in Att(a) (Deg_Ebs(x))
     """
-    ordering = nx.topological_sort(argument_dag)
 
-    overall_strength = {}
+    if dag:
+        intrinsic_strength = {
+            argument: argument_dag.nodes[argument]['weight']
+            for argument in argument_dag.nodes()
+        }
+        overall_strength = {
+            argument: argument_dag.nodes[argument]['weight']
+            for argument in argument_dag.nodes()
+        }
+        ordering = list(nx.topological_sort(argument_dag))
 
-    for target in ordering:
-        w = argument_dag.nodes[target]['strength']
+        # Compute Euler-based evaluation of arguments
+        for target in ordering:
+            in_edges = argument_dag.in_edges(target, True)
 
-        in_edges = argument_dag.in_edges(target, 'polarity')
-        E = sum([
-            overall_strength[edge[0]]
-            if edge[2] == 'support' else
-            -overall_strength[edge[0]]
-            for edge in in_edges
-        ])
+            # Add up the strength of all supporters and attackers.
+            E = sum([
+                overall_strength[edge[0]] * edge[2]['weight']
+                for edge in in_edges
+            ])
+            w = intrinsic_strength[target]
 
-        overall_strength[target] = (
-            1 - ( (1 - w**2) / (1 + w * np.exp(E)) )
-        )
+            new_w = 1 - ( (1 - w**2) / (1 + w * np.exp(E)) )
+            
+            overall_strength[target] = new_w
 
-    return overall_strength
+        evaluated_strength = overall_strength
+
+    # Use the convergence algorithm.
+    else:
+        intrinsic_strength = np.array([
+            argument_dag.nodes[node]['weight'] 
+            for node in argument_dag.nodes()])
+        overall_strength = np.copy(intrinsic_strength)
+        adjacency_matrix = nx.to_numpy_array(argument_dag)
+
+        delta = epsilon + 1
+        i = 0
+        while delta >= epsilon and i < max_iterations:
+            delta = overall_strength
+
+            E = np.dot(overall_strength, adjacency_matrix)
+
+            overall_strength = (
+                1 - ( 
+                    (1 - intrinsic_strength**2) 
+                    / 
+                    (1 + intrinsic_strength * np.exp(E)) 
+                )
+            )
+
+            delta = np.sum(np.abs(delta - overall_strength))
+            i += 1
+
+        evaluated_strength = {
+            argument: overall_strength[i]
+            for i, argument in enumerate(argument_dag.nodes())
+        }
+
+        if verbose:
+            print("Done in {} iterations. Delta = {:.6f}".format(i, delta))
+
+
+    return evaluated_strength
 
 # Returns the graph from the 5th page of 
 # "Weighted Bipolar Argumentation Graphs: Axioms and Semantics" 
 # by Leila Amgoud, Jonathan Ben-Naim
 def sample_graph():
     nodes = [
-        ('a', {'strength': 0.60}),
-        ('b', {'strength': 0.60}),
-        ('c', {'strength': 0.60}),
-        ('d', {'strength': 0.22}),
-        ('e', {'strength': 0.40}),
-        ('f', {'strength': 0.40}),
-        ('g', {'strength': 0.00}),
-        ('h', {'strength': 0.99}),
-        ('i', {'strength': 0.10}),
-        ('j', {'strength': 0.99}),
+        ('a', {'weight': 0.60}),
+        ('b', {'weight': 0.60}),
+        ('c', {'weight': 0.60}),
+        ('d', {'weight': 0.22}),
+        ('e', {'weight': 0.40}),
+        ('f', {'weight': 0.40}),
+        ('g', {'weight': 0.00}),
+        ('h', {'weight': 0.99}),
+        ('i', {'weight': 0.10}),
+        ('j', {'weight': 0.99}),
     ]
 
     edges_attack = [
@@ -73,15 +126,15 @@ def sample_graph():
     graph = nx.DiGraph()
     
     graph.add_nodes_from(nodes)
-    graph.add_edges_from(edges_attack, polarity='attack')
-    graph.add_edges_from(edges_support, polarity='support')
+    graph.add_edges_from(edges_attack, polarity='attack', weight=-1)
+    graph.add_edges_from(edges_support, polarity='support', weight=1)
     
     return graph
 
 def main():
     graph = sample_graph()
 
-    overall_strength = evaluate(graph)
+    overall_strength = evaluate(graph, dag=False, verbose=True)
     
     print("{:<20}{:<20}".format("Argument", "Strength"))
     for argument_name, argument_strength in overall_strength.items():
