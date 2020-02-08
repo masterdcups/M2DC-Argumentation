@@ -3,14 +3,17 @@
   <meta charset="utf-8">
   <title>Argument visualization</title>
 
-  <link rel="stylesheet" type="text/css" href="static/local.css">
+  <link rel="stylesheet" type="text/css" href="static/css/bootstrap.css">
+  <link rel="stylesheet" type="text/css" href="static/css/local.css">
 
-  <script type="text/javascript" src="static/vis-network.js"></script>
-  <link rel="stylesheet" type="text/css" href="static/local2.css">
-  <link rel="stylesheet" type="text/css" href="static/vis1.css">
-  <link rel="stylesheet" type="text/css" href="static/vis2.css">
-  <link rel="stylesheet" type="text/css" href="static/vis3.css">
-  <script type="text/javascript" src="static/graph.js"></script>
+  <script type="text/javascript" src="static/js/vis-network.js"></script>
+  <link rel="stylesheet" type="text/css" href="static/css/local2.css">
+  <link rel="stylesheet" type="text/css" href="static/css/vis1.css">
+  <link rel="stylesheet" type="text/css" href="static/css/vis2.css">
+  <link rel="stylesheet" type="text/css" href="static/css/vis3.css">
+  
+  <script type="text/javascript" src="static/js/jquery-3.4.1.min.js"></script>
+  <script type="text/javascript" src="static/js/graph.js"></script>
   <script type="text/javascript">
 
 
@@ -41,9 +44,11 @@
     function draw() {
       destroy();
       
+      var source = document.getElementById('source');
       var select = document.getElementById('topics');
       var topicID = select.options[select.selectedIndex].value;
       var topicLabel = select.options[select.selectedIndex].text;
+      var sourceID = source.options[source.selectedIndex].value;
       /*#select.selectedIndex = 0; // set fallback value
       for (var i = 0, j = select.options.length; i < j; ++i) {
         if (select.options[i].getAttribute('value') === defaultLocal) {
@@ -51,89 +56,104 @@
           break;
         }
       }*/
-   
-      data = allData[topicID]; /*getGraph(topicID);*/
-      nodes = [];
-      edges = [];
-
-      // create a network
-      var container = document.getElementById('mynetwork');
-      var options = {
-
-        physics: {
-            enabled: true,
-            hierarchicalRepulsion: {
-                centralGravity: 0.0,
-                springLength: 200,
-                springConstant: 0.01,
-                nodeDistance: 150,
-                damping: 0.07,
-                avoidOverlap: 1
+  	  //console.log(topicID+" "+sourceID)
+      var data = JSON.parse('{"nodes":[], "edges":[] }');
+       $.ajax({
+            url: '/jsonFile',
+            data: 'topic='+topicID+'&source='+sourceID ,
+            dataType: 'json',
+            type: 'GET',
+            async: false,
+            success: function(response) {
+                console.log(response);
+                data = response;
+                
             },
-            solver: 'hierarchicalRepulsion'
-        },
-        edges:{
-            arrows: {
-                from: {
-                    scaleFactor:1.5
-                }
-            }
-        },
-        nodes:{
-          color:{
-            'border' : '#6E6EFD',
-            'background': '#FFFFFF'
-          },
-          widthConstraint:{
-            'maximum' : 150  
-            }  
-         },
-        layout: { 
-          hierarchical: {
-            enabled:true,
-            levelSeparation: 500,
-            nodeSpacing: 700,
-            treeSpacing: 250,
-            blockShifting: true,
-            edgeMinimization: true,
-            parentCentralization: true,
-            direction: 'UD',        // UD, DU, LR, RL
-            sortMethod: 'directed',  // hubsize, directed
-           shakeTowards: 'leaves'  // roots, leaves
-             },
-          randomSeed:seed }, // just to make sure the layout is the same when the locale is changed
-        locale: 'en',
-        manipulation: {
-          addNode: function (data, callback) {
-            // filling in the popup DOM elements
-            document.getElementById('node-operation').innerHTML = "Add Node";
-            editNode(data, clearNodePopUp, callback);
-          },
-          editNode: function (data, callback) {
-            // filling in the popup DOM elements
-            document.getElementById('node-operation').innerHTML = "Edit Node";
-            editNode(data, cancelNodeEdit, callback);
-          },
-          addEdge: function (data, callback) {
-            if (data.from == data.to) {
-              var r = confirm("Do you want to connect the node to itself?");
-              if (r != true) {
-                callback(null);
-                return;
-              }
-            }
-            document.getElementById('edge-operation').innerHTML = "Add Edge";
-            editEdgeWithoutDrag(data, callback);
-          },
-          editEdge: {
-            editWithoutDrag: function(data, callback) {
-              document.getElementById('edge-operation').innerHTML = "Edit Edge";
-              editEdgeWithoutDrag(data,callback);
-            }
-          }
-        }
-      };
-      network = new vis.Network(container, data, options);
+            error: function(error) {
+                console.log(error);
+            }});
+
+      //data = allData[topicID]; / *getGraph(topicID); */
+      // create a network
+      			var container = document.getElementById('mynetwork');
+		      var options = {
+
+		        physics: {
+		            enabled: true,
+		            hierarchicalRepulsion: {
+		                centralGravity: 0.0,
+		                springLength: 200,
+		                springConstant: 0.01,
+		                nodeDistance: 150,
+		                damping: 0.07,
+		                avoidOverlap: 1
+		            },
+		            solver: 'hierarchicalRepulsion'
+		        },
+		        edges:{
+		            arrows: {
+		                from: {
+		                    scaleFactor:1.5
+		                }
+		            }
+		        },
+		        nodes:{
+		          color:{
+		            'border' : '#6E6EFD',
+		            'background': '#FFFFFF'
+		          },
+		          widthConstraint:{
+		            'maximum' : 150  
+		            }  
+		         },
+		        layout: { 
+		          hierarchical: {
+		            enabled:true,
+		            levelSeparation: 500,
+		            nodeSpacing: 700,
+		            treeSpacing: 250,
+		            blockShifting: true,
+		            edgeMinimization: true,
+		            parentCentralization: true,
+		            direction: 'UD',        // UD, DU, LR, RL
+		            sortMethod: 'directed',  // hubsize, directed
+		           shakeTowards: 'leaves'  // roots, leaves
+		             },
+		          randomSeed:seed }, // just to make sure the layout is the same when the locale is changed
+		        locale: 'en',
+		        manipulation: {
+		          addNode: function (data, callback) {
+		            // filling in the popup DOM elements
+		            document.getElementById('node-operation').innerHTML = "Add Node";
+		            editNode(data, clearNodePopUp, callback);
+		          },
+		          editNode: function (data, callback) {
+		            // filling in the popup DOM elements
+		            document.getElementById('node-operation').innerHTML = "Edit Node";
+		            editNode(data, cancelNodeEdit, callback);
+		          },
+		          addEdge: function (data, callback) {
+		            if (data.from == data.to) {
+		              var r = confirm("Do you want to connect the node to itself?");
+		              if (r != true) {
+		                callback(null);
+		                return;
+		              }
+		            }
+		            document.getElementById('edge-operation').innerHTML = "Add Edge";
+		            editEdgeWithoutDrag(data, callback);
+		          },
+		          editEdge: {
+		            editWithoutDrag: function(data, callback) {
+		              document.getElementById('edge-operation').innerHTML = "Edit Edge";
+		              editEdgeWithoutDrag(data,callback);
+		            }
+		          }
+		        }
+		      };
+      			network = new vis.Network(container, data, options);
+
+      
     }
 
     function editNode(data, cancelAction, callback) {
@@ -213,6 +233,7 @@
 <body onload="init();">
 <h2>Arguments visualisation</h2>
 
+<div class="w-25 p-3">
 <form method="post">
 <p style="width: 850px; font-size:14px; text-align: justify;">
   Choose the file for nodes and edges:
@@ -220,7 +241,7 @@
 
 
 <label for="source">Source file: </label>
-<select id="source" name="source">
+<select class="form-group" id="source" name="source">
     <option value="wd" selected>Wikidebats</option>
     <option value="kl">Kialo</option>
     <option value="am-fr">Arguman</option>
@@ -232,19 +253,21 @@
 <input type="submit" value="Draw">
 
 </form>
-
+</div>
 <hr>
+<div class="w-25 p-3">
 <p>
   <label for="topics">Select a topic:</label>
-  <select id="topics" onchange="draw();">
+  <select class="form-group" id="topics" onchange="draw();">
     <option value="-1" selected="selected">-</option>
     {% if dispo!=0  %}
     {% for index,row in topics.iterrows() %}
-    <option value="{{row['n']}}">{{row['label']}}</option>
+    <option value="{{row['id']}}">{{row['name']}}</option>
     {% endfor %}
     {% endif %}
   </select>
 </p>
+</div>
 
 <div id="node-popUp">
   <span id="node-operation">node</span> <br>
@@ -256,8 +279,8 @@
       <td>label</td><td><input id="node-label" value="new value"></td>
     </tr>
   </tbody></table>
-  <input type="button" value="save" id="node-saveButton">
-  <input type="button" value="cancel" id="node-cancelButton">
+  <input  type="button" value="save" id="node-saveButton">
+  <input  type="button" value="cancel" id="node-cancelButton">
 </div>
 
 <div id="edge-popUp">

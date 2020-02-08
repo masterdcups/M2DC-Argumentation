@@ -50,13 +50,18 @@ def makeJson(nodes_df, edges_df, lnodes, ledges):
     """
     nodes = []
     edges = []
-
     # iterates over dataframe to add nodes to JSON
     for index,row in nodes_df[nodes_df['n'].isin(lnodes)].iterrows():
         try:
-            nodes.append({'id': row['n'], 'label': row['label'].replace("\'"," "), 'shape':'box'})
+            nodes.append({
+                    'id': row['n'], 
+                    'label': row['label'].replace("\'"," "), 
+                    'shape':'box'})
         except:
-            nodes.append({'id': row['n'], 'label': row['url'], 'shape':'box'})
+            nodes.append({
+                    'id': row['n'], 
+                    'label': row['url'], 
+                    'shape':'box'})
     
     # Templates for edges shape in graph
     pro = {
@@ -65,7 +70,6 @@ def makeJson(nodes_df, edges_df, lnodes, ledges):
                 'type':'arrow'
                 }
             }
-
     con ={ 
              'from':{
                 'enabled':True,
@@ -76,9 +80,17 @@ def makeJson(nodes_df, edges_df, lnodes, ledges):
     # iterates over edges to add edges to JSON
     for edge in ledges:
         if edge[2]>0:
-            edges.append({ 'from': int(edge[1]), 'to': int(edge[0]), 'arrows': pro, 'color': {'color':'green'}  })
+            edges.append({ 
+                    'from': int(edge[1]), 
+                    'to': int(edge[0]), 
+                    'arrows': pro, 
+                    'color': {'color':'green'}  })
         else:
-            edges.append({ 'from': int(edge[1]), 'to': int(edge[0]), 'arrows': con, 'color': {'color':'red'}  })
+            edges.append({ 
+                    'from': int(edge[1]), 
+                    'to': int(edge[0]), 
+                    'arrows': con, 
+                    'color': {'color':'red'}  })
 
     tmp_json = {'nodes':nodes, 'edges':edges}
     json_txt = json.dumps(tmp_json)
