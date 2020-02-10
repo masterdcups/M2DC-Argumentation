@@ -20,7 +20,10 @@ def load(filename):
             except EOFError as e:
                 return None
 
-
+def gmap(generator, f):
+    """Map the function 'f' to every item of the generator"""
+    for item in generator:
+        yield f(item)
     
 
 
@@ -34,6 +37,7 @@ if __name__ == "__main__":
 
     # Sample run
     generator = ((i, 100-i, i**2) for i in range(100))
+    generator = gmap(generator, lambda t: (t[0], t[1], t[2], t[0]+t[1]))
     dump(generator, args.filename)
     for row in load(args.filename):
         print(row)

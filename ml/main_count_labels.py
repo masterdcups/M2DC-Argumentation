@@ -10,9 +10,9 @@ def count_labels(iterable):
     labels = {}
     for x, y in iterable:
         try:
-            labels[y] += 1
+            labels[y['class']] += 1
         except KeyError:
-            labels[y] = 1
+            labels[y['class']] = 1
     return labels
 
 
@@ -27,9 +27,8 @@ if __name__ == "__main__":
 
 
 
-    # CSV-like header
+    # CSV-like format
     print('dataset', 'n_rows', 'n_-1', 'n_1', sep="\t") 
-
     for filename in args.filename:
         dataset = utils.load(filename)
         labels = count_labels(dataset)
