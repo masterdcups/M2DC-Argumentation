@@ -226,6 +226,62 @@
       draw();
     }
 
+
+    function saveGraph(){
+
+    	var jsonf = {};
+    	var nodesf = [];
+    	var edgesf = [];
+
+		var source = document.getElementById('source');
+      	var select = document.getElementById('topics');
+      	var topicID = select.options[select.selectedIndex].value;
+      	var topicLabel = select.options[select.selectedIndex].text;
+      	var sourceID = source.options[source.selectedIndex].value;
+    	
+    	var nodes = network.body.nodes;
+    	for (var nodeID in nodes) {
+    		var nodetmp = nodes[nodeID];
+    		var label = nodetmp.labelModule.elementOptions.label;
+    		//console.log(nodetmp.labelModule.elementOptions.label);
+    		nodesf.push({"id": parseInt(nodeID), "label": label, "shape":"box"});
+    	}
+
+    	var edges = network.body.edges;
+    	for( var e in edges) {
+    		var from = edges[e].fromId;
+    		var to = edges[e].toId;
+    		var color = edges[e].options.color.color;
+    		var tarrow = edges[e].options.arrows.from.type;
+    		//console.log(edges[e]);} fromId, toId, options.color ("green", "red")
+    		edgesf.push({
+    			"from": from, 
+    			"to":to, 
+    			"arrows": {
+    				"from" : {"enabled":true, "type":tarrow}
+    			},
+    			"color": {"color": color} });
+    	}
+    	jsonf = JSON.stringify({"nodes":nodesf, "edges":edgesf});
+
+    	$.ajax({
+            url: '/saveJson',
+            data: 'topic='+topicID+'&source='+sourceID+'&file='+jsonf ,
+            dataType: 'json',
+            type: 'POST',
+            async: false,
+            success: function(response) {
+                console.log(response);
+                //data = response;
+                alert(response);
+                
+            },
+            error: function(error) {
+                console.log(error);
+                alert(error);
+            }});
+
+    }
   </script>
   
 </head>
@@ -268,6 +324,14 @@
   </select>
 </p>
 </div>
+
+<div class="w-25 p-3">
+<p>
+  <button class="form-group" onclick="saveGraph();">Save modfications</button>
+  
+</p>
+</div>
+
 
 <div id="node-popUp">
   <span id="node-operation">node</span> <br>

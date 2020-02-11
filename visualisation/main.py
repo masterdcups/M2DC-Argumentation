@@ -7,6 +7,29 @@ from utils import *
 app = Flask(__name__)
 
 
+@app.route('/saveJson', methods=['GET', 'POST'])
+def saveJson():
+    """
+    Service for retrieving JSON file with the graph format
+    to display it in the web using JS
+    """
+
+    source = request.form.get('source')
+    topic = request.form.get('topic')   
+    jsonf = request.form.get('file')  
+    jsonf = json.loads(jsonf)
+    jsonf = json.dumps(jsonf) 
+    print(source,topic)
+
+    if source is None or topic is None:
+        return "Not params given."
+
+    path = "json/"+str(source)+"/"+str(topic)
+    with open(path,'w') as outfile:
+        json.dump(jsonf, outfile)
+    
+    return "File "+path+" updated"    
+
 @app.route('/jsonFile', methods=['GET', 'POST'])
 def ajaxFunc():
     """
