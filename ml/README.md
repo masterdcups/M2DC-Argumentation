@@ -102,5 +102,23 @@ The *utils* module contains:
 	    """Map the function 'f' to every item of the generator"""
 		...
 
+	def merge_dicts(generator):
+	    """Merge yielded items: some dicts with distinct keys -> a dict with all keys"""
+		...
+	
+	def split_dicts(generator, *key_lists):
+	    """Split yielded items in dicts corresponding to the given key lists"""
+		...
+
+	def to_csv(generator, filename=None):
+	    """CSV of a generator that yields dicts"""
+	    ...
+
+	def from_csv(filename):
+	    """Read a csv and return a generator that yield dicts correspnding to columns"""
+		...
+
+
+
 If the script is directly called, it produces a sample run.
 
