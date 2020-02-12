@@ -1,0 +1,379 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta charset="utf-8">
+  <title>Argument visualization</title>
+
+  <link rel="stylesheet" type="text/css" href="static/css/bootstrap.css">
+  <link rel="stylesheet" type="text/css" href="static/css/local.css">
+
+  <script type="text/javascript" src="static/js/vis-network.js"></script>
+  <link rel="stylesheet" type="text/css" href="static/css/local2.css">
+  <link rel="stylesheet" type="text/css" href="static/css/vis1.css">
+  <link rel="stylesheet" type="text/css" href="static/css/vis2.css">
+  <link rel="stylesheet" type="text/css" href="static/css/vis3.css">
+  
+  <script type="text/javascript" src="static/js/jquery-3.4.1.min.js"></script>
+  <script type="text/javascript" src="static/js/graph.js"></script>
+  <script type="text/javascript">
+
+
+    function getGraph(json_txt){
+        return JSON.parse(json_txt);
+    }
+
+    var nodes = null;
+    var edges = null;
+    var network = null;
+    
+    // Store all the graphs
+    var allData = {};
+    allData[-1] = JSON.parse('{"nodes":[], "edges":[] }');
+    {% for id,graph in list_graph.items() %}
+    allData[{{id}}] = getGraph({{ graph| tojson | safe }});
+    {% endfor %}
+
+    var seed = 2;
+
+    function destroy() {
+      if (network !== null) {
+        network.destroy();
+        network = null;
+      }
+    }
+
+    function draw() {
+      destroy();
+      
+      var source = document.getElementById('source');
+      var select = document.getElementById('topics');
+      var topicID = select.options[select.selectedIndex].value;
+      var topicLabel = select.options[select.selectedIndex].text;
+      var sourceID = source.options[source.selectedIndex].value;
+      /*#select.selectedIndex = 0; // set fallback value
+      for (var i = 0, j = select.options.length; i < j; ++i) {
+        if (select.options[i].getAttribute('value') === defaultLocal) {
+          select.selectedIndex = i;
+          break;
+        }
+      }*/
+  	  //console.log(topicID+" "+sourceID)
+      var data = JSON.parse('{"nodes":[], "edges":[] }');
+       $.ajax({
+            url: '/jsonFile',
+            data: 'topic='+topicID+'&source='+sourceID ,
+            dataType: 'json',
+            type: 'GET',
+            async: false,
+            success: function(response) {
+                console.log(response);
+                data = response;
+                
+            },
+            error: function(error) {
+                console.log(error);
+            }});
+
+      //data = allData[topicID]; / *getGraph(topicID); */
+      // create a network
+      			var container = document.getElementById('mynetwork');
+		      var options = {
+
+		        physics: {
+		            enabled: true,
+		            hierarchicalRepulsion: {
+		                centralGravity: 0.0,
+		                springLength: 200,
+		                springConstant: 0.01,
+		                nodeDistance: 150,
+		                damping: 0.07,
+		                avoidOverlap: 1
+		            },
+		            solver: 'hierarchicalRepulsion'
+		        },
+		        edges:{
+		            arrows: {
+		                from: {
+		                    scaleFactor:1.5
+		                }
+		            }
+		        },
+		        nodes:{
+		          color:{
+		            'border' : '#6E6EFD',
+		            'background': '#FFFFFF'
+		          },
+		          widthConstraint:{
+		            'maximum' : 150  
+		            }  
+		         },
+		        layout: { 
+		          hierarchical: {
+		            enabled:true,
+		            levelSeparation: 500,
+		            nodeSpacing: 700,
+		            treeSpacing: 250,
+		            blockShifting: true,
+		            edgeMinimization: true,
+		            parentCentralization: true,
+		            direction: 'UD',        // UD, DU, LR, RL
+		            sortMethod: 'directed',  // hubsize, directed
+		           shakeTowards: 'leaves'  // roots, leaves
+		             },
+		          randomSeed:seed }, // just to make sure the layout is the same when the locale is changed
+		        locale: 'en',
+		        manipulation: {
+		          addNode: function (data, callback) {
+		            // filling in the popup DOM elements
+		            document.getElementById('node-operation').innerHTML = "Add Node";
+		            editNode(data, clearNodePopUp, callback);
+		          },
+		          editNode: function (data, callback) {
+		            // filling in the popup DOM elements
+		            document.getElementById('node-operation').innerHTML = "Edit Node";
+		            editNode(data, cancelNodeEdit, callback);
+		          },
+		          addEdge: function (data, callback) {
+		            if (data.from == data.to) {
+		              var r = confirm("Do you want to connect the node to itself?");
+		              if (r != true) {
+		                callback(null);
+		                return;
+		              }
+		            }
+		            document.getElementById('edge-operation').innerHTML = "Add Edge";
+		            editEdgeWithoutDrag(data, callback);
+		          },
+		          editEdge: {
+		            editWithoutDrag: function(data, callback) {
+		              document.getElementById('edge-operation').innerHTML = "Edit Edge";
+		              editEdgeWithoutDrag(data,callback);
+		            }
+		          }
+		        }
+		      };
+      			network = new vis.Network(container, data, options);
+
+      
+    }
+
+    function editNode(data, cancelAction, callback) {
+      document.getElementById('node-id').value = data.id;
+      document.getElementById('node-label').value = data.label;
+      document.getElementById('node-saveButton').onclick = saveNodeData.bind(this, data, callback);
+      document.getElementById('node-cancelButton').onclick = cancelAction.bind(this, callback);
+      document.getElementById('node-popUp').style.display = 'block';
+    }
+
+    // Callback passed as parameter is ignored
+    function clearNodePopUp() {
+      document.getElementById('node-saveButton').onclick = null;
+      document.getElementById('node-cancelButton').onclick = null;
+      document.getElementById('node-popUp').style.display = 'none';
+    }
+
+    function cancelNodeEdit(callback) {
+      clearNodePopUp();
+      callback(null);
+    }
+
+    function saveNodeData(data, callback) {
+      data.label = document.getElementById('node-label').value;
+      data.shape = 'box'; 
+      clearNodePopUp();
+      callback(data);
+    }
+
+    function editEdgeWithoutDrag(data, callback) {
+      // filling in the popup DOM elements
+      document.getElementById('edge-label').value = data.label;
+      document.getElementById('edge-saveButton').onclick = saveEdgeData.bind(this, data, callback);
+      document.getElementById('edge-cancelButton').onclick = cancelEdgeEdit.bind(this,callback);
+      document.getElementById('edge-popUp').style.display = 'block';
+    }
+
+    function clearEdgePopUp() {
+      document.getElementById('edge-saveButton').onclick = null;
+      document.getElementById('edge-cancelButton').onclick = null;
+      document.getElementById('edge-popUp').style.display = 'none';
+    }
+
+    function cancelEdgeEdit(callback) {
+      clearEdgePopUp();
+      callback(null);
+    }
+
+    function saveEdgeData(data, callback) {
+      if (typeof data.to === 'object')
+        data.to = data.to.id
+      if (typeof data.from === 'object')
+        data.from = data.from.id
+
+      data['arrows'] = {'from':{'enabled':true, 'type':'box'}};
+      data['color'] = {'color':'red'};
+
+      var label = parseInt(document.getElementById('edge-label').value);
+      if (label>0){
+        data.arrows.from.type = 'arrow';
+        data.color.color = 'green';
+      }
+
+      //data.label = document.getElementById('edge-label').value;
+      clearEdgePopUp();
+      callback(data);
+    }
+
+    function init() {
+      draw();
+    }
+
+
+    function saveGraph(){
+
+    	var jsonf = {};
+    	var nodesf = [];
+    	var edgesf = [];
+
+		var source = document.getElementById('source');
+      	var select = document.getElementById('topics');
+      	var topicID = select.options[select.selectedIndex].value;
+      	var topicLabel = select.options[select.selectedIndex].text;
+      	var sourceID = source.options[source.selectedIndex].value;
+    	
+    	var nodes = network.body.nodes;
+    	for (var nodeID in nodes) {
+    		var nodetmp = nodes[nodeID];
+    		var label = nodetmp.labelModule.elementOptions.label;
+    		//console.log(nodetmp.labelModule.elementOptions.label);
+    		nodesf.push({"id": parseInt(nodeID), "label": label, "shape":"box"});
+    	}
+
+    	var edges = network.body.edges;
+    	for( var e in edges) {
+    		var from = edges[e].fromId;
+    		var to = edges[e].toId;
+    		var color = edges[e].options.color.color;
+    		var tarrow = edges[e].options.arrows.from.type;
+    		//console.log(edges[e]);} fromId, toId, options.color ("green", "red")
+    		edgesf.push({
+    			"from": from, 
+    			"to":to, 
+    			"arrows": {
+    				"from" : {"enabled":true, "type":tarrow}
+    			},
+    			"color": {"color": color} });
+    	}
+    	jsonf = JSON.stringify({"nodes":nodesf, "edges":edgesf});
+
+    	$.ajax({
+            url: '/saveJson',
+            data: 'topic='+topicID+'&source='+sourceID+'&file='+jsonf ,
+            dataType: 'json',
+            type: 'POST',
+            async: false,
+            success: function(response) {
+                console.log(response);
+                //data = response;
+                alert(response);
+                
+            },
+            error: function(error) {
+                console.log(error);
+                alert(error);
+            }});
+
+    }
+  </script>
+  
+</head>
+
+<body onload="init();">
+<h2>Arguments visualisation</h2>
+
+<div class="w-25 p-3">
+<form method="post">
+<p style="width: 850px; font-size:14px; text-align: justify;">
+  Choose the file for nodes and edges:
+</p>
+
+
+<label for="source">Source file: </label>
+<select class="form-group" id="source" name="source">
+    <option value="wd" selected>Wikidebats</option>
+    <option value="kl">Kialo</option>
+    <option value="am-fr">Arguman</option>
+</select>
+
+
+<br>
+
+<input type="submit" value="Draw">
+
+</form>
+</div>
+<hr>
+<div class="w-25 p-3">
+<p>
+  <label for="topics">Select a topic:</label>
+  <select class="form-group" id="topics" onchange="draw();">
+    <option value="-1" selected="selected">-</option>
+    {% if dispo!=0  %}
+    {% for index,row in topics.iterrows() %}
+    <option value="{{row['id']}}">{{row['name']}}</option>
+    {% endfor %}
+    {% endif %}
+  </select>
+</p>
+</div>
+
+<div class="w-25 p-3">
+<p>
+  <button class="form-group" onclick="saveGraph();">Save modfications</button>
+  
+</p>
+</div>
+
+
+<div id="node-popUp">
+  <span id="node-operation">node</span> <br>
+  <table style="margin:auto;">
+    <tbody><tr>
+      <td>id</td><td><input id="node-id" value="new value"></td>
+    </tr>
+    <tr>
+      <td>label</td><td><input id="node-label" value="new value"></td>
+    </tr>
+  </tbody></table>
+  <input  type="button" value="save" id="node-saveButton">
+  <input  type="button" value="cancel" id="node-cancelButton">
+</div>
+
+<div id="edge-popUp">
+  <span id="edge-operation">edge</span> <br>
+  <table style="margin:auto;">
+    <tbody><tr>
+      <td>label</td><td><input id="edge-label" value="new value"></td>
+    </tr></tbody></table>
+  <input type="button" value="save" id="edge-saveButton">
+  <input type="button" value="cancel" id="edge-cancelButton">
+</div>
+
+<br>
+<div id="mynetwork">
+  <div class="vis-network" style="position: relative; overflow: hidden; touch-action: pan-y; user-select: none; width: 100%; height: 100%;" tabindex="900">
+    <canvas style="position: relative; touch-action: none; user-select: none; width: 100%; height: 100%;" width="1280" height="1024">
+      
+    </canvas><div class="vis-manipulation" style="display: none;">
+      
+    </div>
+    <div class="vis-edit-mode" style="display: block;">
+      <div class="vis-button vis-edit vis-edit-mode" style="touch-action: pan-y; user-select: none;">
+        <div class="vis-label">Edit</div>
+      </div>
+    </div>
+    <div class="vis-close" style="display: none;"></div>
+  </div>
+</div>
+
+
+
+</body></html>

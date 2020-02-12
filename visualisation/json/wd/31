@@ -1,0 +1,1 @@
+"{\"nodes\": [{\"id\": 31, \"label\": \" Le nationalisme est-il dangeureux ?\", \"shape\": \"box\"}, {\"id\": 1898, \"label\": \"Le nationalisme est une source majeure de conflit\", \"shape\": \"box\"}], \"edges\": [{\"from\": 31, \"to\": 1898, \"arrows\": {\"from\": {\"enabled\": true, \"type\": \"arrow\"}}, \"color\": {\"color\": \"green\"}}]}"
