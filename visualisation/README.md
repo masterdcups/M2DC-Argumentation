@@ -14,7 +14,12 @@ or:
     pip install requirements.txt
 ```
 ## Run
-Run the following command:
+To generate the topics from the data folder
+```sh
+    python generate.py
+```
+
+To run the webserver:
 ```sh
     python main.py
 ```
