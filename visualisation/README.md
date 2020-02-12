@@ -1,6 +1,7 @@
 # Visualization
 
 This is a web-based tool for visualizing the argument graph (pro/cons arguments) for a given topic.
+
 You can add/edit/delete nodes and edges from the graph if it is necessary.
 
 ## Install
@@ -23,6 +24,6 @@ Then, browse http://localhost:8000
 2. Click the *Draw* button. This will take some time if the file is long.
 3. The *Select Topic* bar will be filled with the recognized topics from the uploaded files.
 4. Choose one topic.
-    4.1 To add a node it is better to choose some high ID value > 1000000, to avoid conflicts with the existing ones
+    * To add a node it is better to choose some high ID value > 1000000, to avoid conflicts with the existing ones
 
 
