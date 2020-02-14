@@ -10,6 +10,8 @@ from keras.optimizers import Adam
 
 from keras.models import Model
 
+import numpy as np
+
 def getOptionsCocarascu():
     default_options = dict()
     default_options["embedded_size"] = 100
@@ -83,11 +85,11 @@ def CocarascuModel(options=None):
     if options["lstm"] == "bi":
         x = Bidirectional(LSTM(default_options["n_lstm"], 
                            activation=options["acti_lstm"],
-                           return_sequences=True))(x) 
+                           return_sequences=False))(x) 
     else:
         x = LSTM(default_options["n_lstm"], 
                  activation=options["acti_lstm"],
-                 return_sequences=True)(x) 
+                 return_sequences=False)(x) 
         
     x = Dropout(rate=options["dropout_rate"])(x)
     x = Model(inputs=argA, outputs=x)
@@ -100,11 +102,11 @@ def CocarascuModel(options=None):
     if options["lstm"] == "bi":
         y = Bidirectional(LSTM(default_options["n_lstm"], 
                            activation=options["acti_lstm"],
-                           return_sequences=True))(y) 
+                           return_sequences=False))(y) 
     else:
         y = LSTM(default_options["n_lstm"], 
                  activation=options["acti_lstm"],
-                 return_sequences=True)(y) 
+                 return_sequences=False)(y) 
     y = Dropout(rate=options["dropout_rate"])(y)
     y = Model(inputs=argB, outputs=y)
     
@@ -141,3 +143,18 @@ def svmModel():
 def rfModel():
     model = RandomForestClassifier(n_estimators=256)
     return model
+
+
+#def main():
+#
+#    batch_size = 128
+#    options = {}
+#    options["n_classif"] = 2
+#    model = CocarascuModel(options)
+#    inputA = np.random.randint(1,high=50, size=(256,50))
+#    inputB = np.random.randint(1,high=50, size=(256,50))
+#    labels = np.random.randint(0,high=1, size=(256,2))
+#    model.fit([inputA, inputB], labels, epochs=3, batch_size=batch_size)
+
+#if __name__=="__main__":
+#    main()
