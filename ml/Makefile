@@ -1,0 +1,120 @@
+# Setup
+PYTHON=python3
+
+DIR = ${CURDIR}
+
+SRC_DIR = src
+CFG_DIR = cfg
+
+MLLIB_DIR = $(DIR)
+export PYTHONPATH=$(MLLIB_DIR)
+
+
+DATA_DIR = data
+# Input files
+DATASETS_DIR = $(DATA_DIR)/raw
+
+NODE_DIR = $(DATASETS_DIR)
+NODE_FILENAME = sentences.pkl
+
+ARGUMENT_DIR = $(DATASETS_DIR)
+ARGUMENT_TRAIN_FILENAME = $(ARGUMENT_DIR)/train.pkl
+ARGUMENT_VALIDATION_FILENAME = $(ARGUMENT_DIR)/dev.pkl
+ARGUMENT_TEST_FILENAME = $(ARGUMENT_DIR)/test.pkl
+
+# Output directories
+OUTPUT_DIR = $(DATA_DIR)/basic
+
+PREPROCESSED_DIR = $(OUTPUT_DIR)/preprocessed
+MODEL_DIR = $(OUTPUT_DIR)/models
+EVALUATION_DIR = $(OUTPUT_DIR)/evaluation
+
+OUTPUT_DIRS = $(PREPROCESSED_DIR) $(MODEL_DIR) $(EVALUATION_DIR)
+
+# Preprocessing targets
+PREPROCESSED_NODE_FILENAME = preprocessed_nodes.pkl
+
+DICTIONARY_FILENAME = dictionary.pkl
+DICTIONARY_CFG_FILENAME = dictionary.yaml
+
+TFIDF_FILENAME = tfidf_model.pkl
+
+PREPROCESSED_TRAINING_FILENAME = training_preprocessed_arguments.pkl
+PREPROCESSED_VALIDATION_FILENAME = validation_preprocessed_arguments.pkl
+PREPROCESSED_TEST_FILENAME = test_preprocessed_arguments.pkl
+
+# Training targets
+MODEL_FILENAME = model.pkl
+
+# Evaluation targets
+EVALUATION_FILENAME = evaluation.txt
+
+### You can stop reading here if you just wanted to define paths.
+
+# Main rule
+.PHONY: all
+all: pre-build $(EVALUATION_DIR)/$(EVALUATION_FILENAME)
+
+.PHONY: pre-build
+pre-build: $(OUTPUT_DIRS)
+
+# Preprocessing rules
+
+$(PREPROCESSED_DIR)/$(PREPROCESSED_NODE_FILENAME): \
+		$(NODE_DIR)/$(NODE_FILENAME)
+	$(PYTHON) $(SRC_DIR)/preprocess_nodes.py $^ $@
+	@echo
+
+$(PREPROCESSED_DIR)/$(DICTIONARY_FILENAME): \
+		$(PREPROCESSED_DIR)/$(PREPROCESSED_NODE_FILENAME) \
+		$(ARGUMENT_TRAIN_FILENAME) \
+		$(CFG_DIR)/$(DICTIONARY_CFG_FILENAME)
+	$(PYTHON) $(SRC_DIR)/train_dictionary.py $^ $@
+	@echo
+
+$(PREPROCESSED_DIR)/$(TFIDF_FILENAME): \
+		$(PREPROCESSED_DIR)/$(PREPROCESSED_NODE_FILENAME) \
+		$(ARGUMENT_TRAIN_FILENAME) \
+		$(PREPROCESSED_DIR)/$(DICTIONARY_FILENAME)
+	$(PYTHON) $(SRC_DIR)/train_tfidf.py $^ $@
+	@echo
+
+$(PREPROCESSED_DIR)/$(PREPROCESSED_TRAINING_FILENAME): \
+		$(ARGUMENT_TRAIN_FILENAME) \
+		$(PREPROCESSED_DIR)/$(PREPROCESSED_NODE_FILENAME) \
+		$(PREPROCESSED_DIR)/$(DICTIONARY_FILENAME) \
+		$(PREPROCESSED_DIR)/$(TFIDF_FILENAME) 
+	$(PYTHON) $(SRC_DIR)/preprocess_arguments.py $^ $@
+	@echo
+
+$(PREPROCESSED_DIR)/$(PREPROCESSED_VALIDATION_FILENAME): \
+		$(ARGUMENT_VALIDATION_FILENAME) \
+		$(PREPROCESSED_DIR)/$(PREPROCESSED_NODE_FILENAME) \
+		$(PREPROCESSED_DIR)/$(DICTIONARY_FILENAME) \
+		$(PREPROCESSED_DIR)/$(TFIDF_FILENAME) 
+	$(PYTHON) $(SRC_DIR)/preprocess_arguments.py $^ $@
+	@echo
+
+# Training rules
+
+$(MODEL_DIR)/$(MODEL_FILENAME): \
+		$(PREPROCESSED_DIR)/$(PREPROCESSED_TRAINING_FILENAME) \
+		$(PREPROCESSED_DIR)/$(PREPROCESSED_VALIDATION_FILENAME) \
+		$(CFG_DIR)/$(DICTIONARY_CFG_FILENAME)
+	$(PYTHON) $(SRC_DIR)/train_model.py $^ $@
+	@echo
+
+# Evaluation rules
+
+$(EVALUATION_DIR)/$(EVALUATION_FILENAME): \
+		$(MODEL_DIR)/$(MODEL_FILENAME) \
+		$(PREPROCESSED_DIR)/$(PREPROCESSED_TRAINING_FILENAME) \
+		$(PREPROCESSED_DIR)/$(PREPROCESSED_VALIDATION_FILENAME) \
+		$(CFG_DIR)/$(DICTIONARY_CFG_FILENAME)
+	$(PYTHON) $(SRC_DIR)/evaluate_model.py $^ # $@
+	@echo
+
+
+
+$(OUTPUT_DIRS): %: 
+	@mkdir -p $@

@@ -1,124 +1,137 @@
-# ML
+# Machine Learning for argument pro/con classification
 
-## Scripts
+This directory contains code to preprocess arguments (which are pairs of text labeled with the type of relation (pro & con)) using NLP techniques, train machine learning models on arguments and evaluate the quality of said models.
 
-### Main script
+## User guide
 
-For now, the *main.py* script is a sample run:
+### Python environment setup
+```
+	conda env create -f setup/environment.yml
+	conda activate argumentation_ml
 
-1. Create and dump the sentence generator on disk (if missing)
-2. Create and dump the given argument generator on disk (if missing). By default it uses the 'dev2' dataset.
-3. Load dumped generators
-4. Apply an arbitrary transformation on sentences (upper case)
-5. Map arguments with the processes sentences
-6. Print rows
+	# This should download necessary corpora/models.
+	# It does not because I don't remember which one were downloaded.
+	# You should get some error message telling you to somehow download
+	# a thing. Please update nlp_setup.py to reflect what you did.
+	python setup/nlp_setup.py
+```
 
+### Usage
 
-### Label count
+All input and output data paths should be declared in the `Makefile`. Make sure everything is setup correcly before running.
 
-The *main_count_labels.py* script counts label frequencies in datasets. It is mainly intended for debugging tasks, and may change or be removed in the future.
+`DATA_DIR=data` by default, with raw data found in `DATA_DIR/raw` and outputs in `OUTPUT_DIR=DATA_DIR/basic`.
 
-You may want to run:
-
-	python3 main_count_labels.py datasets/train.pkl datasets/dev.pkl datasets/dev1.pkl datasets/dev2.pkl datasets/test.pkl datasets/test1.pkl datasets/test2.pkl 
-
-to check that classes are balanced in each dataset
-
-|dataset|n_rows|n_-1|n_1|
-| --- | --- | --- | --- |
-|train|25292|12646|12646|
-|dev1|3638|1819|1819|
-|dev2|406|203|203|
-|dev|3676|1838|1838|
-|test1|3686|1843|1843|
-|test2|710|355|355|
-|test|3752|1876|1876|
+```
+	cd ml/
+	conda activate argumentation_ml
+	make
+```
 
 
-## Modules
+This will generate the following files:
 
-### Datasets
+ - Preprocessing (in `OUTPUT_DIR/preprocessed/`):
 
-The *datasets* module contains:
+   - `dictionary.pkl`
+   - `tfidf.pkl`
+   - `preprocessed_nodes.pkl`
+   - `(training, validation, test)preprocessed_arguments.pkl`
 
-	def sentence_generator(n4j_graph):
-    	"""Create a generator for all sentences (nodes)"""
-	    ...
-	    
-	def argument_generator(dataset_name, n4j_graph, balanced=False):
-	    """Create a dataset generator that yields ({'n1':_, 'n2':_},{'class':_}) tuples.
-	    name: in {train, dev, dev1, dev2, test, test1, test2}
-	    n4j_graph: connected neo4j graph
-	    balanced: Return the same amout of rows for each class (edge weight)
-	    """
-	    ...
+ - Training (in `OUTPUT_DIR/models/`):
 
-	def sentence_mapper(sentence_gen):
-	    """Mapper: map sentences on 'n=n1' and 'n=n2' condition"""
-	    ...
+   - `model.pkl`
 
-	def map_sentences(argument_gen, sentence_gen):
-	    """Map sentences to arguments (use the 'sentence_mapper')"""
-	    ...
-	    
+ - Evaluation (in `OUTPUT_DIR/evaluation/`):
 
-The sentence generator yields {'text': _, 'n': _} dicts.  
-Argument generators yield ({'n1':_, 'n2':_}, {'class':_}) tuples of dicts.  
-The sentence mapping consist to map arguments with the (preprocessed) sentences. Note that all sentences have to be read before mapping, so it breaks the pipeline.
+   - nothing yet (script outputs metrics to stdout)
 
-All sentences are taken from Kialo (thus in english), classes are 1.0 (pro-edges) and -1.0 (cons-edges).
+There is (at least one) file dedicated to each output, which can be found in `src/`. 
+Calling the scripts without arguments will display their individual user guide (argparse).
 
-Available datasets are :
+## Developper guide
 
-- **train**: 80% of kialo, but debates #14 and #16
-- **dev**: union of *dev1* and *dev2* datasets
-- **dev1**: 10% of kialo
-- **dev2**: debate #16 (1.32% of kialo)
-- **test**: union of *test1* and *test2* datasets
-- **test1**: 10% of kialo
-- **test2**: debate #14 (1.69% of kialo)
+### General architecture
+`Makefile` defines the paths of every input and output of each scripts.
 
-If the script is directly called, it uses the *utils* module to dump each dataset generator on disk. Use *-h* option for usage.
+`src/` contains the main scripts. They take paths / filenames as input and output files to disk. These scripts should be as minimal as possible (parse arguments, load files, pass data to library functions, save files).
 
-The sentence generator and all balanced dataset generators are already generated and available in the  *datasets/* directory. You may want to *utils.load* them.
+`cfg/` contains yaml configuration files for the main scripts.
+
+`mllib/` is where the real work is done. This is a module, with the following structure:
+
+ - `preprocessing`:
+
+   - `dataset_preparation` (dataset generation, loading, utilities)
+   - `text_preprocessing` (preprocessing of individual text documents)
+   - `argument_preprocessing` (processing of arguments)
+   - `ml_preprocessing` ((X,y) generators, adaptors, ml utilities)
+
+ - `models` (training procedures and models)
+ - `evaluation` (computing metrics, maybe uploading results)
+
+Module functions should be pure: no side-effects apart from printing to stdout (or loading files through generator getters passed as parameters).
+
+Module scripts cannot be called as main normally. To run `text_preprocessing.py` as a main file (for debugging purpose), execute:
+```
+	python3 -m mllib.preprocessing.text_preprocessing.text_preprocessing args
+```
+Please create a test method (or at least a human-readable print loop) whenever you use these mains (don't throw away the debugging code, clean it up and save it).
+(the current mains might very well be unusable/obsolete code)
+
+### Input / output
+Depending on the context, module functions take as inputs single files (dictionary, models, DataFrame) or functions returning a generator. They return a single file or a generator.
+
+Examples of functions returning a generator:
+```
+	generator_getter = lambda: range(10)
+	generator_getter = lambda: utils.load('file.pkl')
+
+	generator = generator_getter()
+```
+File loading/dumping is mostly done with pkl, either directly or through `mllib.preprocessing.dataset_preparation.utils`.
+
+### Preprocessing
+The pipeline currently involves:
+
+ - Preprocessing the node documents using corpus agnostic techniques, to precompute nlp features
+ - Fitting of gensim's Dictionary and TfidfModel on the node documents appearing in the training arguments
+ - Extraction of argument nodes Tf-Idf vectors and their cosine similarities
+ - Generation of pandas.DataFrame dumps containing the preprocessed arguments
+
+It should be noted that the dumped DataFrame contains Tf-Idf vectors in a sparse format, which cannot be use directly by machine learning methods.
+
+### Training
+The pipeline currently involves:
+
+ - Defining a model (currently sklearn.linear_model.LogisticRegression())
+ - Defining a mapping between the preprocessed argument DataFrame columns and the inputs/outputs of the model (`ml_adaptors.py`)
+ - Defining a training procedure (with a generator (`ml_generators.py`))
+ - Dumping the model to disk
+
+### Evaluation
+The pipeline currently involves:
+
+ - Defining evaluation generators, using the previously defined mapping
+ - Defining the metrics to evaluate
+ - Loading the model (non-trivial for Deep Learning models)
+ - Dumping the metrics evaluation for training and validation sets
+
+### Makefile
+The source code is excluded from the prerequisites (very likely to change).
+
+### Git
 
 
+`data/.gitignore`, keeps empty data dir in repo:
+```
+	*
+	!raw/
+	!.gitignore
+```
 
-
-
-### Utils
-
-The *utils* module contains:
-
-	def dump(generator, filename):
-	    """Dump a generator on disk"""
-	    ...
-
-	def load(filename):
-	    """Load a generator from disk"""
-	    ...
-
-	def gmap(generator, f):
-	    """Map the function 'f' to every item of the generator"""
-		...
-
-	def merge_dicts(generator):
-	    """Merge yielded items: some dicts with distinct keys -> a dict with all keys"""
-		...
-	
-	def split_dicts(generator, *key_lists):
-	    """Split yielded items in dicts corresponding to the given key lists"""
-		...
-
-	def to_csv(generator, filename=None):
-	    """CSV of a generator that yields dicts"""
-	    ...
-
-	def from_csv(filename):
-	    """Read a csv and return a generator that yield dicts correspnding to columns"""
-		...
-
-
-
-If the script is directly called, it produces a sample run.
+`.gitignore`:
+```
+	*__pycache__/
+```
 
