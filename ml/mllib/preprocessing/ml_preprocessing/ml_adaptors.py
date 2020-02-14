@@ -2,7 +2,11 @@ import numpy as np
 import pandas as pd
 import gensim
 
-def default_DataFrame2numpy_mapping(parameters):
+# Mapping for most models: X is the concatenation of all features, 
+# y the concatenation of all targets. 
+# The column renaming is done for demonstration purposes.
+def default_DataFrame2numpy_mapping(parameters, merge_X=True, merge_y=True):
+
     sparse_tfidf = lambda x: gensim_sparse_DataFrame2numpy(
             x, length=parameters['dictionary']['vocabulary_size'])
 
@@ -18,7 +22,7 @@ def default_DataFrame2numpy_mapping(parameters):
                 'tfidf_cosine_similarity': {},
             },
             'parameters': {
-                'merge': True,
+                'merge': merge_X,
             },
         },
         'y': {
@@ -26,7 +30,7 @@ def default_DataFrame2numpy_mapping(parameters):
                 'pro': {},
             },
             'parameters': {
-                'merge': True,
+                'merge': merge_y,
             }
         }
     }

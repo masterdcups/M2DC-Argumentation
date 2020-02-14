@@ -8,32 +8,21 @@ import gensim
 
 from mllib.preprocessing.dataset_preparation import utils
 
-def fit_label_encoder(argument_generator_getter):
-    """
-        Map -1.0 to 0 and 1.0 to 1.
-    """
 
-    label_encoder = sk_preprocessing.LabelEncoder()
-    label_encoder.fit(np.array([-1.0, 1.0]))
+# Alter this function if you have some preprocessing you want to do 
+# on individual nodes dictionary (prefer the DataFrame). 
+# Please move it further down in the file (right after preprocessed_argument_df) when you do.
+def preprocess_node(node): 
+    # dict does not deep-copy objects: modify existing keys at you own risk
+    #return dict(node, {
+    #    #'new_feature1': 1, 'new_feature2': 2
+    #})
 
-    return label_encoder
-
-def fit_id_encoder(argument_generator_getter):
-    """
-        Encodes nodes ids to [0, nb_unique_ids - 1].
-    """
-    id_encoder = sk_preprocessing.OrdinalEncoder()
-    id_encoder.fit([
-        [n] 
-        for argument in argument_generator_getter() 
-        for n in argument[0].values()])
-
-    return id_encoder
-
+    return node
 
 def preprocessed_argument_df(
         argument_generator_getter,
-        nodes_nlp_generator_getter,
+        preprocessed_nodes_generator_getter,
         dictionary, tfidf_model,
         verbose = False,
     ):
@@ -43,12 +32,19 @@ def preprocessed_argument_df(
         Computes argument features (tf-idf cosine similarity).
 
         Returns a DataFrame with all node features prefixed with
-        premise_/conclusion_, and class in 'pro'.
+        premise_/conclusion_, and label in 'pro'.
     """
 
+    # Single node preprocessing on generator items, as
+    # a generator getter (untested)
+    #preprocessed_nodes_generator_getter = lambda: map(
+    #        preprocess_node,
+    #        preprocessed_nodes_generator_getter())
 
-    nodes_nlp = nodes_nlp_generator_getter()
-    df_nodes = pd.DataFrame(nodes_nlp).set_index('id', drop=False)
+    preprocessed_nodes = preprocessed_nodes_generator_getter()
+    
+
+    df_nodes = pd.DataFrame(preprocessed_nodes).set_index('id', drop=False)
 
     df_nodes['sparse_tfidf'] = df_nodes['lemmas'].apply(
             lambda lemmas: tfidf_model[
@@ -105,6 +101,28 @@ def preprocessed_argument_df(
         print()
 
     return df_arguments
+
+def fit_label_encoder(argument_generator_getter):
+    """
+        Map -1.0 to 0 and 1.0 to 1.
+    """
+
+    label_encoder = sk_preprocessing.LabelEncoder()
+    label_encoder.fit(np.array([-1.0, 1.0]))
+
+    return label_encoder
+
+def fit_id_encoder(argument_generator_getter):
+    """
+        Encodes nodes ids to [0, nb_unique_ids - 1].
+    """
+    id_encoder = sk_preprocessing.OrdinalEncoder()
+    id_encoder.fit([
+        [n] 
+        for argument in argument_generator_getter() 
+        for n in argument[0].values()])
+
+    return id_encoder
 
 if __name__ == '__main__':
     pass
