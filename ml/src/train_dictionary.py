@@ -29,7 +29,7 @@ def main(preprocessed_node_path, argument_path, cfg_path, dictionary_path):
 
     dictionary = text.fit_dictionary(
             preprocessed_node_generator_getter,
-            vocabulary_size = dictionary_parameters['vocabulary_size'],
+            dictionary_parameters,
             verbose = True)
 
     pkl.dump(dictionary, dictionary_path.open('wb'))

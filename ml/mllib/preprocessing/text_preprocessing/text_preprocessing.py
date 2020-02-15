@@ -88,7 +88,7 @@ def PennTreebank_to_WordNet(pos_tag):
     return nltk.corpus.wordnet.NOUN
 
 def fit_dictionary(nodes_nlp_generator_getter, 
-        vocabulary_size = 1000,
+        parameters,
         verbose = False):
 
     if verbose:
@@ -107,8 +107,11 @@ def fit_dictionary(nodes_nlp_generator_getter,
                     dictionary.num_nnz / dictionary.num_pos))
 
     kept_tokens = ['not', 'for', 'against', 'good', 'bad']
-    dictionary.filter_extremes(no_below=0, no_above=1, # no exclusion
-        keep_n=vocabulary_size, keep_tokens=kept_tokens)
+    dictionary.filter_extremes(
+            no_below=parameters['min_frequency_absolute'], 
+            no_above=parameters['max_frequency_relative'],
+            keep_n=parameters['vocabulary_size'], 
+            keep_tokens=kept_tokens)
 
     # Transforms dictionary indices into contiguous range [0 (1?), |Vocabulary|]
     dictionary.compactify()
