@@ -127,22 +127,6 @@ def CocarascuModel(options=None):
     return model
    
 
-from sklearn.svm import SVC
-from sklearn.ensemble import RandomForestClassifier
-
-"""
-Methods implemented by Carstents-Toni in
-'Using argumentation to improve classification in Natural Language problems'
-Method: SVM, Random Forest
-"""
-
-def svmModel():
-    model = SVC(C=1, kernel='poly')
-    return model
-
-def rfModel():
-    model = RandomForestClassifier(n_estimators=256)
-    return model
 
 
 #def main():

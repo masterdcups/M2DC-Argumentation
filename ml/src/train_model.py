@@ -3,12 +3,10 @@ from pathlib import Path
 
 import pickle as pkl
 
-import sklearn
-
 from mllib import cfg
 
 from mllib.preprocessing.dataset_preparation import utils
-from mllib.models import training
+from mllib.models import training, simple_models
 
 
 def main(training_argument_path, validation_argument_path,
@@ -20,7 +18,8 @@ def main(training_argument_path, validation_argument_path,
     dictionary_cfg_path = Path(dictionary_cfg_path)
     model_path = Path(model_path)
 
-    model = sklearn.linear_model.LinearRegression()
+    model = simple_models.RandomForestClassifier(n_estimators=30)
+
     model = training.fit_simple(model,
             [lambda: pkl.load(training_argument_path.open('rb'))], 
             [lambda: pkl.load(validation_argument_path.open('rb'))], 

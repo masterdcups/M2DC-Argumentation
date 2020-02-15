@@ -51,7 +51,8 @@ def gensim_sparse_DataFrame2numpy(column, length=1000):
         (the [(word_index, tfidf)] ones)
     """
     vectorized_sparse2full = np.vectorize(
-            lambda sparse: gensim.matutils.sparse2full(sparse, length=length), 
+            lambda sparse: gensim.matutils.sparse2full(
+                sparse, length=length),
             signature='()->(n)')
 
     return vectorized_sparse2full(column.values)

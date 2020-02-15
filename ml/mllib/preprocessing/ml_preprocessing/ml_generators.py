@@ -81,7 +81,7 @@ def generator_DataFrame2numpy(
                     part: {
                         params.get('name', column_name): 
                             params.get('function',default_transform)(
-                                batch[column_name])
+                                batch[column_name]).astype(np.float32)
                         for column_name, params 
                             in mapping[part]['columns'].items()} 
                     for part in mapping}
