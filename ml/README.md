@@ -9,11 +9,8 @@ This directory contains code to preprocess arguments (which are pairs of text la
 	conda env create -f setup/environment.yml
 	conda activate argumentation_ml
 
-	# This should download necessary corpora/models.
-	# It does not because I don't remember which one were downloaded.
-	# You should get some error message telling you to somehow download
-	# a thing. Please update nlp_setup.py to reflect what you did.
-	python setup/nlp_setup.py
+	# This download necessary corpora/models.
+	python3 setup/setup_nlp.py
 ```
 
 ### Usage
