@@ -5,7 +5,7 @@ channels:
 dependencies:
   - gensim=3.8.*
   - joblib=0.14.*
-  #- keras=2.2.*
+  - keras=2.2.*
   - networkx=2.*
   - nltk=3.4.*
   - numpy=1.18.*

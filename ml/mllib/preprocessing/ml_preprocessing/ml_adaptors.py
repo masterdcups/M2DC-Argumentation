@@ -2,58 +2,62 @@ import numpy as np
 import pandas as pd
 import gensim
 
-# Mapping for most models: X is the concatenation of all features, 
-# y the concatenation of all targets. 
-# The column renaming is done for demonstration purposes.
-def default_DataFrame2numpy_mapping(parameters, merge_X=True, merge_y=True):
+import functools
 
-    sparse_tfidf = lambda x: gensim_sparse_DataFrame2numpy(
-            x, length=parameters['dictionary']['vocabulary_size'])
+def fill_mapping(
+        mapping, 
+        default_transform = lambda x: x,
+        before_transform = None,
+        after_transform = None,
+    ):
+    # Compose a function with another : func1 o func2
+    def compose(*functions):
+        return functools.reduce(
+                lambda f, g: lambda *args, **kwargs: f(g(*args, **kwargs)),
+                functions
+            )
 
-    return {
-        'X': {
-            'columns': {
-                'premise_sparse_tfidf': {
-                    'function': sparse_tfidf,
-                    'name': 'premise_tfidf'},
-                'conclusion_sparse_tfidf': {
-                    'function': sparse_tfidf,
-                    'name': 'conclusion_tfidf'},
-                'tfidf_cosine_similarity': {},
-            },
-            'parameters': {
-                'merge': merge_X,
-            },
-        },
-        'y': {
-            'columns': {
-                'pro': {},
-            },
-            'parameters': {
-                'merge': merge_y,
-            }
+    before_functions = [] if not before_transform else [before_transform]
+    after_functions = [] if not after_transform else [after_transform]
+
+    for part, part_mapping in mapping.items():
+        for column, column_mapping in part_mapping['columns'].items():
+            if 'name' not in column_mapping:
+                column_mapping['name'] = column
+
+            #if 'function' not in column_mapping:
+            #    column_mapping['function'] = default_transform
+
+            #column_mapping['function'] = compose_always(
+            #        column_mapping['function']))
+            column_mapping['function'] = compose(*after_functions + [
+                    column_mapping.get('function', default_transform)
+                ] + before_functions)
+
+        #if 'merger' in part_mapping:
+        #    part_mapping['merger'] = 
+        #       *[part_mapping['merger']] + before_functions)
+
+    return mapping
+
+def apply_mapping(mapping:dict, data: dict):
+    data = {
+        part: {
+            column_mapping['name']:
+                column_mapping['function'](data[column_name])
+
+            for column_name, column_mapping in mapping[part]['columns'].items()
         }
+        for part in mapping
     }
 
+    # Merge when needed.
+    data = {
+        part:
+            data[part]
+            if not mapping[part]['merger'] else
+            mapping[part]['merger'](list(data[part].values()))
+        for part in mapping
+    }
 
-def default_DataFrame2numpy_transform(column):
-    """
-        Default function to use for DataFrame columns.
-
-        If some non numpy/pandas function needs to be applied, use
-        np.vectorize(function) or DataFrame.apply(function).
-    """
-    return column.values[:, None]
-
-def gensim_sparse_DataFrame2numpy(column, length=1000):
-    """
-        Transforms sparse tfidf vectors from gensim.models.TfidfModel.
-        (the [(word_index, tfidf)] ones)
-    """
-    vectorized_sparse2full = np.vectorize(
-            lambda sparse: gensim.matutils.sparse2full(
-                sparse, length=length),
-            signature='()->(n)')
-
-    return vectorized_sparse2full(column.values)
-
+    return data

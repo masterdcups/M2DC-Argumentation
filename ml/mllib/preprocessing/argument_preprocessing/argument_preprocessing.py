@@ -33,7 +33,7 @@ def preprocess_node(node):
 def preprocessed_argument_df(
         argument_generator_getter,
         preprocessed_nodes_generator_getter,
-        dictionary, tfidf_model,
+        dictionary, tfidf,
         verbose = False,
     ):
     """
@@ -68,14 +68,17 @@ def preprocessed_argument_df(
                     df_nodes[['id', 'debate_name']].values.ravel('K')
                 ))
             ))
+        print(df_nodes.head(5))
         print()
 
     # Drop node duplicates. They exist due to nodes appearing 
     # in multiple debates. 
     df_nodes.drop_duplicates(['id'], inplace=True)
 
-    df_nodes['sparse_tfidf'] = df_nodes['lemmas'].apply(
-            lambda lemmas: tfidf_model[dictionary.doc2bow(lemmas)])
+    df_nodes['sparse_tfidf'] = tfidf.transform(
+            dictionary.transform(df_nodes['lemmas']))
+            #.apply(
+            #lambda lemmas: tfidf_model[dictionary.doc2bow(lemmas)])
                 #[
                 #    lemma for lemma in lemmas if lemma.isalpha() 
                 #])])
@@ -132,6 +135,8 @@ def preprocessed_argument_df(
 
 
     # ARGUMENT FEATURES
+    print(df_arguments[['premise_sparse_tfidf',
+        'conclusion_sparse_tfidf']].head(5))
 
     df_arguments['tfidf_cosine_similarity'] = \
             df_arguments[

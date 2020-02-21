@@ -1,11 +1,81 @@
 import sys
 import operator
 
+import typing
+
 import pickle as pkl
 import nltk
 import gensim
 
 from mllib.preprocessing.dataset_preparation import utils
+
+#def document2sentences_tokens(document: str) -> [[str]]:
+#    return list(map(nltk.word_tokenize, nltk.sent_tokenize(document)))
+
+def sentences_tokens2sentences_spans(sentences_tokens: [[str]]) -> [(int, int)]:
+    sentences_spans = []
+
+    current_token_index = 0
+    for sentence in sentences_tokens:
+        sentence_len = len(sentence)
+        sentences_spans.append(
+            (current_token_index, current_token_index+sentence_len-1))
+        current_token_index += sentence_len
+
+    return sentences_spans
+
+def sentences_tokens2tokens(sentences_tokens: [[str]]) -> [str]:
+    return [
+        token for sentence in sentences_tokens for token in sentence
+    ]
+
+def tokens2pos_tags(tokens: [str]) -> [str]:
+    return list(map(operator.itemgetter(1), nltk.tag.pos_tag(tokens)))
+
+
+def tokens2lemmas(
+        tokens: [str], 
+        lemmatize, # function to apply to each token, can take pos_tags as arg
+        pos_tags: [str] = None
+    ) -> [str]:
+
+    if not pos_tags:
+        return [lemmatize(token.lower()) for token in tokens]
+    else:
+        return [
+            lemmatize(token.lower(), PennTreebank_to_WordNet(pos_tag))
+            for token, pos_tag in zip(tokens, pos_tags)
+        ]
+
+def PennTreebank_to_WordNet(pos_tag: str) -> str:
+    """
+        Translates Penn Treebank PoS tags to WordNet PoS tags.
+    """
+
+    prefix = pos_tag[:1]
+
+    if prefix == 'V':
+        return nltk.corpus.wordnet.VERB
+    if prefix == 'R':
+        return nltk.corpus.wordnet.ADV
+    if prefix == 'J':
+        return nltk.corpus.wordnet.ADJ
+
+    return nltk.corpus.wordnet.NOUN
+
+# Might break if we use a lemmatizer other than the WordNet one.
+def make_lemmatize(lemmatizer: object = None):
+    """ Returns a function lemmatizing a token, optionally with its pos_tag. """
+
+    if not lemmatizer:
+        lemmatizer = nltk.stem.WordNetLemmatizer()
+    # Closure for lemmatizer
+    def lemmatize(lemmatizer):
+        lemmatizer_reference = lemmatizer
+
+        return lemmatizer_reference.lemmatize
+
+    return lemmatize(lemmatizer) 
 
 def preprocessed_node_generator(
         node_generator_getter, 
@@ -29,8 +99,7 @@ def preprocessed_node_generator(
         plus the initial key/value pairs.
     """
 
-    if not lemmatizer:
-        lemmatizer = nltk.stem.WordNetLemmatizer()
+    lemmatize = make_lemmatize(nltk.stem.WordNetLemmatizer())
 
     nodes = node_generator_getter()
 
@@ -39,27 +108,12 @@ def preprocessed_node_generator(
         document_id = node['n']
         document_debate_name = node['debate_name']
         
-        sentences_tokens = list(map(
-            nltk.word_tokenize, nltk.sent_tokenize(document)))
-
-        sentences_spans = []
-        current_token_index = 0
-        for sentence in sentences_tokens:
-            sentence_len = len(sentence)
-            sentences_spans.append(
-                (current_token_index, current_token_index+sentence_len-1))
-            current_token_index += sentence_len
-
-        tokens = [
-            token for sentence in sentences_tokens for token in sentence
-        ]
-
-        pos_tags = list(map(operator.itemgetter(1), nltk.tag.pos_tag(tokens)))
-
-        lemmas = [
-            lemmatizer.lemmatize(token.lower(), PennTreebank_to_WordNet(pos_tag))
-            for token, pos_tag in zip(tokens, pos_tags)
-        ]
+        sentences_tokens = document2sentences_tokens(document)
+        sentences_spans = sentences_tokens2sentences_spans(sentences_tokens)
+        tokens = sentences_tokens2tokens(sentences_tokens)
+        pos_tags = tokens2pos_tags(tokens)
+        lemmas = tokens2lemmas(
+                tokens, lemmatize, map(PennTreebank_to_WordNet, pos_tags))
 
         yield {
             'id': document_id,
@@ -71,21 +125,7 @@ def preprocessed_node_generator(
             'lemmas': lemmas,
         }
 
-def PennTreebank_to_WordNet(pos_tag):
-    """
-        Translates Penn Treebank PoS tags to WordNet PoS tags.
-    """
 
-    prefix = pos_tag[:1]
-
-    if prefix == 'V':
-        return nltk.corpus.wordnet.VERB
-    if prefix == 'R':
-        return nltk.corpus.wordnet.ADV
-    if prefix == 'J':
-        return nltk.corpus.wordnet.ADJ
-
-    return nltk.corpus.wordnet.NOUN
 
 def fit_dictionary(nodes_nlp_generator_getter, 
         parameters,
@@ -159,24 +199,28 @@ if __name__ == '__main__':
         'debate_name': "Geopolitical situation in the middle east is fine."},
     )
 
+    for x in preprocessed_node_generator(dummy_node_generator_getter):
+        print(*x.items(), sep='\n')
+        print()
 
-    node_nlp_generator = preprocess_nodes_nlp(lambda : utils.load(sys.argv[1]))
-    output_dir = sys.argv[2]
 
-    nodes_nlp_filename = "{}/nodes_nlp.pkl".format(output_dir)
-    utils.dump(node_nlp_generator, nodes_nlp_filename)
+    #node_nlp_generator = preprocess_nodes_nlp(lambda : utils.load(sys.argv[1]))
+    #output_dir = sys.argv[2]
 
-    dictionary = fit_dictionary(
-        lambda : utils.load(nodes_nlp_filename), verbose = True
-    )
-    pkl.dump(dictionary, open("{}/dictionary.pkl".format(output_dir), 'wb'))
+    #nodes_nlp_filename = "{}/nodes_nlp.pkl".format(output_dir)
+    #utils.dump(node_nlp_generator, nodes_nlp_filename)
 
-    tfidf = fit_tfidf(
-        lambda : utils.load(nodes_nlp_filename),
-        dictionary = dictionary,
-        verbose = True
-    )
-    pkl.dump(tfidf, open("{}/tfidf.pkl".format(output_dir), 'wb'))
+    #dictionary = fit_dictionary(
+    #    lambda : utils.load(nodes_nlp_filename), verbose = True
+    #)
+    #pkl.dump(dictionary, open("{}/dictionary.pkl".format(output_dir), 'wb'))
+
+    #tfidf = fit_tfidf(
+    #    lambda : utils.load(nodes_nlp_filename),
+    #    dictionary = dictionary,
+    #    verbose = True
+    #)
+    #pkl.dump(tfidf, open("{}/tfidf.pkl".format(output_dir), 'wb'))
 
 
 
