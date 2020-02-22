@@ -31,6 +31,7 @@ class Embedder():
         embeddings. 
         """
         for document in corpus:
+            embedding = self.embeddings[self.document2ids(document)]
             yield self.embeddings[self.document2ids(document)]
 
     def transform(self,

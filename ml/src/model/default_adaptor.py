@@ -3,13 +3,18 @@ import numpy as np
 from mllib.preprocessing.ml_preprocessing import ml_adaptors as ml_ad
 
 def Adaptor(
-        tfidf,
+        tfidf, embedder,
         merge_X=True, merge_y=True
     ):
     """ Maps a preprocessed arguments DataFrame columns to a dictionary
     of np.array keyed by ['X'|'y'], followed by ['name'] if the columns
     were not merged (merge_X and merge_y).
     """
+
+    mean_embedding = lambda tokens: np.array(
+            list(map(lambda x: np.mean(x, axis=0),
+                embedder.transform_generator(tokens)))
+        )
 
     merger = lambda column_values: np.concatenate(list(column_values), axis=-1)
 
@@ -23,6 +28,14 @@ def Adaptor(
                     'function': tfidf.sparse2dense,
                     'name': 'conclusion_tfidf'},
                 'tfidf_cosine_similarity': {},
+                'premise_tokens': {
+                    'function': mean_embedding,
+                    'name': 'premise_mean_embedding'
+                },
+                'conclusion_tokens': {
+                    'function': mean_embedding,
+                    'name': 'conclusion_mean_embedding'
+                },
             },
         },
         'y': {

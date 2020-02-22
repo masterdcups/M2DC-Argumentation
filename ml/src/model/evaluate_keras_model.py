@@ -3,9 +3,11 @@ from pathlib import Path
 import importlib
 import pickle as pkl
 
+import numpy as np
 import keras
 
 from mllib import cfg
+from mllib.preprocessing.text_preprocessing.embedder import Embedder
 from mllib.preprocessing.dataset_preparation import utils
 from mllib.preprocessing.ml_preprocessing import ml_generators as ml_gen
 from mllib import keras_utils
@@ -17,7 +19,7 @@ def main(
         model_module_path, 
         model_save_path,
         training_argument_path, validation_argument_path,
-        dictionary_path, tfidf_path,
+        dictionary_path, tfidf_path, embedding_path,
         evaluation_output_path
     ):
     model_module_path = Path(model_module_path)
@@ -26,6 +28,7 @@ def main(
     validation_argument_path= Path(validation_argument_path)
     dictionary_path = Path(dictionary_path)
     tfidf_path = Path(tfidf_path)
+    embedding_path = Path(embedding_path)
     evaluation_output_path = Path(evaluation_output_path)
 
 
@@ -35,7 +38,9 @@ def main(
         adaptor = model_module.Adaptor()
     else:
         tfidf = pkl.load(tfidf_path.open('rb'))
-        adaptor = default_adaptor.Adaptor(tfidf)
+        embedding_npz = np.load(embedding_path, allow_pickle=True)
+        embedder = Embedder(embedding_npz['tokens'], embedding_npz['embeddings'])
+        adaptor = default_adaptor.Adaptor(tfidf, embedder)
 
     # Select only X
     #adaptor = lambda x: adaptor(x)[0]
@@ -90,12 +95,15 @@ def main(
 
     with evaluation_output_path.open('w') as f:
         print("\ttrain\tval")
-        f.write("\ttrain\tval")
+        print("\ttrain\tval", file=f)
         for i, metric_name in enumerate(model.metrics_names):
-            f.write("{}:".format(metric_name))
-            f.write("\t{:.3f}\t{:.3f}".format(metrics['training'][i], metrics['validation'][i]))
             print("{}:".format(metric_name))
-            print("\t{:.3f}\t{:.3f}".format(metrics['training'][i], metrics['validation'][i]))
+            print("{}:".format(metric_name), file=f)
+
+            print("\t{:.3f}\t{:.3f}".format(
+                metrics['training'][i], metrics['validation'][i]))
+            print("\t{:.3f}\t{:.3f}".format(
+                metrics['training'][i], metrics['validation'][i]), file=f)
 
 
 if __name__ == '__main__':
@@ -127,6 +135,10 @@ if __name__ == '__main__':
             help='path to tfidf file',
         )
     argparser.add_argument(
+            'embedding_path',
+            help='path to embedding .npz',
+        )
+    argparser.add_argument(
             'evaluation_output_path',
             help='path to dump evaluation',
         )
@@ -135,6 +147,6 @@ if __name__ == '__main__':
     main(
             args.model_module_path, args.model_save_path,
             args.training_argument_path, args.validation_argument_path,
-            args.dictionary_path, args.tfidf_path,
+            args.dictionary_path, args.tfidf_path, args.embedding_path,
             args.evaluation_output_path)
 

@@ -29,7 +29,7 @@ def vec2arrays(vec, oov_token='<OOV>'):
     if oov_token:
         nb_words += 1
     
-    words = np.zeros(nb_words, dtype=np.dtype(str))
+    words = np.zeros(nb_words, dtype=np.dtype(object))
     embeddings = np.zeros((nb_words, dimension), dtype=np.float32)
 
     current_word_id = 0

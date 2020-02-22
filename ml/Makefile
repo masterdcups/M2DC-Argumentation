@@ -17,7 +17,9 @@ DATASETS_DIR = $(DATA_DIR)/raw
 
 NODE_DIR = $(DATASETS_DIR)
 RAW_NODES = $(NODE_DIR)/sentences.pkl
+
 EMBEDDINGS_DIR = $(DATA_DIR)/word_embeddings
+EMBEDDING = $(EMBEDDINGS_DIR)/fasttext_wiki.multi.en.npz
 
 ARGUMENT_DIR = $(DATASETS_DIR)
 RAW_TRAINING_ARGUMENTS = $(ARGUMENT_DIR)/train.pkl
@@ -148,7 +150,7 @@ include $(MODEL_SRC_DIR)/Makefile
 #	$(PYTHON) $(SRC_DIR)/evaluate_model.py $^ # $@
 #	@echo
 
-post-build: $(EVALUATION) $(EMBEDDINGS_DIR)/fasttext_wiki.multi.en.npz
+post-build: $(EVALUATION) 
 
 ### Misc target rules
 

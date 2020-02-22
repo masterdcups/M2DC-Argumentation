@@ -3,9 +3,11 @@ from pathlib import Path
 import importlib
 import pickle as pkl
 
+import numpy as np
 import keras
 
 from mllib import cfg
+from mllib.preprocessing.text_preprocessing.embedder import Embedder
 from mllib.preprocessing.dataset_preparation import utils
 from mllib.preprocessing.ml_preprocessing import ml_generators as ml_gen
 from mllib import keras_utils
@@ -16,7 +18,7 @@ import default_adaptor
 def main(
         model_module_path, 
         training_argument_path, validation_argument_path,
-        dictionary_path, tfidf_path,
+        dictionary_path, tfidf_path, embedding_path,
         model_output_path
     ):
     model_module_path = Path(model_module_path)
@@ -24,6 +26,7 @@ def main(
     validation_argument_path= Path(validation_argument_path)
     dictionary_path = Path(dictionary_path)
     tfidf_path = Path(tfidf_path)
+    embedding_path = Path(embedding_path)
     model_path = Path(model_output_path)
 
 
@@ -34,7 +37,9 @@ def main(
         adaptor = model_module.Adaptor()
     else:
         tfidf = pkl.load(tfidf_path.open('rb'))
-        adaptor = default_adaptor.Adaptor(tfidf)
+        embedding_npz = np.load(embedding_path, allow_pickle=True)
+        embedder = Embedder(embedding_npz['tokens'], embedding_npz['embeddings'])
+        adaptor = default_adaptor.Adaptor(tfidf, embedder)
 
 
 
@@ -111,6 +116,10 @@ if __name__ == '__main__':
             help='path to tfidf file',
         )
     argparser.add_argument(
+            'embedding_path',
+            help='path to embedding .npz file',
+        )
+    argparser.add_argument(
             'model_output_path',
             help='path to dump trained model pickle', # hdf5 for NNs ?
         )
@@ -119,6 +128,6 @@ if __name__ == '__main__':
     main(
             args.model_module_path, 
             args.training_argument_path, args.validation_argument_path,
-            args.dictionary_path, args.tfidf_path,
+            args.dictionary_path, args.tfidf_path, args.embedding_path,
             args.model_output_path)
 
