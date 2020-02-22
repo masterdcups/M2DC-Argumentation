@@ -16,7 +16,8 @@ DATA_DIR = data
 DATASETS_DIR = $(DATA_DIR)/raw
 
 NODE_DIR = $(DATASETS_DIR)
-RAW_NODES =$(NODE_DIR)/sentences.pkl
+RAW_NODES = $(NODE_DIR)/sentences.pkl
+EMBEDDINGS_DIR = $(DATA_DIR)/word_embeddings
 
 ARGUMENT_DIR = $(DATASETS_DIR)
 RAW_TRAINING_ARGUMENTS = $(ARGUMENT_DIR)/train.pkl
@@ -102,6 +103,15 @@ include $(SRC_DIR)/TfIdf/Makefile
 #	$(PYTHON) $(SRC_DIR)/train_tfidf.py $^ $@
 #	@echo
 
+# Download a fastext embedding ("wiki.multi.en.vec" is one)
+$(EMBEDDINGS_DIR)/fasttext_%.vec:
+	wget https://dl.fbaipublicfiles.com/arrival/vectors/$*.vec -O $@
+
+# Preprocess a .vec embedding file (to .npz)
+$(EMBEDDINGS_DIR)/%.npz: $(SRC_DIR)/preprocess_vec_embedding.py \
+		$(EMBEDDINGS_DIR)/%.vec
+	$(PYTHON) $^ $@
+
 $(PREPROCESSED_TRAINING_ARGUMENTS): \
 		$(RAW_TRAINING_ARGUMENTS) \
 		$(TEXT_PREPROCESSED_TRAINING_NODES) \
@@ -138,7 +148,7 @@ include $(MODEL_SRC_DIR)/Makefile
 #	$(PYTHON) $(SRC_DIR)/evaluate_model.py $^ # $@
 #	@echo
 
-post-build: $(EVALUATION)
+post-build: $(EVALUATION) $(EMBEDDINGS_DIR)/fasttext_wiki.multi.en.npz
 
 ### Misc target rules
 

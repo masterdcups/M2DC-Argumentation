@@ -18,7 +18,7 @@ def main(
         model_save_path,
         training_argument_path, validation_argument_path,
         dictionary_path, tfidf_path,
-        model_output_path
+        evaluation_output_path
     ):
     model_module_path = Path(model_module_path)
     model_save_path = Path(model_save_path)
@@ -26,7 +26,7 @@ def main(
     validation_argument_path= Path(validation_argument_path)
     dictionary_path = Path(dictionary_path)
     tfidf_path = Path(tfidf_path)
-    model_path = Path(model_output_path)
+    evaluation_output_path = Path(evaluation_output_path)
 
 
     model_module = importlib.import_module(model_module_path.stem)
@@ -87,11 +87,15 @@ def main(
             steps = 50,
         )
 
-    print("\ttrain\tval")
-    for i, metric_name in enumerate(model.metrics_names):
-        print("{}:".format(metric_name))
-        print("\t{:.3f}\t{:.3f}".format(
-            metrics['training'][i], metrics['validation'][i]))
+
+    with evaluation_output_path.open('w') as f:
+        print("\ttrain\tval")
+        f.write("\ttrain\tval")
+        for i, metric_name in enumerate(model.metrics_names):
+            f.write("{}:".format(metric_name))
+            f.write("\t{:.3f}\t{:.3f}".format(metrics['training'][i], metrics['validation'][i]))
+            print("{}:".format(metric_name))
+            print("\t{:.3f}\t{:.3f}".format(metrics['training'][i], metrics['validation'][i]))
 
 
 if __name__ == '__main__':
@@ -124,7 +128,7 @@ if __name__ == '__main__':
         )
     argparser.add_argument(
             'evaluation_output_path',
-            help='path to dump evaluation', # hdf5 for NNs ?
+            help='path to dump evaluation',
         )
     args = argparser.parse_args()
 

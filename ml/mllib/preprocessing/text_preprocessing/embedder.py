@@ -1,5 +1,6 @@
-import numpy as np
 import types
+
+import numpy as np
 
 class Embedder():
     """ Utility class built from a sequence of tokens and an embedding matrix.
@@ -82,39 +83,6 @@ class Embedder():
         return ids
             
 
-
-def vec2arrays(vec, oov_token='<OOV>'):
-    """ Transforms a generator of .vec file lines into a tuple of numpy arrays: 
-        (tokens, embedding_matrix).
-
-    An extra row is added at index 0, for the Out-Of-Vocabulary token. It can be
-    disabled by setting oov_token=None.
-    """
-
-    header = next(vec).split()
-    nb_words, dimension = header[0], header[1]
-
-    if oov_token:
-        nb_words += 1
-    
-    words = np.zeros(nb_words, dtype=np.dtype(str))
-    embeddings = np.zeros((nb_words, dimension), dtype=np.float32)
-
-    current_word_id = 0
-    if oov_token:
-        words[0] = oov_token
-        current_word_id += 1
-    
-    for line in vec:
-        values = line.split()
-        word, embedding = values[0], values[1:]
-
-        words[current_word_id] = word
-        embeddings[current_word_id] = embedding
-
-        current_word_id += 1
-
-    return words, embeddings
 
 if __name__ == '__main__':
     vocabulary = ['<OOV>', 'dog', 'cat', 'horse', 'raddish']
