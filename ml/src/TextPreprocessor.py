@@ -14,7 +14,7 @@ class TextPreprocessor(Transformer):
         self.Lemmatizer = nltk.WordNetLemmatizer
         self.pos_tag_mapping = nltk.tag.mapping.tagset_mapping('en-ptb', 'universal')
         self.pos_tag2id = {
-                pos_tag: i+1 
+                pos_tag: i+3 # First three are <UNK>, <PAD> and <EOS>
                 for i, pos_tag in
                 enumerate(sorted(set(self.pos_tag_mapping.values())))
             }

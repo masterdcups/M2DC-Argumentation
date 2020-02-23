@@ -107,8 +107,9 @@ def Model(input_layers, output_layer,
     pos_tagsA = input_layers['premise_pos_tags_ids']
     pos_tagsB = input_layers['conclusion_pos_tags_ids']
     pos_tag_embedding = Embedding(
-            13, 8,
-            embeddings_constraint = keras.constraints.MaxNorm(1, axis=-1)
+            16, 4,
+            embeddings_constraint = keras.constraints.MaxNorm(
+                4.0 / embedded_size, axis=-1)
         )
 
     
@@ -184,14 +185,14 @@ def ModelCfg(**kwargs):
         #'maxlen': 50,
         'train_embedding': False,
         #'embedding_matrix': None,
-        'n_lstm': 16,
+        'n_lstm': 32,
         'acti_lstm': 'relu',
         'lstm': 'bi',
         'dropout_rate': 0.2,
         'merge': 'concat',
-        'n_nn': 8,
+        'n_nn': 16,
         'n_classif': 1,
-        'lrate': 0.01,
+        'lrate': 0.001,
     }
 
 
@@ -242,6 +243,16 @@ def Adaptor(
 
         return documents
 
+    def pad_tags(tags):
+        tags = keras.preprocessing.sequence.pad_sequences(tags,
+                padding='pre', value=1,
+                truncating='pre', maxlen=maxlen-1,
+                dtype=np.int32)
+        tags = np.concatenate([
+                tags, np.full((len(tags), 1), 2, dtype=np.int32)
+            ], axis=-1)
+        return tags
+
 
     #return keras.preprocessing.sequence.pad_sequences(
     #        list(map(
@@ -265,11 +276,11 @@ def Adaptor(
                     'name': 'conclusion_seq'
                 },
                 'premise_pos_tags_ids': {
-                    'function': lambda tags: keras.preprocessing.sequence.pad_sequences(tags, maxlen),
+                    'function': pad_tags,
                     'name': 'premise_pos_tags_ids'
                 },
                 'conclusion_pos_tags_ids': {
-                    'function': lambda tags: keras.preprocessing.sequence.pad_sequences(tags, maxlen),
+                    'function': pad_tags,
                     'name': 'conclusion_pos_tags_ids'
                 },
             },
