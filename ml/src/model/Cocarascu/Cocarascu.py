@@ -195,7 +195,7 @@ def FitCfg(**kwargs):
     return {
         'batch_size': 64,
         'steps_per_epoch': 50,
-        'epochs': 20,
+        'epochs': 5,
     }
 
 

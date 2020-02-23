@@ -19,7 +19,7 @@ NODE_DIR = $(DATASETS_DIR)
 RAW_NODES = $(NODE_DIR)/sentences.pkl
 
 EMBEDDINGS_DIR = $(DATA_DIR)/word_embeddings
-EMBEDDING = $(EMBEDDINGS_DIR)/fasttext_wiki.multi.en.npz
+EMBEDDING = $(PREPROCESSED_DIR)/fasttext_wiki.multi.en.npz
 
 ARGUMENT_DIR = $(DATASETS_DIR)
 RAW_TRAINING_ARGUMENTS = $(ARGUMENT_DIR)/train.pkl
@@ -33,7 +33,7 @@ PREPROCESSED_DIR = $(OUTPUT_DIR)/preprocessed
 MODEL_OUTPUT_DIR = $(OUTPUT_DIR)/models
 EVALUATION_OUTPUT_DIR = $(OUTPUT_DIR)/evaluation
 
-OUTPUT_DIRS = $(PREPROCESSED_DIR) $(MODEL_OUTPUT_DIR) $(EVALUATION_OUTPUT_DIR)
+OUTPUT_DIRS = $(PREPROCESSED_DIR) $(MODEL_OUTPUT_DIR) $(EVALUATION_OUTPUT_DIR) $(EMBEDDINGS_DIR)
 
 # Preprocessing targets
 TEXT_PREPROCESSED_TRAINING_NODES = $(PREPROCESSED_DIR)/preprocessed_training_nodes.pkl
@@ -54,14 +54,6 @@ MODEL = $(MODEL_OUTPUT_DIR)/model.pkl
 
 # Evaluation targets
 EVALUATION_FILENAME = $(EVALUATION_OUTPUT_DIR)/evaluation.txt
-
-#export
-
-OUTPUTS = $(TEXT_PREPROCESSED_TRAINING_NODES) \
-	  $(DICTIONARY) $(TFIDF) \
-	  $(PREPROCESSED_TRAINING_FILENAME) $(PREPROCESSED_VALIDATION_ARGUMENTS) \
-	  $(PREPROCESSED_TEST_ARGUMENTS) \
-	  $(MODEL) $(EVALUATION_FILENAME)
 
 ### You can stop reading here if you just wanted to define paths.
 
@@ -106,11 +98,12 @@ include $(SRC_DIR)/TfIdf/Makefile
 #	@echo
 
 # Download a fastext embedding ("wiki.multi.en.vec" is one)
+.PRECIOUS: $(EMBEDDINGS_DIR)/fasttext_%.vec
 $(EMBEDDINGS_DIR)/fasttext_%.vec:
 	wget https://dl.fbaipublicfiles.com/arrival/vectors/$*.vec -O $@
 
 # Preprocess a .vec embedding file (to .npz)
-$(EMBEDDINGS_DIR)/%.npz: $(SRC_DIR)/preprocess_vec_embedding.py \
+$(PREPROCESSED_DIR)/%.npz: $(SRC_DIR)/preprocess_vec_embedding.py \
 		$(EMBEDDINGS_DIR)/%.vec
 	$(PYTHON) $^ $@
 
@@ -150,7 +143,7 @@ include $(MODEL_SRC_DIR)/Makefile
 #	$(PYTHON) $(SRC_DIR)/evaluate_model.py $^ # $@
 #	@echo
 
-post-build: $(EVALUATION) 
+post-build: $(MODEL) 
 
 ### Misc target rules
 
