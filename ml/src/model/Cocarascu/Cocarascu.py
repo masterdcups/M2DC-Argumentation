@@ -101,11 +101,15 @@ def Model(input_layers, output_layer,
     word_embedding = Embedding(
             vocab_size, embedded_size,
             weights = [embedding_matrix],
-            trainable = train_embedding)
+            trainable = train_embedding,
+        )
 
     pos_tagsA = input_layers['premise_pos_tags_ids']
     pos_tagsB = input_layers['conclusion_pos_tags_ids']
-    pos_tag_embedding = Embedding(13, 4)
+    pos_tag_embedding = Embedding(
+            13, 8,
+            embeddings_constraint = keras.constraints.MaxNorm(1, axis=-1)
+        )
 
     
     #Model for arg1
@@ -180,14 +184,14 @@ def ModelCfg(**kwargs):
         #'maxlen': 50,
         'train_embedding': False,
         #'embedding_matrix': None,
-        'n_lstm': 32,
+        'n_lstm': 16,
         'acti_lstm': 'relu',
         'lstm': 'bi',
         'dropout_rate': 0.2,
         'merge': 'concat',
-        'n_nn': 32,
+        'n_nn': 8,
         'n_classif': 1,
-        'lrate': 0.001,
+        'lrate': 0.01,
     }
 
 
@@ -195,7 +199,7 @@ def FitCfg(**kwargs):
     return {
         'batch_size': 64,
         'steps_per_epoch': 50,
-        'epochs': 5,
+        'epochs': 20,
     }
 
 
@@ -206,13 +210,46 @@ def Adaptor(
     ):
 
     def documents2ids(documents):
-        return keras.preprocessing.sequence.pad_sequences(
-                list(map(
-                    lambda document: list(map(
-                        lambda token: token2id.get(token, 0),
-                        document)),
-                    documents)),
-                maxlen=maxlen)
+        # Take the last maxlen-1 tokens, pre-padded with <PAD> if needed
+        def pad(documents):
+            return keras.preprocessing.sequence.pad_sequences(
+                    documents,
+                    padding='pre', value=token2id['<PAD>'],
+                    truncating='pre', maxlen=maxlen-1,
+                    dtype=np.int32
+                )
+        # Convert to tokens
+        documents = list(map(
+                lambda document: list(map(
+                    lambda token: token2id.get(token,0), 
+                    document)), 
+                documents))
+
+        #for document in documents:
+        #    document = np.array(
+        #            list(map(lambda token: token2id.get(token,0), document)), 
+        #            dtype=np.int32
+        #        )
+        #print(documents)
+        # Pad / trim (might want to do before conversion to tokens)
+        documents = pad(documents)
+
+        # Add <EOS> at the end
+        documents = np.concatenate([
+                documents, np.full(
+                    (len(documents), 1), token2id['<EOS>'], dtype=np.int32)
+            ], axis=-1)
+
+        return documents
+
+
+    #return keras.preprocessing.sequence.pad_sequences(
+    #        list(map(
+    #            lambda document: list(map(
+    #                lambda token: token2id.get(token, 0),
+    #                document)),
+    #            documents)),
+    #        maxlen=maxlen)
 
     merger = lambda column_values: np.concatenate(list(column_values), axis=-1)
 

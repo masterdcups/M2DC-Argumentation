@@ -82,12 +82,14 @@ def main(model_module_path,
     training_generator = map(adaptor, 
                 ml_gen.generator_DataFrames(
                     [lambda: pkl.load(training_argument_path.open('rb'))],
-                    batch_size = fit_configuration.get('batch_size', 64)))
+                    batch_size = fit_configuration.get('batch_size', 64),
+                    shuffle=True))
 
     validation_generator = map(adaptor, 
                 ml_gen.generator_DataFrames(
                     [lambda: pkl.load(validation_argument_path.open('rb'))],
-                    batch_size = fit_configuration.get('batch_size', 64)))
+                    batch_size = fit_configuration.get('batch_size', 64),
+                    shuffle=True))
         
     model.fit_generator(
             training_generator, 

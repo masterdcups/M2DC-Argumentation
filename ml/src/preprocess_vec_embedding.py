@@ -15,12 +15,18 @@ def main(vec_path, output_path):
             tokens = tokens, embeddings = matrix)
 
 
-def vec2arrays(vec, oov_token='<OOV>'):
+def vec2arrays(
+        vec, 
+        oov_token='<UNK>', # 0.0 vector
+        pad_token='<PAD>', # -1.0 norm vector
+        eos_token='<EOS>', # 1.0 norm vector
+    ):
     """ Transforms a generator of .vec file lines into a tuple of numpy arrays: 
         (tokens, embedding_matrix).
 
     An extra row is added at index 0, for the Out-Of-Vocabulary token. It can be
-    disabled by setting oov_token=None.
+    disabled by setting oov_token=None. Same for padding (next index) and
+    End-Of-Sequence (next index) tokens.
     """
 
     header = next(vec).split()
@@ -28,13 +34,29 @@ def vec2arrays(vec, oov_token='<OOV>'):
 
     if oov_token:
         nb_words += 1
+    if pad_token:
+        nb_words += 1
+    if eos_token:
+        nb_words += 1
     
     words = np.zeros(nb_words, dtype=np.dtype(object))
     embeddings = np.zeros((nb_words, dimension), dtype=np.float32)
 
     current_word_id = 0
+
     if oov_token:
-        words[0] = oov_token
+        words[current_word_id] = oov_token
+        current_word_id += 1
+
+    if pad_token:
+        words[current_word_id] = pad_token
+        embeddings[current_word_id] = -1.0 * np.sqrt(1.0 / dimension)
+        #np.full(embeddings.shape[-1], value=-1.0, dtype=np.float32)
+        current_word_id += 1
+
+    if eos_token:
+        words[current_word_id] = eos_token
+        embeddings[current_word_id] = 1.0 * np.sqrt(1.0 / dimension)
         current_word_id += 1
     
     for i, line in tqdm(enumerate(vec)):
