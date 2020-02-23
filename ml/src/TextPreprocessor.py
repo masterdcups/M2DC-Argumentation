@@ -12,6 +12,12 @@ class TextPreprocessor(Transformer):
 
     def __init__(self, *kwargs):
         self.Lemmatizer = nltk.WordNetLemmatizer
+        self.pos_tag_mapping = nltk.tag.mapping.tagset_mapping('en-ptb', 'universal')
+        self.pos_tag2id = {
+                pos_tag: i+1 
+                for i, pos_tag in
+                enumerate(sorted(set(self.pos_tag_mapping.values())))
+            }
 
     def transform(self, corpus, *kwargs):
         lemmatizer = self.Lemmatizer()
@@ -35,11 +41,13 @@ class TextPreprocessor(Transformer):
         ]
 
         pos_tags = list(map(
-                operator.itemgetter(1), 
+                lambda tag: self.pos_tag_mapping[operator.itemgetter(1)], 
                 nltk.tag.pos_tag(tokens)))
+        pos_tags_ids = list(map(lambda tag: self.pos_tag2id[tag], pos_tags))
 
         lemmas = [
-            lemmatizer.lemmatize(token, text.PennTreebank_to_WordNet(pos_tag))
+            lemmatizer.lemmatize(
+                token)#, text.PennTreebank_to_WordNet(pos_tag))
             for token, pos_tag in zip(tokens, pos_tags)
         ]
 
@@ -48,5 +56,6 @@ class TextPreprocessor(Transformer):
             'sentences_spans': sentences_spans,
             'tokens': tokens,
             'pos_tags': pos_tags,
+            'pos_tags_ids': pos_tags_ids,
             'lemmas': lemmas,
         }

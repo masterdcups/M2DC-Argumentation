@@ -2,6 +2,8 @@ import argparse
 from pathlib import Path
 import pickle as pkl
 
+from tqdm import tqdm
+
 from mllib.preprocessing.text_preprocessing import text_preprocessing as text
 from mllib.preprocessing.dataset_preparation import utils
 
@@ -42,7 +44,7 @@ def main(node_path, arguments_path, preprocessed_node_path):
     preprocessed_node_generator = utils.merge_dicts(zip(
         renamed_node_generator, preprocessed_text_generator))
 
-    utils.dump(preprocessed_node_generator, preprocessed_node_path)
+    utils.dump(tqdm(preprocessed_node_generator), preprocessed_node_path)
 
 
 if __name__ == '__main__':

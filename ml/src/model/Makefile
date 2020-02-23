@@ -1,17 +1,19 @@
 export PYTHONPATH:=$(PYTHONPATH):$(MODEL_SRC_DIR)
 
 MLP_SRC_DIR = $(MODEL_SRC_DIR)/MLP
+COCARASCU_SRC_DIR = $(MODEL_SRC_DIR)/Cocarascu
 
-include $(MLP_SRC_DIR)/Makefile
+#include $(MLP_SRC_DIR)/Makefile
+include $(COCARASCU_SRC_DIR)/Makefile
 EVALUATION = $(EVALUATION_OUTPUT_DIR)/$(MODEL_NAME)_metrics.csv
 
-$(MODEL): $(MODEL_SRC_DIR)/train_keras_model.py \
-		$(MODEL_MODULE) \
-		$(PREPROCESSED_TRAINING_ARGUMENTS) \
-		$(PREPROCESSED_VALIDATION_ARGUMENTS) \
-		$(DICTIONARY) $(TFIDF) $(EMBEDDING)
-	$(PYTHON) $^ $@
-	@echo
+#$(MODEL): $(MODEL_SRC_DIR)/train_keras_model.py \
+#		$(MODEL_MODULE) \
+#		$(PREPROCESSED_TRAINING_ARGUMENTS) \
+#		$(PREPROCESSED_VALIDATION_ARGUMENTS) \
+#		$(DICTIONARY) $(TFIDF) $(EMBEDDING)
+#	$(PYTHON) $^ $@
+#	@echo
 
 $(EVALUATION): $(MODEL_SRC_DIR)/evaluate_keras_model.py \
 		$(MODEL_MODULE) \
@@ -20,3 +22,4 @@ $(EVALUATION): $(MODEL_SRC_DIR)/evaluate_keras_model.py \
 		$(PREPROCESSED_VALIDATION_ARGUMENTS) \
 		$(DICTIONARY) $(TFIDF) $(EMBEDDING)
 	$(PYTHON) $^ $@
+

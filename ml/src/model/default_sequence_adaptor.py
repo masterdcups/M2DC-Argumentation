@@ -4,37 +4,31 @@ from mllib.preprocessing.ml_preprocessing import ml_adaptors as ml_ad
 
 def Adaptor(
         tfidf, embedder,
-        merge_X=True, merge_y=True
+        merge_X=False, merge_y=False
     ):
     """ Maps a preprocessed arguments DataFrame columns to a dictionary
     of np.array keyed by ['X'|'y'], followed by ['name'] if the columns
     were not merged (merge_X and merge_y).
     """
+    def documents2tensor(documents):
+        def left_padding(doc_len, max_len):
+            return max([doc_len, max_len])-doc_len
 
-    mean_embedding = lambda tokens: np.array(
-            list(map(lambda x: np.mean(x, axis=0),
-                embedder.transform_generator(tokens)))
-        )
+        return embedder.transform(documents,
+                document_position_offset=left_padding)
 
     merger = lambda column_values: np.concatenate(list(column_values), axis=-1)
 
     mapping = {
         'X': {
             'columns': {
-                #'premise_sparse_tfidf': {
-                #    'function': tfidf.sparse2dense,
-                #    'name': 'premise_tfidf'},
-                #'conclusion_sparse_tfidf': {
-                #    'function': tfidf.sparse2dense,
-                #    'name': 'conclusion_tfidf'},
-                'tfidf_cosine_similarity': {},
                 'premise_tokens': {
-                    'function': mean_embedding,
-                    'name': 'premise_mean_embedding'
+                    'function': documents2tensor,
+                    'name': 'premise_embeddings'
                 },
                 'conclusion_tokens': {
-                    'function': mean_embedding,
-                    'name': 'conclusion_mean_embedding'
+                    'function': documents2tensor,
+                    'name': 'conclusion_embeddings'
                 },
             },
         },

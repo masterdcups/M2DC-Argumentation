@@ -8,6 +8,7 @@ def generator_DataFrames(
         DataFrame_loaders, 
         batch_size = None, # Whole files if None, batch_size samples otherwise
         epochs = None, # Number of iterations over DataFrame_loaders
+        shuffle = False,
     ):
     """
         Applies a mapping to DataFrame rows, batching them into numpy arrays.
@@ -21,6 +22,8 @@ def generator_DataFrames(
 
         for df_loader in DataFrame_loaders:
             df = df_loader()
+            if shuffle:
+                df = df.sample(frac=1).reset_index(drop=True)
 
             ## Only keep the columns we will yield.
             #df = df[[

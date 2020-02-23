@@ -55,7 +55,7 @@ def apply_mapping(mapping:dict, data: dict):
     data = {
         part:
             data[part]
-            if not mapping[part]['merger'] else
+            if 'merger' not in mapping[part] else
             mapping[part]['merger'](list(data[part].values()))
         for part in mapping
     }

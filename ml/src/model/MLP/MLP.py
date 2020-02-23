@@ -53,11 +53,13 @@ def Configuration(
     ):
     configuration = {
         'model': {
-            'projection_dimension': int(np.sqrt(sample_X.shape[-1])),
+            'projection_dimension': int(np.log2(sample_X.shape[-1])),
             'projection_dropout': 0.25
         },
         'fit': {
-            'batch_size': 64
+            'batch_size': 64,
+            'steps_per_epoch': 200,
+            'epochs': 50,
         }
     }
     return configuration

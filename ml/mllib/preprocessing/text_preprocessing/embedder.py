@@ -17,11 +17,7 @@ class Embedder():
                     ("{} tokens were passed, but the embedding matrix contains" +
                     " {} rows.").format(len(tokens), len(embeddings)))
 
-        self.token2id = {
-                token: i
-                for i, token in enumerate(tokens)
-            }
-
+        self.token2id = tokens2dict(tokens)
         self.embeddings = embeddings
         if oov_vector is not None:
             self.embeddings[0] = oov_vector
@@ -83,6 +79,11 @@ class Embedder():
             ids[i] = self.token2id.get(word, 0)
         return ids
             
+def tokens2dict(tokens):
+    return {
+            token: i
+            for i, token in enumerate(tokens)
+        }
 
 
 if __name__ == '__main__':
