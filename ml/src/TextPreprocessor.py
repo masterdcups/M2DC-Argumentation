@@ -19,8 +19,12 @@ class TextPreprocessor(Transformer):
                 enumerate(sorted(set(self.pos_tag_mapping.values())))
             }
 
+        #print(*self.pos_tag2id.items(), sep='\n')
+
+
     def transform(self, corpus, *kwargs):
         lemmatizer = self.Lemmatizer()
+        
 
         for document in corpus:
             yield self._document2dict(document, lemmatizer)
@@ -41,7 +45,7 @@ class TextPreprocessor(Transformer):
         ]
 
         pos_tags = list(map(
-                lambda tag: self.pos_tag_mapping[operator.itemgetter(1)], 
+                lambda tag: self.pos_tag_mapping[tag[1]], 
                 nltk.tag.pos_tag(tokens)))
         pos_tags_ids = list(map(lambda tag: self.pos_tag2id[tag], pos_tags))
 

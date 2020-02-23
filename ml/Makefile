@@ -11,20 +11,22 @@ MLLIB = $(MLLIB_PATH)/mllib
 export PYTHONPATH:=$(PYTHONPATH):$(MLLIB_PATH)
 
 
+# Input directories
 DATA_DIR = data
-# Input files
-DATASETS_DIR = $(DATA_DIR)/raw
 
+DATASETS_DIR = $(DATA_DIR)/raw
 NODE_DIR = $(DATASETS_DIR)
+ARGUMENT_DIR = $(DATASETS_DIR)
+
+LEXICONS_DIR = $(DATA_DIR)/lexicons
+EMBEDDINGS_DIR = $(DATA_DIR)/word_embeddings
+
 RAW_NODES = $(NODE_DIR)/sentences.pkl
 
-EMBEDDINGS_DIR = $(DATA_DIR)/word_embeddings
-EMBEDDING = $(PREPROCESSED_DIR)/fasttext_wiki.multi.en.npz
-
-ARGUMENT_DIR = $(DATASETS_DIR)
 RAW_TRAINING_ARGUMENTS = $(ARGUMENT_DIR)/train.pkl
 RAW_VALIDATION_ARGUMENTS = $(ARGUMENT_DIR)/dev.pkl
 RAW_TEST_ARGUMENTS = $(ARGUMENT_DIR)/test.pkl
+
 
 # Output directories
 OUTPUT_DIR = $(DATA_DIR)/basic
@@ -38,6 +40,9 @@ OUTPUT_DIRS = $(PREPROCESSED_DIR) $(MODEL_OUTPUT_DIR) $(EVALUATION_OUTPUT_DIR) $
 # Preprocessing targets
 TEXT_PREPROCESSED_TRAINING_NODES = $(PREPROCESSED_DIR)/preprocessed_training_nodes.pkl
 TEXT_PREPROCESSED_VALIDATION_NODES = $(PREPROCESSED_DIR)/preprocessed_validation_nodes.pkl
+
+WORD_EMBEDDING = $(PREPROCESSED_DIR)/fasttext_wiki.multi.en.npz
+SENTIMENT_EMBEDDING = $(PREPROCESSED_DIR)/textblob_en-sentiment.npz
 
 DICTIONARY = $(PREPROCESSED_DIR)/dictionary.pkl
 DICTIONARY_CFG = $(CFG_DIR)/dictionary.yaml
@@ -65,7 +70,6 @@ all: pre-build post-build
 pre-build: $(OUTPUT_DIRS)
 
 # Preprocessing rules
-
 $(SRC_DIR)/preprocess_nodes.py: $(SRC_DIR)/TextPreprocessor.py
 	@touch $@
 
@@ -105,6 +109,11 @@ $(EMBEDDINGS_DIR)/fasttext_%.vec:
 # Preprocess a .vec embedding file (to .npz)
 $(PREPROCESSED_DIR)/%.npz: $(SRC_DIR)/preprocess_vec_embedding.py \
 		$(EMBEDDINGS_DIR)/%.vec
+	$(PYTHON) $^ $@
+
+# Preprocess a .xml sentiment lexicon into a .npz embedding
+$(PREPROCESSED_DIR)/%.npz: $(SRC_DIR)/preprocess_textblob_sentiment_xml.py \
+		$(LEXICONS_DIR)/%.xml
 	$(PYTHON) $^ $@
 
 $(PREPROCESSED_TRAINING_ARGUMENTS): \
