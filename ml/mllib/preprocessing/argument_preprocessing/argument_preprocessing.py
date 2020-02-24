@@ -133,6 +133,12 @@ def preprocessed_argument_df(
 
     # ARGUMENT FEATURES
 
+    df_arguments['difference_number_of_tokens'] = \
+            df_arguments.apply(lambda x: x.premise_number_of_tokens - x.conclusion_number_of_tokens, axis='columns')
+    
+    df_arguments['difference_number_of_punctuations'] = \
+            df_arguments.apply(lambda x: x.premise_number_of_punctuations - x.conclusion_number_of_punctuations, axis='columns')
+    
     df_arguments['tfidf_cosine_similarity'] = \
             df_arguments[
                 ['premise_sparse_tfidf', 'conclusion_sparse_tfidf']

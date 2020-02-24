@@ -53,22 +53,31 @@ def preprocessed_node_generator(
         tokens = [
             token for sentence in sentences_tokens for token in sentence
         ]
-
+        
+        number_of_tokens = len(tokens)
+        
         pos_tags = list(map(operator.itemgetter(1), nltk.tag.pos_tag(tokens)))
+        
+        number_of_punctuations = sum(not x[0].isalpha() for x in pos_tags)
 
         lemmas = [
             lemmatizer.lemmatize(token.lower(), PennTreebank_to_WordNet(pos_tag))
             for token, pos_tag in zip(tokens, pos_tags)
         ]
-
+        
+        contains_not = 'not' in lemmas
+        
         yield {
             'id': document_id,
             'debate_name': document_debate_name,
             'document': document,
             'sentences_spans': sentences_spans,
             'tokens': tokens,
+            'number_of_tokens': number_of_tokens,
             'pos_tags': pos_tags,
+            'number_of_punctuations': number_of_punctuations,
             'lemmas': lemmas,
+            'contains_not': contains_not,
         }
 
 def PennTreebank_to_WordNet(pos_tag):

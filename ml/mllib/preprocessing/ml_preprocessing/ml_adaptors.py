@@ -13,6 +13,14 @@ def default_DataFrame2numpy_mapping(parameters, merge_X=True, merge_y=True):
     return {
         'X': {
             'columns': {
+                'premise_number_of_tokens': {},
+                'conclusion_number_of_tokens': {},
+                'difference_number_of_tokens': {},
+                'premise_number_of_punctuations': {},
+                'conclusion_number_of_punctuations': {},
+                'difference_number_of_punctuations': {},
+                'premise_contains_not': {},
+                'conclusion_contains_not': {},
                 'premise_sparse_tfidf': {
                     'function': sparse_tfidf,
                     'name': 'premise_tfidf'},
