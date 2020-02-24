@@ -22,8 +22,8 @@ import argparse
 def main(dataset_name, n4j_uri, n4j_auth):
     """Sample run"""
 
-    raw_sentences_dump_file = os.path.join('datasets', 'sentences.pkl')
-    raw_arguments_dump_file = os.path.join('datasets', dataset_name+'.pkl')
+    raw_sentences_dump_file = os.path.join('sentences.pkl')
+    raw_arguments_dump_file = os.path.join(dataset_name+'.pkl')
 
 
     # Create raw datasets (if missing) 
@@ -63,7 +63,7 @@ if __name__ == "__main__":
 
     # Read command-line arguments
     parser = argparse.ArgumentParser(description="Sample run")
-    parser.add_argument('dataset_name', nargs='?', default='dev2')
+    parser.add_argument('dataset_name', nargs='?', default='dev')
     parser.add_argument('--n4j_uri', nargs='?', default='bolt://localhost:7687')
     parser.add_argument('--n4j_user', nargs='?', default='neo4j')
     parser.add_argument('--n4j_pass', nargs='?', default="")

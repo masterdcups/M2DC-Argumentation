@@ -177,19 +177,19 @@ def _unbalanced_dataset_query(dataset_name):
     Return sentence numbers (sentence.n) for kialo
     """
 
-    condition = _traintestdev_condition(dataset_name)
+    debates = _traintestdev_debates(dataset_name)
     query = """
     MATCH
         (debate:Debate {origin: "kl"})-[:Contains]->(x:Sentence)-[r:Pro|:Cons]->(y:Sentence)
     WHERE
-        %s
+        debate.n IN [%s]
     WITH
         x.n as x, y.n as y, r.w as w, rand() as rdm
     ORDER BY
         rdm
     RETURN
         x, y, w
-    """%condition
+    """%(', '.join(map(str, debates)))
     return query
 
 
