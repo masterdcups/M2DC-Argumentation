@@ -4,6 +4,7 @@ Utils
 
 import pickle as pkl
 import pandas as pd
+import random as rdm
 
 
 def dump(generator, filename):
@@ -63,6 +64,15 @@ def from_csv(filename):
     columns = list(df.columns)
     for row in df.to_records(index=False):
         yield {columns[i]: row[i] for i in range(1, len(row))}
+
+
+def shuffle(generator):
+    """Shuffle a generator (break the pipeline)"""
+    rows = list(generator)
+    rdm.shuffle(rows)
+    for row in rows:
+        yield row
+    
 
 
 if __name__ == "__main__":

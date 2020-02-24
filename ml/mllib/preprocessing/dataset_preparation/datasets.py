@@ -29,7 +29,8 @@ def sentence_generator(n4j_graph):
     RETURN
         label,
         n,
-        y.label as debate
+        y.label as debate,
+        debn as debate_num
     ORDER BY
         rdm
     """
@@ -38,6 +39,7 @@ def sentence_generator(n4j_graph):
             's': record['label'],
             'n': record['n'],
             'debate_name': record['debate'],
+            'debate_num': record['debate_num']
             }
 
 
@@ -49,13 +51,9 @@ def argument_generator(dataset_name, n4j_graph, balanced=False):
     balanced: Return the same amout of rows for each class (edge weight)
 
     Available datasets:
-        train: 80% of kialo dataset but debates #14 and #16
-        dev1: 10% of kialo dataset but debates #14 and #16
-        dev2: kialo debate #16 (1.32% of kialo)
-        dev: union of dev1 and dev2
-        test1: 10% of kialo dataset but debates #14 and #16
-        test2: kialo debate #14 (1.69% of kialo)
-        test: union of test1 and test2
+        train: debates 0..9, 15, 17..19, 21..25
+        dev: debates 14, 16, 20
+        test: debates 10..13
     """
 
     if balanced:
@@ -93,35 +91,23 @@ def map_sentences(argument_gen, sentence_gen):
     return utils.gmap(argument_gen, sentence_mapper(sentence_gen))
 
 
-def _traintestdev_condition(dataset_name):
-    """Neo4j condition (cypher sub-query) corresponding to a dataset name
+def _traintestdev_debates(dataset_name):
+    """Debate numbers corresponding to a dataset name
 
     Available datasets:
-        train: 80% of kialo dataset but debates #14 and #16
-        dev1: 10% of kialo dataset but debates #14 and #16
-        dev2: kialo debate #16 (1.32% of kialo)
-        dev: union of dev1 and dev2
-        test1: 10% of kialo dataset but debates #14 and #16
-        test2: kialo debate #14 (1.69% of kialo)
-        test: union of test1 and test2
+        train: debates 0..9, 15, 17..19, 21..25
+        dev: debates 14, 16, 20
+        test: debates 10..13
     """
     if dataset_name == "train":
-        condition = "x.n % 10 > 2 and not debate.n = 14 and not debate.n = 16"
+        debates = list(range(10))+[15, 17, 18, 19]+list(range(21,26))
     elif dataset_name == "dev":
-        condition = "x.n % 10 = 0 and not debate.n = 14"
-    elif dataset_name == "dev1":
-        condition = "x.n % 10 = 0 and not debate.n = 14 and not debate.n = 16"
-    elif dataset_name == "dev2":
-        condition = "debate.n = 16"
+        debates = [14, 16, 20]
     elif dataset_name == "test":
-        condition = "x.n % 10 = 1 and not debate.n = 16"
-    elif dataset_name == "test1":
-        condition = "x.n % 10 = 1 and not debate.n = 14 and not debate.n = 16"
-    elif dataset_name == "test2":
-        condition = "debate.n = 14"
+        debates = [10, 11, 12, 13]
     else:
-        raise ValueError("Dataset name must be in {train, dev, dev1, dev2, test, test1, test2}")
-    return condition
+        raise ValueError("Dataset name must be in {train, dev, test}")
+    return debates
 
 
 
@@ -131,60 +117,57 @@ def _balanced_dataset_query(dataset_name, n4j_graph):
     Return sentence numbers (sentence.n) for kialo
     """
 
-    condition = _traintestdev_condition(dataset_name)
-    query = """
-    MATCH
-        (debate:Debate {origin: "kl"})-[:Contains]->(x:Sentence)-[r:Pro|:Cons]->(y:Sentence)
-    WHERE
-        %s
-    WITH
-        count(r) as len,
-        type(r) as t
-    RETURN
-        len
-    ORDER BY
-        len asc
-    LIMIT
-        1
-    """%condition
-    n_rows = int(n4j_graph.evaluate(query))
-    query = """
-    MATCH
-        (debate:Debate {origin: "kl"})-[:Contains]->(x:Sentence)-[r:Pro]->(y:Sentence)
-    WHERE
-        %s
-    WITH
-        x.n as x,
-        y.n as y,
-        r.w as w,
-        rand() as rdm
-    LIMIT
-        %d
-    WITH
-        collect({x: x, y: y, w: w, rdm: rdm}) as rows1
-    MATCH
-        (debate:Debate {origin: "kl"})-[:Contains]->(x:Sentence)-[r:Cons]->(y:Sentence)
-    WHERE
-        %s
-    WITH
-        x.n as x,
-        y.n as y,
-        r.w as w,
-        rand() as rdm,
-        rows1
-    LIMIT
-        %d
-    WITH
-        collect({x: x, y: y, w: w, rdm: rdm}) + rows1 as rows
-    UNWIND
-        rows as row
-    RETURN
-        row.x as x,
-        row.y as y,
-        row.w as w
-    ORDER BY
-        row.rdm
-    """%(condition, n_rows, condition, n_rows)
+    debates = _traintestdev_debates(dataset_name)
+
+    query = ""
+
+    for d_num in debates:
+        subquery = """
+        MATCH
+            (d: Debate {origin: "kl", n: %d})
+        WITH
+            d
+        OPTIONAL MATCH
+            p_pro=(d)-[:Contains]->()<-[:Pro]-()
+        WITH
+            d,
+            count(p_pro) as n_pro
+        OPTIONAL MATCH
+            p_cons=(d)-[:Contains]->()<-[:Cons]-()
+        WITH
+            n_pro,
+            count(p_cons) as n_cons
+        RETURN
+            CASE WHEN n_pro < n_cons THEN n_pro ELSE n_cons END as min_edges
+        LIMIT
+            1
+        """%d_num
+        
+        n_rows = int(n4j_graph.evaluate(subquery))
+
+        if query != "":
+            query += " UNION "
+
+        query += """
+        MATCH
+            (d: Debate {origin: "kl", n: %d})-[:Contains]->(x:Sentence)-[:Pro]->(y:Sentence)
+        RETURN
+            x.n as x,
+            y.n as y,
+            1 as w
+        LIMIT
+            %d
+        UNION
+        MATCH
+            (d: Debate {origin: "kl", n: %d})-[:Contains]->(x:Sentence)-[:Cons]->(y:Sentence)
+        RETURN
+            x.n as x,
+            y.n as y,
+            -1 as w
+        LIMIT
+            %d
+        """%(d_num, n_rows, d_num, n_rows)
+
     return query
 
 
@@ -220,7 +203,7 @@ if __name__ == "__main__":
     import argparse
     import os
 
-    DATASETS = ['train', 'dev', 'dev1', 'dev2', 'test', 'test1', 'test2']
+    DATASETS = ['train', 'dev', 'test']
     
     # Read command-line argument
     parser = argparse.ArgumentParser(description='Dump dataset generators on disk')
@@ -241,24 +224,37 @@ if __name__ == "__main__":
         sentence_generator(graph),
         os.path.join(args.directory, 'sentences.pkl')
         )
+    utils.to_csv(
+        sentence_generator(graph),
+        os.path.join(args.directory, 'sentences.csv')
+        )
     print("done")
     for dsname in DATASETS:
         print("Generate the '%s' dataset generator"%dsname, end='... ', flush=True)
         utils.dump(
-            argument_generator(dsname, graph, balanced=(not args.unbalanced)),
+            utils.shuffle(
+                argument_generator(dsname, graph, balanced=(not args.unbalanced))
+                ),
             os.path.join(args.directory, "%s.pkl"%dsname)
+            )
+        utils.to_csv(
+            utils.merge_dicts(utils.shuffle(
+                argument_generator(dsname, graph, balanced=(not args.unbalanced))
+                )),
+            os.path.join(args.directory, "%s.csv"%dsname)
             )
         print("done")
 
-    # Print 10 rows of sentences and dev1 datasets (option --show_sample)
+    # Print 10 rows of sentences and dev datasets (option --show_sample)
     if args.show_sample:
         for i, row in enumerate(utils.load(os.path.join(args.directory, 'sentences.pkl'))):
             if i == 10:
                 break
             print(row)
-        for i, row in enumerate(utils.load(os.path.join(args.directory, 'dev1.pkl'))):
+        for i, row in enumerate(utils.load(os.path.join(args.directory, 'dev.pkl'))):
             if i == 10:
                 break
+            print(row)
 
     # Print the dataset lengths (option --count_labels)
     if args.count_labels:
