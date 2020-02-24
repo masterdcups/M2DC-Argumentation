@@ -20,19 +20,16 @@ The *main_count_labels.py* script counts label frequencies in datasets. It is ma
 
 You may want to run:
 
-	python3 main_count_labels.py datasets/train.pkl datasets/dev.pkl datasets/dev1.pkl datasets/dev2.pkl datasets/test.pkl datasets/test1.pkl datasets/test2.pkl 
+	d='../../../data/raw'
+	python3 main_count_labels.py $d/train.pkl $d/dev.pkl $d/test.pkl
 
 to check that classes are balanced in each dataset
 
 |dataset|n_rows|n_-1|n_1|
 | --- | --- | --- | --- |
-|train|25292|12646|12646|
-|dev1|3638|1819|1819|
-|dev2|406|203|203|
-|dev|3676|1838|1838|
-|test1|3686|1843|1843|
-|test2|710|355|355|
-|test|3752|1876|1876|
+|train|22973|11237|11237|
+|dev|4132|2066|2066|
+|test|3906|1953|1953|
 
 
 ## Modules
@@ -47,7 +44,7 @@ The *datasets* module contains:
 	    
 	def argument_generator(dataset_name, n4j_graph, balanced=False):
 	    """Create a dataset generator that yields ({'n1':_, 'n2':_},{'class':_}) tuples.
-	    name: in {train, dev, dev1, dev2, test, test1, test2}
+	    name: in {train, dev, test}
 	    n4j_graph: connected neo4j graph
 	    balanced: Return the same amout of rows for each class (edge weight)
 	    """
@@ -70,17 +67,13 @@ All sentences are taken from Kialo (thus in english), classes are 1.0 (pro-edges
 
 Available datasets are :
 
-- **train**: 80% of kialo, but debates #14 and #16
-- **dev**: union of *dev1* and *dev2* datasets
-- **dev1**: 10% of kialo
-- **dev2**: debate #16 (1.32% of kialo)
-- **test**: union of *test1* and *test2* datasets
-- **test1**: 10% of kialo
-- **test2**: debate #14 (1.69% of kialo)
+- **train**: debates 0..9, 15, 17..19, 21..25
+- **dev**: debates 14, 16, 20
+- **test**: debates 10..13
 
 If the script is directly called, it uses the *utils* module to dump each dataset generator on disk. Use *-h* option for usage.
 
-The sentence generator and all balanced dataset generators are already generated and available in the  *datasets/* directory. You may want to *utils.load* them.
+The sentence generator and all balanced dataset generators are already generated and available in the  *../../../data/raw/* directory. You may want to *utils.load* them.
 
 
 

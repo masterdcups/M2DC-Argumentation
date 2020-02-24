@@ -107,6 +107,7 @@ def _traintestdev_debates(dataset_name):
         debates = [10, 11, 12, 13]
     else:
         raise ValueError("Dataset name must be in {train, dev, test}")
+    print(debates)
     return debates
 
 

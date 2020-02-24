@@ -3,9 +3,6 @@
 Aim: balance pro and cons edges in datasets
 
 
-**WARNING:** this is only a work plan, for now datasets are **NOT** prepared this way.
-
-
 ## Datasets repartition
 
 We take the same amount of pro and cons edges in each debate, so we drop a few edges to reach this objective.
@@ -14,11 +11,11 @@ We propose to split the corpus in:
 
 | Dataset | Debates | Number of edges of each type | Proportion |
 | --- | --- | --- | --- |
-| train | 0..9, 15, 17..19, 21..25 | 13834 | 77.49% |
+| train | 0..9, 15, 17..19, 21..25 | 11237 | 77.49% |
 | dev | 14, 16, 20 | 2066 | 11.57% |
 | test | 10..13 | 1953 | 10.94% |
 
-As explain in the next section, it is not possible to balance nodes (rearding to their ingoing edges).
+As explain in the next section, it is not possible to balance nodes (regarding to their ingoing edges).
 
 ## Data exploration
 
