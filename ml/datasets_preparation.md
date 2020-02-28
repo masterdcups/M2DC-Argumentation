@@ -9,11 +9,11 @@ We take the same amount of pro and cons edges in each debate, so we drop a few e
 
 We propose to split the corpus in:
 
-| Dataset | Debates | Number of edges of each type | Proportion |
+| Dataset | Debates | Number of edges | Proportion |
 | --- | --- | --- | --- |
-| train | 0..9, 15, 17..19, 21..25 | 11237 | 77.49% |
-| dev | 14, 16, 20 | 2066 | 11.57% |
-| test | 10..13 | 1953 | 10.94% |
+| train | 0..9, 15, 17..19, 21..25 | 22973 | 74.08% |
+| dev | 14, 16, 20 | 4132 | 13.32% |
+| test | 10..13 | 3906 | 12.59% |
 
 As explain in the next section, it is not possible to balance nodes (regarding to their ingoing edges).
 
