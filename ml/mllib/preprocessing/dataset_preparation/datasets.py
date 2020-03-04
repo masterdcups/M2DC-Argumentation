@@ -11,19 +11,19 @@ import py2neo
 
 
 
-def sentence_generator(n4j_graph):
+def sentence_generator(n4j_graph, corpus):
     """Create a generator for all sentences (nodes)"""
     
     query = """
     MATCH
-        (x: Sentence {origin: "kl"})<-[:Contains]-(deb:Debate)
+        (x: Sentence {origin: "%s"})<-[:Contains]-(deb:Debate)
     WITH
         x.label as label,
         x.n as n,
         deb.n as debn,
         rand() as rdm
     MATCH
-        (y: Sentence {origin: "kl"})
+        (y: Sentence {origin: "%s"})
     WHERE
         y.n = debn
     RETURN
@@ -33,7 +33,7 @@ def sentence_generator(n4j_graph):
         debn as debate_num
     ORDER BY
         rdm
-    """
+    """%(corpus, corpus)
     for record in n4j_graph.run(query):
         yield {
             's': record['label'],
@@ -44,22 +44,22 @@ def sentence_generator(n4j_graph):
 
 
 
-def argument_generator(dataset_name, n4j_graph, balanced=False):
+def argument_generator(dataset_name, n4j_graph, corpus, balanced=False):
     """Create a dataset generator that yields ({'n1':_, 'n2':_},{'class':_}) tuples.
     name: in {train, dev, dev1, dev2, test, test1, test2}
     n4j_graph: connected neo4j graph
     balanced: Return the same amout of rows for each class (edge weight)
 
-    Available datasets:
+    Available datasets (kl):
         train: debates 0..9, 15, 17..19, 21..25
         dev: debates 14, 16, 20
         test: debates 10..13
     """
 
     if balanced:
-        query = _balanced_dataset_query(dataset_name, n4j_graph)
+        query = _balanced_dataset_query(dataset_name, n4j_graph, corpus)
     else:
-        query = _unbalanced_dataset_query(dataset_name)
+        query = _unbalanced_dataset_query(dataset_name, corpus)
 
     for record in n4j_graph.run(query):
         yield ({'n1': record['x'], 'n2': record['y']}, {'class': record['w']})
@@ -91,7 +91,7 @@ def map_sentences(argument_gen, sentence_gen):
     return utils.gmap(argument_gen, sentence_mapper(sentence_gen))
 
 
-def _traintestdev_debates(dataset_name):
+def _traintestdev_debates(dataset_name, corpus):
     """Debate numbers corresponding to a dataset name
 
     Available datasets:
@@ -99,33 +99,44 @@ def _traintestdev_debates(dataset_name):
         dev: debates 14, 16, 20
         test: debates 10..13
     """
-    if dataset_name == "train":
-        debates = list(range(10))+[15, 17, 18, 19]+list(range(21,26))
-    elif dataset_name == "dev":
-        debates = [14, 16, 20]
-    elif dataset_name == "test":
-        debates = [10, 11, 12, 13]
+    if corpus == "kl":
+        if dataset_name == "train":
+            debates = list(range(10))+[15, 17, 18, 19]+list(range(21,26))
+        elif dataset_name == "dev":
+            debates = [14, 16, 20]
+        elif dataset_name == "test":
+            debates = [10, 11, 12, 13]
+        else:
+            raise ValueError("Dataset name must be in {train, dev, test}")
+    elif corpus == "wd":
+        if dataset_name == "train":
+            debates = [i for i in range(48) if not i in [9,24,19,25,44]]
+        elif dataset_name == "dev":
+            debates = [9, 24]
+        elif dataset_name == "test":
+            debates = [19,25]
+        else:
+            raise ValueError("Dataset name must be in {train, dev, test}")
     else:
-        raise ValueError("Dataset name must be in {train, dev, test}")
-    print(debates)
+        raise ValueError("Corpus must be in {kl, wd}")
     return debates
 
 
 
 
-def _balanced_dataset_query(dataset_name, n4j_graph):
+def _balanced_dataset_query(dataset_name, n4j_graph, corpus):
     """Cypher query for a given dataset (balanced classes)
-    Return sentence numbers (sentence.n) for kialo
+    Return sentence numbers (sentence.n) for the given corpus
     """
 
-    debates = _traintestdev_debates(dataset_name)
+    debates = _traintestdev_debates(dataset_name, corpus)
 
     query = ""
 
     for d_num in debates:
         subquery = """
         MATCH
-            (d: Debate {origin: "kl", n: %d})
+            (d: Debate {origin: "%s", n: %d})
         WITH
             d
         OPTIONAL MATCH
@@ -142,7 +153,7 @@ def _balanced_dataset_query(dataset_name, n4j_graph):
             CASE WHEN n_pro < n_cons THEN n_pro ELSE n_cons END as min_edges
         LIMIT
             1
-        """%d_num
+        """%(corpus,d_num)
         
         n_rows = int(n4j_graph.evaluate(subquery))
 
@@ -151,7 +162,7 @@ def _balanced_dataset_query(dataset_name, n4j_graph):
 
         query += """
         MATCH
-            (d: Debate {origin: "kl", n: %d})-[:Contains]->(x:Sentence)-[:Pro]->(y:Sentence)
+            (d: Debate {origin: "%s", n: %d})-[:Contains]->(x:Sentence)-[:Pro]->(y:Sentence)
         RETURN
             x.n as x,
             y.n as y,
@@ -160,28 +171,28 @@ def _balanced_dataset_query(dataset_name, n4j_graph):
             %d
         UNION
         MATCH
-            (d: Debate {origin: "kl", n: %d})-[:Contains]->(x:Sentence)-[:Cons]->(y:Sentence)
+            (d: Debate {origin: "%s", n: %d})-[:Contains]->(x:Sentence)-[:Cons]->(y:Sentence)
         RETURN
             x.n as x,
             y.n as y,
             -1 as w
         LIMIT
             %d
-        """%(d_num, n_rows, d_num, n_rows)
+        """%(corpus, d_num, n_rows, corpus, d_num, n_rows)
 
     return query
 
 
 
-def _unbalanced_dataset_query(dataset_name):
+def _unbalanced_dataset_query(dataset_name, corpus):
     """Cypher query for a given dataset (unbalanced classes)
-    Return sentence numbers (sentence.n) for kialo
+    Return sentence numbers (sentence.n) for the given copus
     """
 
-    debates = _traintestdev_debates(dataset_name)
+    debates = _traintestdev_debates(dataset_name, corpus)
     query = """
     MATCH
-        (debate:Debate {origin: "kl"})-[:Contains]->(x:Sentence)-[r:Pro|:Cons]->(y:Sentence)
+        (debate:Debate {origin: "%s"})-[:Contains]->(x:Sentence)-[r:Pro|:Cons]->(y:Sentence)
     WHERE
         debate.n IN [%s]
     WITH
@@ -190,7 +201,7 @@ def _unbalanced_dataset_query(dataset_name):
         rdm
     RETURN
         x, y, w
-    """%(', '.join(map(str, debates)))
+    """%(corpus, ', '.join(map(str, debates)))
     return query
 
 
@@ -211,6 +222,7 @@ if __name__ == "__main__":
     parser.add_argument('uri', help='Neo4j uri', nargs='?', default='bolt://localhost:7687')
     parser.add_argument('user', help='Neo4j user')
     parser.add_argument('passw', help='Neo4j password')
+    parser.add_argument('--corpus', nargs='?', default='kl', choices=['wd','kl'])
     parser.add_argument('--unbalanced', action='store_true')
     parser.add_argument('--show_sample', action='store_true')
     parser.add_argument('--count_labels', action='store_true')
@@ -222,11 +234,11 @@ if __name__ == "__main__":
     graph = py2neo.Graph(args.uri, auth=(args.user, args.passw))
     print("Generate the 'sentence' generator", end='... ', flush=True)
     utils.dump(
-        sentence_generator(graph),
+        sentence_generator(graph, args.corpus),
         os.path.join(args.directory, 'sentences.pkl')
         )
     utils.to_csv(
-        sentence_generator(graph),
+        sentence_generator(graph, args.corpus),
         os.path.join(args.directory, 'sentences.csv')
         )
     print("done")
@@ -234,13 +246,13 @@ if __name__ == "__main__":
         print("Generate the '%s' dataset generator"%dsname, end='... ', flush=True)
         utils.dump(
             utils.shuffle(
-                argument_generator(dsname, graph, balanced=(not args.unbalanced))
+                argument_generator(dsname, graph, corpus=args.corpus, balanced=(not args.unbalanced))
                 ),
             os.path.join(args.directory, "%s.pkl"%dsname)
             )
         utils.to_csv(
             utils.merge_dicts(utils.shuffle(
-                argument_generator(dsname, graph, balanced=(not args.unbalanced))
+                argument_generator(dsname, graph, corpus=args.corpus, balanced=(not args.unbalanced))
                 )),
             os.path.join(args.directory, "%s.csv"%dsname)
             )
