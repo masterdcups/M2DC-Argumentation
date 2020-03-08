@@ -17,6 +17,12 @@ This directory contains code to preprocess arguments (which are pairs of text la
 
 All input and output data paths should be declared in the `Makefile`. Make sure everything is setup correcly before running.
 
+Raw word embeddings and sentiment lexicons need to be downloaded separately, in text format (meaning not binary, but can be .txt or .vec), in the `data/word_embeddings` and `data/lexicons` directories :
+ - word embeddings can be fasttext or GloVe (others should work, but were not tried) 
+ - sentiment lexicon can be IBM's UniGram lexicon (recommended, found in section 3.2 (sentiment composition lexicon) of https://www.research.ibm.com/haifa/dept/vst/debating_data.shtml), textblob's lexicon (https://github.com/sloria/TextBlob/blob/dev/textblob/en/en-sentiment.xml) (others should work, but were not tried)
+
+Once downloaded, they need to be converted to dense matrices, through the use of `preprocess_vec_embedding.py` (you might need to modify lines 39 to 44 of this script, as some files do not have matrix dimensions as header) (use `preprocess_textblob_sentiment_xml.py` should you choose textblob's lexicon). (look at lines 44&47 of the Makefile: you need to rename the raw files as such)
+
 `DATA_DIR=data` by default, with raw data found in `DATA_DIR/raw` and outputs in `OUTPUT_DIR=DATA_DIR/basic`.
 
 ```
@@ -29,11 +35,12 @@ All input and output data paths should be declared in the `Makefile`. Make sure 
 This will generate the following files:
 
  - Preprocessing (in `OUTPUT_DIR/preprocessed/`):
-
    - `dictionary.pkl`
    - `tfidf.pkl`
    - `preprocessed_nodes.pkl`
-   - `(training, validation, test)preprocessed_arguments.pkl`
+   - `(training, validation, test)_preprocessed_arguments.pkl`
+   - `{embedding}.npz`
+   - `{lexicon}.npz`
 
  - Training (in `OUTPUT_DIR/models/`):
 
