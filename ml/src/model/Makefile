@@ -2,9 +2,12 @@ export PYTHONPATH:=$(PYTHONPATH):$(MODEL_SRC_DIR)
 
 MLP_SRC_DIR = $(MODEL_SRC_DIR)/MLP
 COCARASCU_SRC_DIR = $(MODEL_SRC_DIR)/Cocarascu
+ENCDEC_SRC_DIR = $(MODEL_SRC_DIR)/EncDec
 
 #include $(MLP_SRC_DIR)/Makefile
-include $(COCARASCU_SRC_DIR)/Makefile
+#include $(COCARASCU_SRC_DIR)/Makefile
+include $(ENCDEC_SRC_DIR)/Makefile
+#include $(TRANSFORMER_SRC_DIR)/Makefile
 EVALUATION = $(EVALUATION_OUTPUT_DIR)/$(MODEL_NAME)_metrics.csv
 
 #$(MODEL): $(MODEL_SRC_DIR)/train_keras_model.py \

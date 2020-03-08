@@ -10,6 +10,10 @@ from mllib.preprocessing.dataset_preparation import utils
 from TextPreprocessor import TextPreprocessor
 
 def main(node_path, arguments_path, preprocessed_node_path):
+    """
+        Load nodes and edges lists, select nodes appearing in the edge list
+        and apply NLP transformations (lemmatization, pos tagging).
+    """
 
     node_path = Path(node_path)
     preprocessed_node_path = Path(preprocessed_node_path)

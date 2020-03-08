@@ -14,7 +14,7 @@ export PYTHONPATH:=$(PYTHONPATH):$(MLLIB_PATH)
 # Input directories
 DATA_DIR = data
 
-DATASETS_DIR = $(DATA_DIR)/raw
+DATASETS_DIR = $(DATA_DIR)/raw2
 NODE_DIR = $(DATASETS_DIR)
 ARGUMENT_DIR = $(DATASETS_DIR)
 
@@ -29,7 +29,7 @@ RAW_TEST_ARGUMENTS = $(ARGUMENT_DIR)/test.pkl
 
 
 # Output directories
-OUTPUT_DIR = $(DATA_DIR)/basic
+OUTPUT_DIR = $(DATA_DIR)/basic2
 
 PREPROCESSED_DIR = $(OUTPUT_DIR)/preprocessed
 MODEL_OUTPUT_DIR = $(OUTPUT_DIR)/models
@@ -42,7 +42,9 @@ TEXT_PREPROCESSED_TRAINING_NODES = $(PREPROCESSED_DIR)/preprocessed_training_nod
 TEXT_PREPROCESSED_VALIDATION_NODES = $(PREPROCESSED_DIR)/preprocessed_validation_nodes.pkl
 
 WORD_EMBEDDING = $(PREPROCESSED_DIR)/fasttext_wiki.multi.en.npz
-SENTIMENT_EMBEDDING = $(PREPROCESSED_DIR)/textblob_en-sentiment.npz
+#WORD_EMBEDDING = $(PREPROCESSED_DIR)/glove_twitter.27B.50d.npz
+#SENTIMENT_EMBEDDING = $(PREPROCESSED_DIR)/textblob_en-sentiment.npz
+SENTIMENT_EMBEDDING = $(PREPROCESSED_DIR)/ibm_ug_en-sentiment.npz
 
 DICTIONARY = $(PREPROCESSED_DIR)/dictionary.pkl
 DICTIONARY_CFG = $(CFG_DIR)/dictionary.yaml
@@ -114,6 +116,10 @@ $(PREPROCESSED_DIR)/%.npz: $(SRC_DIR)/preprocess_vec_embedding.py \
 # Preprocess a .xml sentiment lexicon into a .npz embedding
 $(PREPROCESSED_DIR)/%.npz: $(SRC_DIR)/preprocess_textblob_sentiment_xml.py \
 		$(LEXICONS_DIR)/%.xml
+	$(PYTHON) $^ $@
+
+$(PREPROCESSED_DIR)/%.npz: $(SRC_DIR)/preprocess_sentiment_lexicon.py \
+		$(LEXICONS_DIR)/%.txt
 	$(PYTHON) $^ $@
 
 $(PREPROCESSED_TRAINING_ARGUMENTS): \

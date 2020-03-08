@@ -1,17 +1,15 @@
 import argparse
 from pathlib import Path
-import re
 
 import numpy as np
-from sklearn.decomposition import PCA
 from tqdm import tqdm
 
-def main(vec_path, output_path):
-    vec_path = Path(vec_path)
+def main(txt_path, output_path):
+    txt_path = Path(txt_path)
     output_path = Path(output_path)
 
     tokens, matrix = vec2arrays(
-            vec_path.open('r', encoding='utf-8'), reduce_dim=50)
+            txt_path.open('r', encoding='utf-8'))
 
     np.savez(output_path,
             tokens = tokens, embeddings = matrix)
@@ -19,10 +17,9 @@ def main(vec_path, output_path):
 
 def vec2arrays(
         vec, 
-        oov_token='<UNK>', # 0.0 vector
-        pad_token='<PAD>', # -1.0 norm vector
-        eos_token='<EOS>', # 1.0 norm vector
-        reduce_dim=None, # PCA if valued
+        oov_token='<UNK>', # 0.0 
+        pad_token='<PAD>', # -2.0
+        eos_token='<EOS>', # 2.0
     ):
     """ Transforms a generator of .vec file lines into a tuple of numpy arrays: 
         (tokens, embedding_matrix).
@@ -32,16 +29,8 @@ def vec2arrays(
     End-Of-Sequence (next index) tokens.
     """
 
-    # Regex pattern matching words to exclude from the embeddings
-    pattern = re.compile(r'<.*>')
-
-    
-    # if header contains vocab_size, dimensionality
     header = next(vec).split()
     nb_words, dimension = int(header[0]), int(header[1])
-
-    # else
-    #nb_words, dimension = 100000, 50
 
     if oov_token:
         nb_words += 1
@@ -61,33 +50,23 @@ def vec2arrays(
 
     if pad_token:
         words[current_word_id] = pad_token
-        embeddings[current_word_id] = -1.0 * np.sqrt(1.0 / dimension)
+        embeddings[current_word_id] = -2.0 * np.sqrt(1.0 / dimension)
+        #np.full(embeddings.shape[-1], value=-1.0, dtype=np.float32)
         current_word_id += 1
 
     if eos_token:
         words[current_word_id] = eos_token
-        embeddings[current_word_id] = 1.0 * np.sqrt(1.0 / dimension)
+        embeddings[current_word_id] = 2.0 * np.sqrt(1.0 / dimension)
         current_word_id += 1
     
     for i, line in tqdm(enumerate(vec)):
         values = line.rstrip().split(' ')
-        word, embedding = values[0], map(float, values[1:])
-
-        if pattern.match(word):
-            continue
+        word, embedding = values[0], list(map(float, values[1:]))
 
         words[current_word_id] = word
-        embeddings[current_word_id] = list(embedding)
+        embeddings[current_word_id] = embedding
 
         current_word_id += 1
-
-        if current_word_id >= nb_words:
-            break
-
-    if reduce_dim and dimension > reduce_dim:
-        pca = PCA(reduce_dim, copy=False)
-        embeddings = pca.fit_transform(embeddings)
-
 
     return words, embeddings
 
@@ -98,8 +77,8 @@ if __name__ == '__main__':
             "keyed by 'tokens' and 'embeddings'.")
         )
     argparser.add_argument(
-            'vec_path',
-            help='path to .vec embedding file',
+            'txt_path',
+            help='path to sentiment lexicon file',
         )
     argparser.add_argument(
             'output_path',
@@ -107,4 +86,4 @@ if __name__ == '__main__':
         )
     args = argparser.parse_args()
 
-    main(args.vec_path, args.output_path)
+    main(args.txt_path, args.output_path)

@@ -21,32 +21,23 @@ def fill_mapping(
     after_functions = [] if not after_transform else [after_transform]
 
     for part, part_mapping in mapping.items():
-        for column, column_mapping in part_mapping['columns'].items():
-            if 'name' not in column_mapping:
-                column_mapping['name'] = column
+        for stream_name, stream_mapping in part_mapping['streams'].items():
+            if 'column' not in stream_mapping:
+                stream_mapping['column'] = stream_name
 
-            #if 'function' not in column_mapping:
-            #    column_mapping['function'] = default_transform
-
-            #column_mapping['function'] = compose_always(
-            #        column_mapping['function']))
-            column_mapping['function'] = compose(*after_functions + [
-                    column_mapping.get('function', default_transform)
+            stream_mapping['function'] = compose(*after_functions + [
+                    stream_mapping.get('function', default_transform)
                 ] + before_functions)
-
-        #if 'merger' in part_mapping:
-        #    part_mapping['merger'] = 
-        #       *[part_mapping['merger']] + before_functions)
 
     return mapping
 
 def apply_mapping(mapping:dict, data: dict):
     data = {
         part: {
-            column_mapping['name']:
-                column_mapping['function'](data[column_name])
+            stream_name:
+                stream_mapping['function'](data[stream_mapping['column']])
 
-            for column_name, column_mapping in mapping[part]['columns'].items()
+            for stream_name, stream_mapping in mapping[part]['streams'].items()
         }
         for part in mapping
     }

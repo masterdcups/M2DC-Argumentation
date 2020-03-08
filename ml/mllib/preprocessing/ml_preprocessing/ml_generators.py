@@ -22,8 +22,6 @@ def generator_DataFrames(
 
         for df_loader in DataFrame_loaders:
             df = df_loader()
-            if shuffle:
-                df = df.sample(frac=1).reset_index(drop=True)
 
             ## Only keep the columns we will yield.
             #df = df[[
@@ -36,6 +34,10 @@ def generator_DataFrames(
             if not batch_size or batch_size > nb_samples:
                 batch_size = nb_samples
             offset = 0
+
+            if shuffle:
+                nb_samples_in_batches = nb_samples - (nb_samples % batch_size)
+                df = df.sample(n=nb_samples_in_batches).reset_index(drop=True)
 
             while offset + batch_size <= nb_samples:
                 yield df.iloc[offset:offset+batch_size]

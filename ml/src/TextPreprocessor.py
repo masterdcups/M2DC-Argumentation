@@ -19,8 +19,6 @@ class TextPreprocessor(Transformer):
                 enumerate(sorted(set(self.pos_tag_mapping.values())))
             }
 
-        #print(*self.pos_tag2id.items(), sep='\n')
-
 
     def transform(self, corpus, *kwargs):
         lemmatizer = self.Lemmatizer()
