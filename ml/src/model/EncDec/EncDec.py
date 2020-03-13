@@ -307,6 +307,7 @@ def Adaptor(
         sentiment_embedding_dictionary,
         maxlen = 50,
         augmentation_rate = None,
+        inference=False, # Whether or not to prepare label ('y' key)
         **kwargs,
     ):
 
@@ -410,21 +411,20 @@ def Adaptor(
                 },
             },
         },
-        'y': {
+    }
+    if not inference:
+        mapping['y'] = {
             'streams': {
                 'pro': {},
             },
             'merger': merger,
         }
-    }
-
 
     mapping = ml_ad.fill_mapping(mapping,
             default_transform = lambda x: x[:,None],
             before_transform = lambda x: x.values,
         )
 
-    # Uncomment for some debug prints
     #for part in mapping:
     #    print(part)
     #    for stream in part:
@@ -432,7 +432,10 @@ def Adaptor(
 
     def complete_adaptor(data):
         data = ml_ad.apply_mapping(mapping, data)
-        return data['X'], data['y']
+        if not inference:
+            return data['X'], data['y']
+        else:
+            return data['X']
 
     return complete_adaptor
 
