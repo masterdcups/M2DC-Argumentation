@@ -9,12 +9,9 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import keras
-import keras.backend as K
 
 from TextPreprocessor import TextPreprocessor
 
-
-from mllib import cfg
 from mllib.preprocessing.text_preprocessing import embedder
 from mllib.preprocessing.dataset_preparation import utils
 from mllib.preprocessing.ml_preprocessing import ml_generators as ml_gen
@@ -25,6 +22,12 @@ def main(
         word_embedding_path,
         sentiment_embedding_path
     ):
+    """
+        This script loads a model definition script and its trained model,
+        as well as embedding dictionaries. It then makes predictions on
+        arguments, which are currently defined inside the script (feel free to
+        load them from a file.).
+    """
 
     model_module_path = Path(model_module_path)
     model_path = Path(model_path)
@@ -95,7 +98,7 @@ def main(
 
 if __name__ == '__main__':
     argparser = argparse.ArgumentParser(
-            description='Trains and save a keras model'
+            description='Uses a model to make predictions'
         )
     argparser.add_argument(
             'model_module_path',
