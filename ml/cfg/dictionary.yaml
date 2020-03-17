@@ -1,0 +1,4 @@
+dictionary:
+    vocabulary_size: 1000
+    min_frequency_absolute: 5
+    max_frequency_relative: 0.5

@@ -1,0 +1,20 @@
+name: argumentation_ml
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - gensim=3.8.*
+  - joblib=0.14.*
+  - keras=2.2.*
+  - networkx=2.*
+  - nltk=3.4.*
+  - numpy=1.18.*
+  - pandas=1.0.*
+  - pip=19.3.*
+  - pyyaml=5.3.*
+  - scikit-learn=0.22.*
+  - spacy=2.0.*
+  - tqdm
+  - yaml=0.1.*
+prefix: /home/arche/.conda/envs/argumentation_ml
+
