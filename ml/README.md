@@ -21,6 +21,7 @@ Raw word embeddings and sentiment lexicons need to be downloaded separately, in 
 
  - word embeddings can be fasttext or GloVe (others should work, but were not tried) 
  - sentiment lexicon can be [IBM's UniGram lexicon](https://www.research.ibm.com/haifa/dept/vst/debating_data.shtml) (recommended, found in section 3.2 (sentiment composition lexicon)), [textblob's lexicon](https://github.com/sloria/TextBlob/blob/dev/textblob/en/en-sentiment.xml) (others should work, but were not tried)
+ These files need to be renamed such that their stem match the preprocessed files stem, defined in the Makefile (`$WORD_EMBEDDING` and `$SENTIMENT_EMBEDDING` variables) (e.g.: `$WORD_EMBEDDING = foo.npz` needs `foo.[vec|txt]` as a raw file).
 
 
 `DATA_DIR=data` by default, with raw data found in `DATA_DIR/raw` and outputs in `OUTPUT_DIR=DATA_DIR/basic`.
